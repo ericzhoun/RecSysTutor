@@ -1,0 +1,1374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recommendation Systems, End to End — An Interactive Course</title>
+<style>
+:root{
+  --bg:#f5f5f2;
+  --panel:#fbfbf9;
+  --ink:#17181a;
+  --muted:#5d6167;
+  --faint:#8b9097;
+  --line:rgba(20,22,24,.14);
+  --line-soft:rgba(20,22,24,.08);
+  --accent:#0f6f66;
+  --accent-ink:#0b544d;
+  --accent-soft:rgba(15,111,102,.10);
+  --ok:#1f7a3d;
+  --bad:#a12a1f;
+  --code:#eceae4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua","URW Palladio L",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --measure:71ch;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.layout{display:grid;grid-template-columns:308px minmax(0,1fr);align-items:start;}
+
+/* ---------- sidebar ---------- */
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--line);
+  padding:30px 24px 60px;background:var(--panel);}
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);}
+.brand b{display:block;font-family:var(--serif);font-size:19px;letter-spacing:0;text-transform:none;
+  color:var(--ink);font-weight:600;margin:6px 0 2px;line-height:1.25;}
+.progress-wrap{margin:22px 0 18px;}
+.progress-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;}
+.progress-bar{height:5px;background:var(--line-soft);position:relative;}
+.progress-bar>span{position:absolute;inset:0 auto 0 0;width:0;background:var(--accent);transition:width .3s ease;}
+.toc{list-style:none;margin:0;padding:0;}
+.toc .mod{margin:16px 0 2px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);}
+.toc a{display:block;padding:4px 8px 4px 10px;text-decoration:none;color:var(--muted);font-size:14px;
+  border-left:2px solid transparent;line-height:1.4;}
+.toc a:hover{color:var(--ink);}
+.toc a.active{color:var(--accent-ink);border-left-color:var(--accent);background:var(--accent-soft);}
+.side-note{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint);line-height:1.5;}
+.side-note code{font-family:var(--mono);font-size:11.5px;background:var(--code);padding:1px 4px;}
+.side-search{margin:16px 0 4px;}
+.side-search input{width:100%;font-family:var(--mono);font-size:12px;padding:7px 9px;border:1px solid var(--line);
+  background:var(--bg);color:var(--ink);}
+.side-search input:focus{outline:none;border-color:var(--accent);}
+.side-search input::placeholder{color:var(--faint);}
+
+/* ---------- layout helpers ---------- */
+.main{min-width:0;padding-bottom:110px;}
+.container{max-width:800px;margin:0 auto;padding:0 44px;}
+.bleed{max-width:1080px;margin:0 auto;padding:0 44px;}
+p{margin:0 0 1.05em;max-width:var(--measure);}
+ul,ol{max-width:var(--measure);padding-left:1.2em;margin:0 0 1.1em;}
+li{margin:.28em 0;}
+strong{font-weight:600;}
+em{font-style:italic;}
+code{font-family:var(--mono);font-size:.86em;background:var(--code);padding:1.5px 5px;border-radius:3px;}
+hr.rule{border:0;border-top:1px solid var(--line);margin:56px 0;}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--line);background:
+  linear-gradient(0deg,var(--panel),var(--panel));padding:64px 0 46px;margin-bottom:8px;}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink);}
+h1.display{font-family:var(--serif);font-weight:600;font-size:clamp(38px,5.4vw,66px);line-height:1.02;
+  letter-spacing:-.02em;margin:16px 0 0;max-width:16ch;}
+.lede{font-size:19.5px;line-height:1.55;color:var(--muted);margin:22px 0 0;max-width:60ch;}
+.meta-row{display:flex;flex-wrap:wrap;gap:0;margin-top:34px;border-top:1px solid var(--line);}
+.meta-row div{flex:1 1 140px;padding:14px 18px 6px 0;border-right:1px solid var(--line-soft);}
+.meta-row div:last-child{border-right:0;}
+.meta-row .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+.meta-row .v{font-family:var(--serif);font-size:22px;margin-top:3px;}
+
+/* ---------- sections ---------- */
+.module{padding-top:64px;}
+.module-head{display:flex;gap:18px;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:12px;}
+.folio{font-family:var(--mono);font-size:13px;color:var(--accent-ink);letter-spacing:.06em;padding-top:6px;}
+.module-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3vw,34px);line-height:1.1;
+  letter-spacing:-.01em;margin:0;}
+.module-sub{margin:14px 0 0;color:var(--muted);font-size:15.5px;max-width:64ch;}
+.lesson{padding-top:40px;}
+.lesson h3{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em;}
+.lesson h3 .n{font-family:var(--mono);font-size:13px;color:var(--faint);margin-right:10px;font-weight:400;}
+.lesson h4{font-size:14px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  margin:1.7em 0 .55em;}
+.lesson:first-of-type{padding-top:34px;}
+
+/* ---------- callouts ---------- */
+.note{border:1px solid var(--line);background:var(--panel);padding:16px 18px 6px;margin:20px 0;}
+.note>.lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent-ink);margin-bottom:8px;}
+.note p{max-width:66ch;font-size:15.6px;}
+.note.why>.lab{color:var(--muted);}
+.formula{font-family:var(--mono);font-size:14.5px;background:#111315;color:#e9ece8;padding:14px 16px;
+  overflow-x:auto;line-height:1.8;margin:16px 0;}
+.formula .mut{color:#8a938c;}
+
+/* ---------- code ---------- */
+pre{background:#111315;color:#e7eae6;padding:16px 18px;overflow-x:auto;font-family:var(--mono);
+  font-size:13px;line-height:1.62;margin:16px 0;border:1px solid #000;}
+pre .c{color:#7f8a83;}
+pre .k{color:#8fd0c6;}
+pre .s{color:#e6c07b;}
+.codecap{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin:20px 0 -10px;}
+
+/* ---------- tables ---------- */
+table.grid{border-collapse:collapse;width:100%;font-size:14px;margin:18px 0;background:var(--panel);}
+table.grid th,table.grid td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+table.grid th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  background:#f0f0ec;}
+table.grid td:first-child{font-weight:600;white-space:nowrap;}
+
+/* ---------- widgets ---------- */
+.widget{border:1px solid var(--line);background:var(--panel);margin:24px 0;}
+.widget-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:12px 16px;border-bottom:1px solid var(--line-soft);}
+.widget-head .t{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);}
+.widget-head .s{font-size:12.5px;color:var(--faint);}
+.widget-body{padding:18px 16px;}
+.wrow{display:flex;align-items:center;gap:14px;margin:12px 0;flex-wrap:wrap;}
+.wrow label{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted);min-width:150px;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;background:var(--line);flex:1;min-width:160px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--accent);
+  border-radius:50%;cursor:pointer;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--accent);}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--accent);border:0;border-radius:50%;cursor:pointer;}
+.wval{font-family:var(--mono);font-size:12.5px;min-width:74px;text-align:right;color:var(--ink);}
+.readout{display:flex;gap:0;border:1px solid var(--line-soft);margin-top:14px;flex-wrap:wrap;}
+.readout div{flex:1 1 120px;padding:11px 14px;border-right:1px solid var(--line-soft);}
+.readout div:last-child{border-right:0;}
+.readout .k{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.readout .v{font-family:var(--mono);font-size:17px;margin-top:3px;color:var(--accent-ink);}
+.bars{margin-top:14px;}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-family:var(--mono);font-size:12px;}
+.bar .nm{width:96px;color:var(--muted);}
+.bar .tk{flex:1;height:14px;background:var(--line-soft);position:relative;}
+.bar .tk>i{position:absolute;inset:0 auto 0 0;background:var(--accent);transition:width .25s ease;}
+.bar .pc{width:58px;text-align:right;color:var(--ink);}
+.btn{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);
+  color:var(--panel);border:1px solid var(--ink);padding:8px 14px;cursor:pointer;}
+.btn:hover{background:var(--accent);border-color:var(--accent);}
+.btn.ghost{background:transparent;color:var(--ink);}
+.btn.ghost:hover{background:var(--ink);color:var(--panel);}
+
+/* ---------- funnel widget ---------- */
+.funnel{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.stage{flex:1 1 150px;border:1px solid var(--line);padding:12px 14px;cursor:pointer;background:var(--bg);}
+.stage[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);}
+.stage .st{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.stage .sn{font-family:var(--serif);font-size:18px;margin-top:4px;}
+.stage .sd{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.stage-detail{margin-top:14px;border:1px solid var(--line-soft);padding:14px 16px;font-size:14.5px;background:var(--bg);}
+.stage-detail b{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);}
+
+/* ---------- quiz ---------- */
+.quiz{border:1px solid var(--line);background:var(--panel);padding:18px 18px 14px;margin:18px 0;}
+.quiz .qh{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+  display:flex;justify-content:space-between;}
+.quiz .qq{font-weight:600;margin:8px 0 12px;font-size:15.5px;max-width:66ch;}
+.opts{display:flex;flex-direction:column;gap:6px;}
+.opt{text-align:left;font-family:var(--sans);font-size:14.5px;background:var(--bg);border:1px solid var(--line);
+  padding:9px 12px;cursor:pointer;color:var(--ink);}
+.opt:hover{border-color:var(--faint);}
+.opt.correct{border-color:var(--ok);background:rgba(31,122,61,.09);}
+.opt.wrong{border-color:var(--bad);background:rgba(161,42,31,.08);}
+.opt:disabled{cursor:default;}
+.fb{margin-top:10px;font-size:14px;display:none;border-top:1px solid var(--line-soft);padding-top:10px;color:var(--muted);}
+.fb b{color:var(--ink);}
+
+/* ---------- misc ---------- */
+.landscape{width:100%;height:auto;border:1px solid var(--line);background:var(--panel);margin:20px 0;}
+.chip{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid var(--line);padding:2px 7px;border-radius:3px;color:var(--muted);margin:0 4px 4px 0;}
+.colophon{border-top:2px solid var(--ink);margin-top:70px;padding-top:18px;font-size:13.5px;color:var(--faint);}
+.colophon a{text-decoration:underline;}
+.plainlink{text-decoration:underline;text-underline-offset:3px;}
+.navbtns{display:flex;justify-content:space-between;margin-top:34px;gap:12px;}
+
+@media (max-width:1000px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:22px 20px;}
+  .toc{columns:2;column-gap:26px;}
+  .side-note{display:none;}
+  .container,.bleed{padding:0 22px;}
+}
+@media print{
+  .sidebar,.navbtns{display:none;}
+  .layout{display:block;}
+  .widget{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">Interactive course
+    <b>Recommendation Systems, End&nbsp;to&nbsp;End</b>
+    <span style="color:var(--faint)">from “Be a happy and strong coder”</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-row"><span>Progress</span><span id="progText">0 / 0 lessons</span></div>
+    <div class="progress-bar"><span id="progBar"></span></div>
+  </div>
+  <div class="side-search"><input id="tocFilter" type="search" placeholder="Filter lessons…" aria-label="Filter lessons"></div>
+  <nav><ul class="toc" id="toc"></ul></nav>
+  <div class="side-note">
+    Built from 31 posts of the <a class="plainlink" href="https://happystrongcoder.substack.com/archive?sort=top">blog archive</a>.
+    Widgets run locally — no network, no tracking. Progress is kept in memory for this session only.
+  </div>
+</aside>
+<main class="main">
+
+<header class="hero">
+  <div class="container">
+    <div class="kicker">Interactive course · Recommender Systems</div>
+    <h1 class="display">Recommendation Systems, End to End</h1>
+    <p class="lede">A hand-built course for machine-learning engineers, assembled from the full post archive of the
+      <em>“Be a happy and strong coder”</em> blog — candidate generation to ranking to sequential generative models —
+      with live widgets, code, and self-checks on every module.</p>
+    <div class="meta-row">
+      <div><div class="k">Source</div><div class="v">31 posts</div></div>
+      <div><div class="k">Modules</div><div class="v">8</div></div>
+      <div><div class="k">Lessons</div><div class="v">36</div></div>
+      <div><div class="k">Widgets · quizzes</div><div class="v">7 · 6</div></div>
+      <div><div class="k">Est. time</div><div class="v">~6 h</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ M0 ============ -->
+<section class="module" id="m0" data-mod="M0">
+  <div class="container">
+    <div class="module-head"><div class="folio">M0</div><h2>Orientation</h2></div>
+    <p class="module-sub">Where the course is going, how to move through it, and the one mental model that makes every
+      later model fall into place: the recommendation funnel.</p>
+  </div>
+
+  <div class="container lesson" id="l0-1" data-lesson>
+    <h3><span class="n">01</span>How to use this course</h3>
+    <p>Recommender systems look intimidating because the literature is a pile of architectures. It is much easier once you
+      sort every model by <strong>which stage of the funnel it lives in</strong> and <strong>which problem it was invented to
+      fix</strong>. That is the organising principle here. Each lesson follows the same shape: the problem, the idea, the
+      mechanics, and a practical takeaway.</p>
+    <ul>
+      <li><strong>Track A — Retrieval:</strong> modules 2 and 6 (two-tower, FM, Twitter). Start here if your job is candidate generation.</li>
+      <li><strong>Track B — Ranking:</strong> module 3 (the CTR feature-interaction family). The densest, most practical module.</li>
+      <li><strong>Track C — Sequence &amp; generative:</strong> module 4 (SASRec → BERT4Rec → HSTU). The frontier.</li>
+      <li><strong>Track D — Multi-task:</strong> module 5 (MMoE, ESMM, the optimiser zoo). The industry default.</li>
+    </ul>
+    <div class="note why"><div class="lab">Prerequisites</div>
+      <p>Comfort with feed-forward networks, embeddings, and one DL framework (the blog uses TensorFlow; PyTorch equivalents
+        are noted). Softmax, cross-entropy, and basic probability are assumed. No prior recommender-systems knowledge required.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l0-2" data-lesson>
+    <h3><span class="n">02</span>The landscape</h3>
+    <p>Almost every post in the archive can be pinned to one of five rows below. Keep this map open in your head; the rest of
+      the course simply zooms into each cell.</p>
+  </div>
+  <div class="bleed">
+    <svg class="landscape" viewBox="0 0 1040 430" role="img" aria-label="Map of recommender-system model families">
+      <rect x="0" y="0" width="1040" height="430" fill="#fbfbf9"/>
+      <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="11" fill="#8b9097">
+        <text x="26" y="30">CANDIDATE GENERATION</text><text x="26" y="47">(millions → thousands, &lt;100 ms)</text>
+        <text x="26" y="126">RANKING</text><text x="26" y="143">(thousands → hundreds, richer model)</text>
+        <text x="26" y="222">SEQUENCE / GENERATIVE</text><text x="26" y="239">(order matters; next-item)</text>
+        <text x="26" y="318">MULTI-TASK</text><text x="26" y="335">(several objectives at once)</text>
+        <text x="26" y="404">INDUSTRIAL SYSTEMS</text>
+      </g>
+      <g stroke="#141618" stroke-opacity="0.14">
+        <line x1="0" y1="62" x2="1040" y2="62"/><line x1="0" y1="158" x2="1040" y2="158"/>
+        <line x1="0" y1="254" x2="1040" y2="254"/><line x1="0" y1="350" x2="1040" y2="350"/>
+      </g>
+      <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#17181a">
+        <g>
+          <rect x="250" y="20" width="150" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="39">Two-Tower</text>
+          <rect x="412" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="428" y="39">YouTube DNN</text>
+          <rect x="574" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="590" y="39">FM retriever</text>
+          <rect x="716" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="732" y="39">SimClusters</text>
+          <rect x="858" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="874" y="39">GraphJet / RealGraph</text>
+        </g>
+        <g>
+          <rect x="250" y="116" width="120" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="135">Wide &amp; Deep</text>
+          <rect x="382" y="116" width="90" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="135">DeepFM</text>
+          <rect x="484" y="116" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="500" y="135">DCN&nbsp;V2</text>
+          <rect x="576" y="116" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="592" y="135">xDeepFM</text>
+          <rect x="676" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="692" y="135">AutoInt</text>
+          <rect x="774" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="790" y="135">MaskNet</text>
+          <rect x="872" y="116" width="136" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="888" y="135">DLRM / FinalMLP</text>
+        </g>
+        <g>
+          <rect x="250" y="212" width="120" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="231">Transformer</text>
+          <rect x="382" y="212" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="231">BERT</text>
+          <rect x="482" y="212" width="92" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="498" y="231">SASRec</text>
+          <rect x="586" y="212" width="100" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="602" y="231">BERT4Rec</text>
+          <rect x="698" y="212" width="310" height="30" fill="none" stroke="#0f6f66"/><text x="714" y="231">HSTU — generative recommender</text>
+        </g>
+        <g>
+          <rect x="250" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="327">MMoE</text>
+          <rect x="342" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="358" y="327">ESMM</text>
+          <rect x="434" y="308" width="240" height="30" fill="none" stroke="#0f6f66"/><text x="450" y="327">MTL optimisers I–III</text>
+          <rect x="686" y="308" width="322" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="702" y="327">Industry practice: label design + loss weighting</text>
+        </g>
+      </g>
+      <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#17181a">
+        <rect x="250" y="379" width="200" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="398">Twitter: RealGraph → GraphJet → SimClusters → MaskNet → TwHIN</text>
+      </g>
+      <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="10.5" fill="#8b9097">
+        <text x="250" y="428">teal outline = the model the blog treats as a reference implementation</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ M1 ============ -->
+<section class="module" id="m1" data-mod="M1">
+  <div class="container">
+    <div class="module-head"><div class="folio">M1</div><h2>The funnel and its foundations</h2></div>
+    <p class="module-sub">Before any architecture: what an online recommender actually is, how YouTube framed it as
+      classification, how you keep recommendations healthy, and how you prove any of it worked.</p>
+  </div>
+
+  <div class="container lesson" id="l1-1" data-lesson>
+    <h3><span class="n">01</span>The anatomy of a recommender</h3>
+    <p>The blog’s very first idea — inherited from the YouTube paper — is that a production recommender is not one model but
+      a <strong>cascade</strong>. A corpus that is far too large to score exhaustively is cut down in stages, each stage more
+      expensive than the last.</p>
+    <ul>
+      <li><strong>Candidate generation (retrieval).</strong> Millions to billions → a few thousand. Cheap, parallel, heavy recall pressure.</li>
+      <li><strong>Ranking (scoring).</strong> Thousands → hundreds. The expensive model with rich user × item × context features.</li>
+      <li><strong>Reranking.</strong> The final ordering pass: diversity, business rules, freshness, exposure control.</li>
+    </ul>
+    <p>Click a stage to see what each one optimises for. This is the single most useful thing to know before you read any
+      recommendation paper: <em>which stage is it, and what did it improve there?</em></p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Funnel explorer</span><span class="s">click a stage</span></div>
+      <div class="widget-body">
+        <div class="funnel" id="funnel"></div>
+        <div class="stage-detail" id="funnelDetail"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l1-2" data-lesson>
+    <h3><span class="n">02</span>Recommendation as classification</h3>
+    <p>The YouTube paper reframes “what should we show?” as a multiclass problem: predict which of millions of videos a user
+      will watch next, given user features <code>U</code> and context <code>C</code>. That is an <strong>extreme multiclass</strong>
+      problem, and its solution — <strong>sampled softmax</strong> — is the reason retrieval models look the way they do.</p>
+    <div class="formula">P(video = i | U, C) = e^{v_i · u} / Σ_j e^{v_j · u}   <span class="mut">← softmax over the whole corpus is intractable</span>
+sampled estimator:   P̂ ∝ e^{v_i · u} / Σ_{j∈batch} e^{v_j · u} <span class="mut">← negatives drawn from a background distribution</span></div>
+    <p>The catch the blog stresses: the sampling distribution is <strong>not</strong> the true item distribution, so the
+      logits are biased and must be corrected by importance weighting — which becomes module 2’s central topic.</p>
+    <div class="note why"><div class="lab">Three details the paper gets right that most re-implementations miss</div>
+      <p><strong>Example age.</strong> Feed a feature that encodes the recency of the training example, so the model can track
+      non-stationary popularity at serving time. <strong>Watch-time weighted loss.</strong> Weight each positive by minutes
+      watched, and use <code>e^{T}·y + T</code> odds so a well-watched video is genuinely “more positive”.
+      <strong>Don’t shuffle the sequence.</strong> Positions in the user’s watch history are themselves a feature.</p>
+    </div>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Extreme-multiclass cost &amp; bias</span><span class="s">drag the sliders</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>corpus size (items)</label><input type="range" id="ssN" min="4" max="9" step="0.1" value="7"><span class="wval" id="ssNv">10,000,000</span></div>
+        <div class="wrow"><label>negatives per positive</label><input type="range" id="ssK" min="1" max="4096" step="1" value="512"><span class="wval" id="ssKv">512</span></div>
+        <div class="wrow"><label>popularity skew (exponent)</label><input type="range" id="ssS" min="0" max="2.2" step="0.05" value="1.1"><span class="wval" id="ssSv">1.10</span></div>
+        <div class="readout" id="ssOut"></div>
+        <div class="fb" id="ssNote" style="display:block"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l1-3" data-lesson>
+    <h3><span class="n">03</span>Diversity and long-term health</h3>
+    <p>A recommender optimising engagement alone will collapse the catalogue onto a handful of hits. The blog’s diversity post
+      argues this is not just an ethical concern but an <strong>ecosystem</strong> concern: starving the long tail of
+      engagement data means those items can never be learned well. Two metrics show up everywhere.</p>
+    <ul>
+      <li><strong>Effective Catalog Size (ECS)</strong> — from Netflix. Roughly, how many items account for a “typical hour” streamed. Higher is more diverse.</li>
+      <li><strong>Diversity Index (DI)</strong> — the Gini–Simpson index, <code>1 − Σ p_i²</code>. The probability two draws are different items; range <code>[0, 1]</code>.</li>
+    </ul>
+    <p>Diversity is injected at all three funnel stages — downsampling hot items in the candidate generator, multi-interest models
+      at ranking, and <strong>pointwise→listwise reranking</strong> (the popular DPP approach) at the end.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Effective catalog size &amp; diversity index</span><span class="s">four item shares</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>item A share</label><input type="range" id="eA" min="0" max="100" value="70"><span class="wval" id="eAv">70</span></div>
+        <div class="wrow"><label>item B share</label><input type="range" id="eB" min="0" max="100" value="20"><span class="wval" id="eBv">20</span></div>
+        <div class="wrow"><label>item C share</label><input type="range" id="eC" min="0" max="100" value="7"><span class="wval" id="eCv">7</span></div>
+        <div class="wrow"><label>item D share (rest)</label><span class="wval" id="eDv">3</span></div>
+        <div class="readout" id="eOut"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l1-4" data-lesson>
+    <h3><span class="n">04</span>A/B testing done right</h3>
+    <p>Everything upstream only matters if you can measure it. The blog’s AB-testing post walks from statistical hypothesis
+      testing to the subtle traps. The core vocabulary:</p>
+    <table class="grid">
+      <thead><tr><th>Concept</th><th>What it is</th><th>Trap</th></tr></thead>
+      <tbody>
+        <tr><td>p-value</td><td>P(observing data this extreme | H₀ true)</td><td>Misread as P(model is better)</td></tr>
+        <tr><td>Type I error (α)</td><td>False positive — ship a no-op change</td><td>Lowering α raises sample cost</td></tr>
+        <tr><td>Type II error (β)</td><td>False negative — miss a real win</td><td>Chasing α=0.05 while power is 0.3</td></tr>
+        <tr><td>Power</td><td>1 − β; chance of detecting a real effect</td><td>Low power ⇒ your “no effect” is meaningless</td></tr>
+      </tbody>
+    </table>
+    <div class="note why"><div class="lab">Practical takeaway</div>
+      <p>Run a <strong>power analysis before the test</strong>, not after. Sample size, effect size (MDE), α and power are four
+        faces of one relationship — fix three and the fourth is determined. A “flat” A/B result from an under-powered test tells
+        you nothing, and a low-sample-size test is the most common source of false wins.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="lq1" data-lesson>
+    <h3><span class="n">✓</span>Module check</h3>
+  </div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m1">
+      <div class="widget-head"><span class="t">Self-check · Module 1</span><span class="s" id="score-m1">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m1"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m0">↑ Orientation</button>
+    <button class="btn" data-goto="#m2">Candidate generation →</button>
+  </div></div>
+</section>
+
+<!-- ============ M2 ============ -->
+<section class="module" id="m2" data-mod="M2">
+  <div class="container">
+    <div class="module-head"><div class="folio">M2</div><h2>Candidate generation / retrieval</h2></div>
+    <p class="module-sub">The two-tower family: how to learn a representation space where “nearest neighbours of the user” is a
+      good recommendation — and how to stop the training signal from lying to you.</p>
+  </div>
+
+  <div class="container lesson" id="l2-1" data-lesson>
+    <h3><span class="n">01</span>Two-tower retrieval foundations</h3>
+    <p>The reference implementation is Google’s <em>Sampling-Bias-Corrected Neural Modeling for Large Corpus Item
+      Recommendations</em>. Two independent towers encode <code>&lt;user, context&gt;</code> and <code>&lt;item&gt;</code> into the
+      same vector space; relevance is a dot product.</p>
+    <div class="formula">score(u, i) = ⟨ φ_user(U, C), ψ_item(I) ⟩</div>
+    <p>Because the item tower does not see the user at inference, every item embedding can be precomputed and indexed — turning
+      “recommend” into an <strong>approximate nearest-neighbour search</strong>. That amortisation is the entire reason retrieval
+      is tractable at YouTube scale: <em>item modelling is separated from user modelling</em>.</p>
+    <h4>In-batch negatives</h4>
+    <p>Training uses every other item in the batch as a negative for a given user. Cheap and effective — but the batch is not a
+      random sample of the corpus, so the loss is biased. Two fixes from the paper:</p>
+    <ul>
+      <li><strong>logQ correction.</strong> Subtract <code>log q(i)</code> (the item’s sampling probability) from each logit, so
+        popular items are no longer over-penalised.</li>
+      <li><strong>Normalisation + temperature.</strong> L2-normalise embeddings and divide logits by a learned temperature
+        <code>τ</code>. The blog reports this pair moving recall by ≈5% in practice — small changes, large effects.</li>
+    </ul>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Normalisation &amp; temperature</span><span class="s">one query, five items</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>temperature τ</label><input type="range" id="tpT" min="0.1" max="5" step="0.05" value="1"><span class="wval" id="tpTv">1.00</span></div>
+        <div class="bars" id="tpBars"></div>
+        <div class="readout" id="tpOut"></div>
+        <div class="fb" id="tpNote" style="display:block"></div>
+      </div>
+    </div>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · logQ sampling-bias correction</span><span class="s">one item, sliders</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>raw logit s(u,i)</label><input type="range" id="lqS" min="-6" max="8" step="0.1" value="3"><span class="wval" id="lqSv">3.0</span></div>
+        <div class="wrow"><label>item sampling prob q(i)</label><input type="range" id="lqQ" min="-6" max="-2" step="0.05" value="-3"><span class="wval" id="lqQv">0.0010</span></div>
+        <div class="readout" id="lqOut"></div>
+        <div class="fb" id="lqNote" style="display:block"></div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+
+    <h4>Streaming frequency estimation</h4>
+    <p>logQ needs <code>q(i)</code> — but with a billion-item corpus that is continuously changing, you cannot count once and be
+      done. The paper’s contribution is an <strong>online estimator</strong> of the average gap between two hits of the same item,
+      using two hashed arrays and an exponential moving average:</p>
+  </div>
+  <div class="container">
+    <div class="codecap">streaming frequency estimation — the core loop</div>
+<pre><span class="c"># A[h]: last step item y was seen   B[h]: estimate of gap Δ between hits</span>
+<span class="k">for</span> t, y <span class="k">in</span> stream:
+    <span class="k">if</span> A[h(y)] &gt;= 0 <span class="k">and</span> B[h(y)] != 0:
+        B[h(y)] = (1 - alpha) * B[h(y)] + alpha * (t - A[h(y)])
+    <span class="k">else</span>:
+        B[h(y)] = (1 - alpha) * B[h(y)] + alpha * 0
+    A[h(y)] = t
+freq_hat(y) = 1 / B[h(y)]      <span class="c"># used as q(i) in the logQ correction</span></pre>
+    <p>Hash collisions under-estimate the gap (a bucket may contain several items), so the paper adds a multi-hash variant that
+      takes the <em>maximum</em> estimate across several hash functions — collisions can only under-predict. Higher
+      <code>alpha</code> tracks change faster but is noisier; the estimator is unbiased as <code>t → ∞</code>.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Streaming frequency estimator</span><span class="s">run the stream</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>true hit rate (per step)</label><input type="range" id="frP" min="1" max="20" value="8"><span class="wval" id="frPv">0.080</span></div>
+        <div class="wrow"><label>learning rate α</label><input type="range" id="frA" min="1" max="60" value="20"><span class="wval" id="frAv">0.20</span></div>
+        <div class="wrow"><button class="btn" id="frRun">Run 4000 steps</button><button class="btn ghost" id="frStep">+ 200 steps</button></div>
+        <div class="readout" id="frOut"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l2-2" data-lesson>
+    <h3><span class="n">02</span>Mixed negative sampling &amp; production upgrades</h3>
+    <p>Two-tower I fixes <em>popularity</em> bias. Two-tower II (Mixed Negative Sampling, MNS) fixes the next problem: with pure
+      in-batch negatives the batch is dominated by head items, so <strong>long-tail items are barely trained</strong>. MNS mixes
+      two negative pools — in-batch negatives <em>and</em> a uniformly-sampled batch from the whole corpus — and adapts the
+      gradient weights so both pools contribute correctly.</p>
+    <div class="note why"><div class="lab">Two-tower III — the engineering tail</div>
+      <p>The third post is pure production hygiene: the naive logQ table grows without bound. The fix is an
+      <strong>expiring table</strong> (a mutable hash map with an expiry) so stale counters are evicted and memory stays flat as
+      the corpus churns. Bias correction is not a one-off formula — it is a piece of streaming infrastructure you have to operate.</p>
+    </div>
+    <div class="codecap">two-tower retrieval — the skeleton (framework-agnostic)</div>
+<pre>user_vec = normalize(MLP_user(user_feats, context_feats))   <span class="c"># [B, d]</span>
+item_vec = normalize(MLP_item(item_feats))                    <span class="c"># [N, d]</span>
+logits   = user_vec @ item_vec.T / temperature               <span class="c"># [B, N]</span>
+logits   = logits - log(sampling_prob_of_each_item)          <span class="c"># logQ correction</span>
+loss     = cross_entropy(logits, labels=diagonal)            <span class="c"># in-batch softmax</span></pre>
+  </div>
+
+  <div class="container lesson" id="l2-3" data-lesson>
+    <h3><span class="n">03</span>Factorization Machines as a retriever</h3>
+    <p>Two-tower is not the only retriever. The blog’s FM→DeepFM post shows a second route: a <strong>Factorization Machine
+      can act as a candidate retriever</strong> by “splitting features” — keep the user side, freeze the item side, and the
+      second-order term collapses into an inner product you can precompute and index.</p>
+    <div class="formula">FM 2nd-order term:  Σ_{i&lt;j} ⟨v_i, v_j⟩ x_i x_j
+user–item part:     ⟨ (Σ_{i∈user} v_i x_i) , (Σ_{j∈item} v_j x_j) ⟩  <span class="mut">← one dot product, indexable</span></div>
+    <p>This is the conceptual bridge to ranking: the same FM that retrieves can, with a deep component bolted on, become the
+      <strong>DeepFM</strong> ranker. Retrieval and ranking are often the same primitive at different scales.</p>
+  </div>
+
+  <div class="container lesson" id="lq2"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m2">
+      <div class="widget-head"><span class="t">Self-check · Module 2</span><span class="s" id="score-m2">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m2"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m1">↑ Funnel &amp; foundations</button>
+    <button class="btn" data-goto="#m3">Ranking &amp; feature interaction →</button>
+  </div></div>
+</section>
+
+<!-- ============ M3 ============ -->
+<section class="module" id="m3" data-mod="M3">
+  <div class="container">
+    <div class="module-head"><div class="folio">M3</div><h2>Ranking &amp; feature interaction</h2></div>
+    <p class="module-sub">The CTR-model family tree. Every model here answers the same question — <em>how do I capture
+      interactions between features?</em> — and differs only in the mechanism it uses to do so.</p>
+  </div>
+
+  <div class="container lesson" id="l3-1" data-lesson>
+    <h3><span class="n">01</span>Wide &amp; Deep</h3>
+    <p>The ancestor of the whole family. One linear “wide” path with hand-crafted cross-product features, plus a deep MLP over
+      embeddings, joint-trained.</p>
+    <ul>
+      <li><strong>Memorization</strong> = the wide path. It learns frequent co-occurrences, e.g. the cross feature
+        <code>AND(user_installed_app=netflix, impression_app=pandora)</code>.</li>
+      <li><strong>Generalization</strong> = the deep path. Embeddings let the model score unseen items with low-dimensional similarity.</li>
+      <li><strong>Training</strong> = FTRL with L1 for the wide part (sparse, online), AdaGrad for the deep part.</li>
+    </ul>
+    <div class="note why"><div class="lab">The question the blog pauses on</div>
+      <p>“Can a deep model memorise too?” Yes — but less efficiently. A wide cross-product path gives the deep net a head start
+        and cuts training cost. Wide&amp;Deep is a trade-off, not a claim that linear models are superior.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l3-2" data-lesson>
+    <h3><span class="n">02</span>FM → DeepFM</h3>
+    <p>Factorization Machines learn a polynomial kernel by representing interactions as inner products of latent vectors — so
+      second-order interactions are learned even when a pair is never co-observed. DeepFM keeps the FM as the “wide” side and
+      adds a deep MLP: <strong>no manual feature crosses at all</strong>.</p>
+    <div class="formula">ŷ_DeepFM = sigmoid( ŷ_FM + ŷ_Deep )   <span class="mut">← FM and deep share the same embeddings</span></div>
+  </div>
+
+  <div class="container lesson" id="l3-3" data-lesson>
+    <h3><span class="n">03</span>DCN → DCN-V2</h3>
+    <p>DCN replaces the wide path with an explicit <strong>Cross Network</strong> that models bounded-order, explicit interactions
+      without feature engineering:</p>
+    <div class="formula">x_{l+1} = x_0 · (w_lᵀ x_l) + b_l + x_l</div>
+    <p>The first version is cheap but the expressiveness of each layer is limited. <strong>DCN-V2</strong> upgrades it with a
+      weight matrix and a <em>mixture of low-rank experts</em>, so the cross network can approximate the full matrix while staying
+      efficient for web-scale serving. This “expressiveness vs. serving cost” tension runs through the entire module.</p>
+  </div>
+
+  <div class="container lesson" id="l3-4" data-lesson>
+    <h3><span class="n">04</span>xDeepFM</h3>
+    <p>xDeepFM attacks a subtle flaw in DCN and DeepFM: their interactions are <em>bit-wise</em> (they mix elements within an
+      embedding). <strong>Compressed Interaction Network (CIN)</strong> makes interactions <em>vector-wise</em> — the same kind of
+      interaction an FM models — while keeping the order controllable and the cost bounded by sum-pooling.</p>
+    <table class="grid">
+      <thead><tr><th>Model</th><th>Interaction style</th><th>Order</th></tr></thead>
+      <tbody>
+        <tr><td>DeepFM</td><td>vector-wise (FM) + bit-wise (MLP)</td><td>2nd explicit, ∞ implicit</td></tr>
+        <tr><td>DCN</td><td>bit-wise (cross net)</td><td>bounded explicit</td></tr>
+        <tr><td>xDeepFM</td><td>vector-wise (CIN)</td><td>controllable explicit</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container lesson" id="l3-5" data-lesson>
+    <h3><span class="n">05</span>AutoInt</h3>
+    <p>AutoInt reaches for <strong>multi-head self-attention</strong> to model feature interactions, and — unlike the models
+      above — is <strong>interpretable</strong>: the attention weights tell you which features interacted. The post builds the
+      attention layer from scratch, which is exactly the mechanism that returns in module 4’s sequential models.</p>
+    <div class="formula">α_{i,j} = softmax_j( wᵀ [ e_i || e_j ] )   <span class="mut">← e_i are feature embeddings, not tokens</span></div>
+  </div>
+
+  <div class="container lesson" id="l3-6" data-lesson>
+    <h3><span class="n">06</span>DLRM (Facebook)</h3>
+    <p>DLRM is as much a systems paper as a modelling one. It keeps the industry-standard structure — dense features through an
+      MLP, sparse features through embeddings, pairwise dot-product interactions, then a final MLP — but deliberately stops at
+      <strong>second-order interactions</strong>, arguing higher order may not justify the cost.</p>
+    <div class="note why"><div class="lab">Why this paper matters</div>
+      <p>Half of it is training infrastructure: model parallelism for the large embedding table, data parallelism for the dense
+        MLP, and the communication cost between them. If you have ever sized an embedding table for a real system, this is the
+        paper that frames the problem.</p>
+    </div>
+    <div class="codecap">DLRM feature interaction — pairwise dot products, then take the triangle</div>
+<pre>e = stack(embeddings, axis=1)             <span class="c"># [B, F, d]</span>
+gram = e @ transpose(e, [0,2,1])          <span class="c"># [B, F, F] — all pairs</span>
+tril = band_part(gram, -1, 0)             <span class="c"># keep lower triangle (TF: tf.linalg.band_part)</span>
+inter = flatten(tril)                      <span class="c"># [B, F*(F+1)/2]</span>
+logit = MLP( concat(dense_mlp_out, inter) )</pre>
+  </div>
+
+  <div class="container lesson" id="l3-7" data-lesson>
+    <h3><span class="n">07</span>FinalMLP</h3>
+    <p>A short, surprising Huawei paper: drop the wide/cross path entirely and use <strong>two parallel MLP streams</strong>, with
+      a learned <em>feature-selection</em> mask per stream so each stream sees a different view, fused by a <strong>bilinear
+      fusion</strong> layer. It topped the Criteo CTR benchmark in 2023 — evidence that stream diversity plus a good fusion beats
+      architecture cleverness.</p>
+  </div>
+
+  <div class="container lesson" id="l3-8" data-lesson>
+    <h3><span class="n">08</span>MaskNet (Twitter)</h3>
+    <p>Twitter’s main ranker. The idea: an <strong>instance-guided mask</strong> — a per-example gate derived from the input —
+      is used to multiply the feature embeddings <em>before</em> the MLP. This is feature-wise multiplication (cf. FiLM), giving
+      instance-level non-linearity at low cost.</p>
+    <div class="formula">MaskBlock:  h = ReLU( W₂ · ReLU( W₁ · ( x ⊙ m ) ) ) ,  m = ReLU( W_g · x )</div>
+    <p>Two variants — <strong>SerialMaskNet</strong> and <strong>ParallelMaskNet</strong> — trade depth for width. The blog notes
+      the idea originally came from Sina Weibo (2021), a good reminder that production recsys ideas flow in both directions
+      across industry.</p>
+  </div>
+
+  <div class="container lesson" id="l3-9" data-lesson>
+    <h3><span class="n">09</span>Choosing a ranker</h3>
+    <p>Cheat-sheet for the whole family. In practice the gap between SOTA rankers on a public dataset is far smaller than the gap
+      created by your <em>features and labels</em> — so the choice below is usually a serving-cost decision, not an accuracy one.</p>
+    <table class="grid">
+      <thead><tr><th>Model</th><th>Mechanism</th><th>Cost</th><th>Best when</th></tr></thead>
+      <tbody>
+        <tr><td>Wide&amp;Deep</td><td>explicit crosses + MLP</td><td>low</td><td>strong known crosses, online learning</td></tr>
+        <tr><td>DeepFM</td><td>FM + MLP, shared embeddings</td><td>low</td><td>default strong baseline</td></tr>
+        <tr><td>DCN-V2</td><td>cross net + low-rank mixture</td><td>medium</td><td>want explicit order without FE</td></tr>
+        <tr><td>xDeepFM</td><td>vector-wise CIN</td><td>medium-high</td><td>vector-wise interactions matter</td></tr>
+        <tr><td>AutoInt</td><td>multi-head self-attention</td><td>high</td><td>interpretability wanted</td></tr>
+        <tr><td>DLRM</td><td>pairwise dots, systems-first</td><td>medium</td><td>huge sparse tables, multi-node</td></tr>
+        <tr><td>FinalMLP</td><td>two-stream MLP + bilinear fusion</td><td>low</td><td>simplicity with SOTA-ish results</td></tr>
+        <tr><td>MaskNet</td><td>instance-guided mask</td><td>low</td><td>cheap instance-level gating</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="container lesson" id="lq3"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m3">
+      <div class="widget-head"><span class="t">Self-check · Module 3</span><span class="s" id="score-m3">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m3"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m2">↑ Retrieval</button>
+    <button class="btn" data-goto="#m4">Sequence &amp; generative →</button>
+  </div></div>
+</section>
+
+<!-- ============ M4 ============ -->
+<section class="module" id="m4" data-mod="M4">
+  <div class="container">
+    <div class="module-head"><div class="folio">M4</div><h2>Sequential &amp; generative recommenders</h2></div>
+    <p class="module-sub">From “what is this user like?” to “what did they do next?”. Four papers trace the arc from the
+      Transformer, through two sequential classics, to the current generative frontier.</p>
+  </div>
+
+  <div class="container lesson" id="l4-1" data-lesson>
+    <h3><span class="n">01</span>Transformer from scratch</h3>
+    <p>The blog builds the Transformer in code before using it for recommendation, because the sequential models are modified
+      Transformers and the details matter. Two pieces to internalise:</p>
+    <ul>
+      <li><strong>Positional encoding.</strong> Self-attention is permutation-invariant, so order must be injected. Sinusoids give
+        each position a unique signature that generalises to unseen lengths.</li>
+      <li><strong>Multi-head self-attention.</strong> Project to Q, K, V; score, scale, mask, softmax, aggregate — in parallel heads.</li>
+    </ul>
+    <div class="formula">Attention(Q,K,V) = softmax( Q Kᵀ / √d_k ) V        PE(pos,2i) = sin(pos / 10000^{2i/d})</div>
+  </div>
+
+  <div class="container lesson" id="l4-2" data-lesson>
+    <h3><span class="n">02</span>BERT</h3>
+    <p>BERT is the encoder half plus a pretraining recipe. Understanding the recipe is what lets you read BERT4Rec:</p>
+    <ul>
+      <li><strong>Masked LM.</strong> Hide ~15% of tokens, predict them from <em>both</em> sides. Needs care, because the
+        <code>[MASK]</code> token never appears at fine-tuning time.</li>
+      <li><strong>Next Sentence Prediction</strong> — later shown less useful, but it is in the original design.</li>
+      <li><strong>Pretrain once, fine-tune per task</strong> — the paradigm that sequential recommenders inherit.</li>
+    </ul>
+  </div>
+
+  <div class="container lesson" id="l4-3" data-lesson>
+    <h3><span class="n">03</span>SASRec</h3>
+    <p><em>Self-Attentive Sequential Recommendation.</em> The Transformer decoder-only stack applied to item sequences: the model
+      attends to the past to predict the next item.</p>
+    <ul>
+      <li><strong>Causal mask</strong> — position <code>t</code> may only attend to <code>≤ t</code>. This is what makes it a
+        “recommend the next item” model rather than a masked one.</li>
+      <li><strong>Learned positional embeddings</strong> (not sinusoids), plus item embeddings; dropout and layer norm for stability.</li>
+      <li><strong>Training objective</strong>: binary — one positive (the true next item) versus sampled negatives — with a
+        per-timestep loss, not a softmax over the whole catalogue.</li>
+    </ul>
+    <div class="codecap">SASRec — the causal mask is the whole trick (PyTorch)</div>
+<pre>S = scores(q, k)                              <span class="c"># [B, T, T]</span>
+mask = torch.tril(torch.ones(T, T)).bool()    <span class="c"># j &gt; t is masked out</span>
+S = S.masked_fill(~mask, float("-inf"))
+attn = softmax(S, dim=-1) @ v                  <span class="c"># only the past is visible</span></pre>
+  </div>
+
+  <div class="container lesson" id="l4-4" data-lesson>
+    <h3><span class="n">04</span>BERT4Rec</h3>
+    <p>The bidirectional counterpart: instead of predicting strictly the next item, mask a random item in the sequence and
+      predict it from both directions — a <strong>cloze</strong> objective for behaviour sequences.</p>
+    <table class="grid">
+      <thead><tr><th></th><th>SASRec</th><th>BERT4Rec</th></tr></thead>
+      <tbody>
+        <tr><td>Attention</td><td>unidirectional (causal)</td><td>bidirectional</td></tr>
+        <tr><td>Objective</td><td>next-item</td><td>masked-item (cloze), output softmax over items</td></tr>
+        <tr><td>Sees future</td><td>no</td><td>yes (within the sequence)</td></tr>
+        <tr><td>Needs</td><td>1 positive + negatives</td><td>softmax over item vocabulary</td></tr>
+      </tbody>
+    </table>
+    <p>Bidirectional context helps when history is dense; the cost is that you can no longer simply “predict the next token”. In
+      production, the next-item formulation is usually what you actually need at serving time.</p>
+  </div>
+
+  <div class="container lesson" id="l4-5" data-lesson>
+    <h3><span class="n">05</span>HSTU — generative recommenders</h3>
+    <p>“Actions Speak Louder than Words: Trillion-Parameter Sequential Transducers for Generative Recommendations.” This is the
+      post the blog treats as a genuine paradigm shift, and it is worth reading against the critiques it makes of SASRec/BERT4Rec.</p>
+    <ul>
+      <li><strong>Unify the feature space.</strong> Sparse (categorical/token) and dense (CTR stats, counts, aggregated signals)
+        features are projected into one sequential representation — academic recsys often ignored dense features entirely.</li>
+      <li><strong>Retrieval = next content-token prediction</strong> and <strong>ranking = next action-token prediction</strong>.
+        Recommendation becomes transduction, the same shape as GPT.</li>
+      <li><strong>Amortise the cost.</strong> Like two-tower, separate the expensive part so inference stays within a
+        few-hundred-millisecond budget at scale.</li>
+      <li><strong>High-performance attention</strong> (HSTU) that handles long, non-stationary behaviour sequences and
+        streaming data — the two things academic sequential models mostly dodge.</li>
+    </ul>
+    <div class="note why"><div class="lab">The critique the blog endorses</div>
+      <p>Real recommendation logs are <em>non-stationary streams</em>, not static datasets you can epoch over. A model that
+        ignores serving latency, feature engineering, and the CG/ranker split is not a production model, however good its
+        offline numbers. HSTU is interesting precisely because it keeps those constraints in view.</p>
+    </div>
+  </div>
+  <div class="container lesson" id="lq4"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m4">
+      <div class="widget-head"><span class="t">Self-check · Module 4</span><span class="s" id="score-m4">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m4"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m3">↑ Ranking</button>
+    <button class="btn" data-goto="#m5">Multi-task learning →</button>
+  </div></div>
+</section>
+
+<!-- ============ M5 ============ -->
+<section class="module" id="m5" data-mod="M5">
+  <div class="container">
+    <div class="module-head"><div class="folio">M5</div><h2>Multi-task learning</h2></div>
+    <p class="module-sub">Real systems predict clicks <em>and</em> conversions <em>and</em> dwell time <em>and</em> likes at once.
+      This is the industry default — and the optimiser literature around it is a cautionary tale.</p>
+  </div>
+
+  <div class="container lesson" id="l5-1" data-lesson>
+    <h3><span class="n">01</span>MMoE — modelling task relationships</h3>
+    <p>Start from the baseline: a <strong>shared bottom</strong> MLP feeding task-specific towers. Its weakness is that
+      performance collapses when tasks are only loosely related. <strong>MMoE</strong> replaces the shared bottom with several
+      <em>experts</em> and gives each task its own <strong>gating network</strong>:</p>
+    <div class="formula">f_k(x) = Σ_i g^k(x)_i · f_i(x) ,   g^k(x) = softmax(W_{g_k} x)</div>
+    <p>Each task soft-shares the experts through its own gate — the same “multiple heads, weighted combination” idea as
+      multi-head attention, applied to tasks instead of features.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · MMoE gating</span><span class="s">one input, two tasks</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>input x₁</label><input type="range" id="mx1" min="-2" max="2" step="0.05" value="0.8"><span class="wval" id="mx1v">0.80</span></div>
+        <div class="wrow"><label>input x₂</label><input type="range" id="mx2" min="-2" max="2" step="0.05" value="-0.4"><span class="wval" id="mx2v">-0.40</span></div>
+        <div class="bars" id="moBars"></div>
+        <div class="readout" id="moOut"></div>
+        <div class="fb" id="moNote" style="display:block"></div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+
+    <div class="lesson" id="l5-2" data-lesson style="padding-top:34px">
+    <h3><span class="n">02</span>ESMM — the entire space</h3>
+    <p>Conversion prediction has two traps: <strong>sample selection bias</strong> (you only observe conversion on clicked
+      samples, which are a biased subset) and <strong>sparse labels</strong> (conversions are rare). Alibaba’s ESMM sidesteps both
+      by modelling the <em>entire space</em> with two towers that share embeddings:</p>
+    <div class="formula">pCVR = pCTCVR / pCTR
+Loss = L(CTR) + L(CTCVR)   <span class="mut">← CTCVR label is observed on every impression</span></div>
+    <p>By predicting the composite CTCVR on <em>all</em> impressions and dividing by CTR at inference, the CVR tower trains on
+      far more data and never sees the biased clicked-only subset directly. Two tasks, two patterns of MTL — the blog calls this
+      the <strong>sequential / additive</strong> pattern.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l5-3" data-lesson>
+    <h3><span class="n">03</span>Multi-task optimisation I — weighting the losses</h3>
+    <p>Once you have several losses, how do you weight them? The first family adapts the weights during training:</p>
+    <ul>
+      <li><strong>Uncertainty weighting</strong> (Kendall et al.) — learn a per-task log-variance σ²; weight each loss by
+        <code>1/(2σ²)</code> with a penalty term, so noisy tasks are down-weighted automatically. Elegant and cheap.</li>
+      <li><strong>Gradient normalisation (GradNorm)</strong> — rescale gradient magnitudes so all tasks train at similar rates,
+        balancing by <em>learning speed</em> rather than by loss value.</li>
+    </ul>
+    <div class="formula">L = Σ_k [ (1/(2σ_k²)) · L_k + log σ_k ]   <span class="mut">← uncertainty weighting</span></div>
+  </div>
+
+  <div class="container lesson" id="l5-4" data-lesson>
+    <h3><span class="n">04</span>Multi-task optimisation II — schedules and multi-objective views</h3>
+    <ul>
+      <li><strong>Dynamic Weight Averaging (DWA)</strong> — weight each task by the ratio of its recent loss to its loss a few steps ago; tasks improving slowly get boosted.</li>
+      <li><strong>Dynamic Task Prioritisation (DTP)</strong> — weight tasks by difficulty (e.g. via KPI/K), focusing capacity on the hard tasks.</li>
+      <li><strong>MTL as multi-objective optimisation</strong> — treat the task gradients as a Pareto problem (MGDA / PE-LTR) and find a descent direction that does not harm any task.</li>
+    </ul>
+  </div>
+
+  <div class="container lesson" id="l5-5" data-lesson>
+    <h3><span class="n">05</span>Multi-task optimisation III — and the reality check</h3>
+    <ul>
+      <li><strong>PCGrad (gradient surgery)</strong> — when two task gradients conflict (negative cosine similarity), project each
+        onto the normal plane of the other. Conflicts, not magnitudes, are the enemy.</li>
+      <li><strong>IMTL (impartial learning)</strong> — find a gradient that is equally “good” for all tasks, via a closed-form
+        projection (IMTL-G) or a loss-balance variant (IMTL-L).</li>
+      <li><strong>Random Loss Weighting (RLW)</strong> — literally sample weights at random; surprisingly competitive, which is
+        itself the clue.</li>
+    </ul>
+    <div class="note why"><div class="lab">The punchline the blog highlights</div>
+      <p>By the end of 2023 two papers argued that most MTL optimisers <strong>do not reliably beat simple weighted sum
+        (scalarization)</strong>. In other words: the elaborate gradient-surgery machinery often loses to tuning a few fixed
+        weights — or to better labels and a shared trunk. Reach for PCGrad/IMTL when you have a diagnosed, reproducible conflict;
+        not as a default. Loss weights are a hyper-parameter, and static ones are a strong baseline.</p>
+    </div>
+  </div>
+  <div class="container lesson" id="lq5"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m5">
+      <div class="widget-head"><span class="t">Self-check · Module 5</span><span class="s" id="score-m5">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m5"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m4">↑ Sequence</button>
+    <button class="btn" data-goto="#m6">Twitter case study →</button>
+  </div></div>
+</section>
+
+<!-- ============ M6 ============ -->
+<section class="module" id="m6" data-mod="M6">
+  <div class="container">
+    <div class="module-head"><div class="folio">M6</div><h2>Case study: Twitter’s recommender</h2></div>
+    <p class="module-sub">A six-post deep dive into one real system, read in the order data actually flows: who to look at
+      (RealGraph), what is happening now (GraphJet), what to recommend (SimClusters), and how to rank it (MaskNet → TwHIN).</p>
+  </div>
+
+  <div class="container lesson" id="l6-1" data-lesson>
+    <h3><span class="n">01</span>RealGraph — in-network retrieval</h3>
+    <p>The oldest component (2014) and the clearest example of <strong>feature-engineered retrieval</strong>. RealGraph predicts
+      the probability that user A will interact with user B, built from a directed interaction graph.</p>
+    <ul>
+      <li><strong>Graph generation</strong> — aggregate interactions (follows, retweets, replies, profile visits) into edges with features.</li>
+      <li><strong>Edge + user features</strong> — interaction counts and rates by type, plus node-level signals.</li>
+      <li><strong>Model</strong> — logistic regression; the value is the <em>features and the pipeline</em>, not the model class.</li>
+    </ul>
+    <div class="note why"><div class="lab">Why a 2014 LR model is worth studying</div>
+      <p>It shows that a candidate retriever can be a <strong>lightweight probabilistic score over a graph</strong>, refreshed
+        offline. Retrieval need not be a neural network — recall and freshness often matter more than model capacity.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l6-2" data-lesson>
+    <h3><span class="n">02</span>GraphJet — real-time graph processing</h3>
+    <p>A 2016 in-memory engine for <strong>real-time</strong> recommendations: it maintains a sliding-window bipartite graph of
+      recent user↔tweet interactions and answers “who engaged with things like this?” in milliseconds.</p>
+    <ul>
+      <li><strong>Edge insertions</strong> stream in; old edges expire on a rolling window.</li>
+      <li><strong>ID mapping + memory allocation</strong> are the whole engineering story — efficient arrays, no GC pressure.</li>
+      <li><strong>Read-only optimisations</strong> and <strong>edge lookups by sampling</strong> keep reads lock-free.</li>
+    </ul>
+    <p>The lesson: <em>freshness is a retrieval feature</em>. RealGraph covers the stable graph; GraphJet covers the last few
+      minutes.</p>
+  </div>
+
+  <div class="container lesson" id="l6-3" data-lesson>
+    <h3><span class="n">03</span>SimClusters — community-based representations</h3>
+    <p>Twitter’s most advanced candidate retriever, and the most conceptually interesting. It produces one
+      <strong>sparse community vector</strong> for every user and item, so recommendations become “find items topical to this
+      user’s communities”.</p>
+    <h4>Community discovery, in three steps</h4>
+    <ol>
+      <li><strong>Similarity graph of right nodes</strong> — interconnect users (or content) by a similarity notion.</li>
+      <li><strong>Communities of right nodes</strong> — find dense clusters (Metropolis–Hastings style sampling at scale); each community is characterised by its influencers.</li>
+      <li><strong>Communities of left nodes</strong> — project the communities back onto the full set of users/items.</li>
+    </ol>
+    <div class="note why"><div class="lab">Why SimClusters stays readable</div>
+      <p>Every dimension <em>is</em> a community, so the embedding is interpretable (unlike MF or generic graph embeddings), the
+        vectors are sparse and invertible for ANN indices, and new/churning content can be placed in the same space immediately.
+        Scale claimed: ~10⁹ users, ~10¹¹ edges.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l6-4" data-lesson>
+    <h3><span class="n">04</span>MaskNet in production</h3>
+    <p>The ranker that sits on top of the retrievers above (see module 3.8). The case-study view: a low-cost,
+      instance-guided gating ranker is exactly what you want when the retriever has already narrowed candidates to a few hundred
+      and you need to score them inside a tight latency budget.</p>
+  </div>
+
+  <div class="container lesson" id="l6-5" data-lesson>
+    <h3><span class="n">05</span>TwHIN &amp; the system picture</h3>
+    <p>The closing post ties it together with <strong>TwHIN</strong> — Twitter’s Heterogeneous Information Network embeddings —
+      and, more importantly, the operational problems nobody puts in a paper:</p>
+    <ul>
+      <li><strong>Parameter drift across model versions</strong> — embeddings must stay compatible as models are retrained.</li>
+      <li><strong>Multi-modal embeddings</strong> — users and different content types share one space.</li>
+      <li><strong>Deployment reality</strong> — offline batch jobs, low-latency online stores, and the hand-off between them.</li>
+    </ul>
+    <div class="note why"><div class="lab">The through-line of the whole case study</div>
+      <p>A real recommender is not one clever model. It is a <strong>layered machine</strong> where each layer solves a different
+        time-scale and recall problem — stable graph (RealGraph), fresh graph (GraphJet), topical communities (SimClusters),
+        cheap accurate scoring (MaskNet), shared representations (TwHIN).</p>
+    </div>
+  </div>
+  <div class="container lesson" id="lq6"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m6">
+      <div class="widget-head"><span class="t">Self-check · Module 6</span><span class="s" id="score-m6">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m6"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m5">↑ Multi-task</button>
+    <button class="btn" data-goto="#m7">Practical toolkit →</button>
+  </div></div>
+</section>
+
+<!-- ============ M7 ============ -->
+<section class="module" id="m7" data-mod="M7">
+  <div class="container">
+    <div class="module-head"><div class="folio">M7</div><h2>Practical toolkit &amp; capstone</h2></div>
+    <p class="module-sub">Everything above is theory until you can shape the data and assemble a pipeline. This module is the
+      hands-on counterpart.</p>
+  </div>
+
+  <div class="container lesson" id="l7-1" data-lesson>
+    <h3><span class="n">01</span>Data preprocessing with Pandas (Criteo)</h3>
+    <p>The blog’s practical guide uses the Criteo 1TB click-logs dataset — 13 numeric features, 26 hashed categorical features,
+      and a click label. The reusable moves:</p>
+    <ul>
+      <li><strong>Analyse first</strong> — feature distributions and pairwise relationships before any model.</li>
+      <li><strong>Handle sparsity</strong> — categorical features are hashed and high-cardinality; downsampling negatives is often necessary.</li>
+      <li><strong>Build meta-info</strong> — a schema of feature→(type, cardinality, vocab) that both training and serving read.</li>
+    </ul>
+    <div class="codecap">Criteo-style preprocessing with Pandas</div>
+<pre>df = pd.read_csv(path, sep="\t", names=cols)
+cat_cols = [c <span class="k">for</span> c <span class="k">in</span> df <span class="k">if</span> c.startswith("C")]
+num_cols = [c <span class="k">for</span> c <span class="k">in</span> df <span class="k">if</span> c.startswith("I")]
+
+<span class="c"># downsample the majority (non-click) class to a target rate</span>
+pos = df[df.label == 1]; neg = df[df.label == 0]
+neg = neg.sample(frac=neg_rate_keep, random_state=0)
+train = pd.concat([pos, neg]).sample(frac=1.0, random_state=0)
+
+<span class="c"># per-column vocab sizes → embedding table meta-info</span>
+meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k">in</span> cat_cols}</pre>
+    <div class="note why"><div class="lab">Why this matters more than the model</div>
+      <p>Negative downsampling changes the prior, so <strong>the served probability must be recalibrated</strong> back to the true
+        rate. Getting the preprocessing and calibration right moves production metrics more than swapping rankers.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l7-2" data-lesson>
+    <h3><span class="n">02</span>Capstone — design one system end to end</h3>
+    <p>Pick a domain you know (videos, products, music, jobs). Work the funnel top to bottom and write one paragraph per box.
+      A reasonable reference answer is sketched alongside.</p>
+    <table class="grid">
+      <thead><tr><th>Stage</th><th>Decisions to make</th><th>Reasonable default</th></tr></thead>
+      <tbody>
+        <tr><td>Objectives</td><td>What single north-star + guardrails?</td><td>Watch-time/engagement; diversity + freshness as guardrails</td></tr>
+        <tr><td>Labels</td><td>What is a positive? weighting?</td><td>Click positive, weighted by dwell; separate CVR head</td></tr>
+        <tr><td>Retrieval</td><td>One source or many?</td><td>Two-tower + a fresh-graph source + a popularity fallback</td></tr>
+        <tr><td>Ranking</td><td>Which ranker? how many features?</td><td>DeepFM/DCN-V2 with user × item × context crosses</td></tr>
+        <tr><td>Multi-task</td><td>Which heads? how combined?</td><td>CTR + CVR (ESMM) + a long-term signal</td></tr>
+        <tr><td>Reranking</td><td>What constraints?</td><td>DPP for diversity, freshness and exposure rules</td></tr>
+        <tr><td>Evaluation</td><td>Offline + online?</td><td>Recall@K offline; powered A/B with pre-registered MDE</td></tr>
+      </tbody>
+    </table>
+    <div class="note why"><div class="lab">You have finished the course</div>
+      <p>If you can defend each row above with a mechanism from modules 1–6, you can read almost any recommender paper and place
+        it — which stage it is, what problem it fixes, and what it costs.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="colophon">
+      <p style="max-width:66ch">Interactive course assembled from the 31 posts of <em>“Be a happy and strong coder”</em>
+        (Fan) — <a class="plainlink" href="https://happystrongcoder.substack.com/archive?sort=top">happystrongcoder.substack.com</a>.
+        Every lesson links back to a source post; the diagrams, widgets and quizzes are original to this course. Quotes and
+        figures are attributed to the blog; external papers are named by title so you can find the originals.</p>
+      <p style="font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:14px">
+        Single-file artifact · offline · AutoClaw</p>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s,r){return (r||document).querySelector(s);};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+  function fmt(n,d){ if(d==null)d=0; return Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  function el(tag,cls,txt){ var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+
+  /* ---------------- progress + TOC ---------------- */
+  var lessons = $$("[data-lesson]");
+  var total = lessons.length;
+  var seen = 0, seenSet = {};
+  var toc = $("#toc");
+  var curModLi = null;
+  $$("section.module").forEach(function(mod){
+    var id = mod.id;
+    var head = $(".module-head h2", mod);
+    var folio = $(".folio", mod);
+    var li = el("li","mod", (folio?folio.textContent:"") + " · " + (head?head.textContent:""));
+    toc.appendChild(li);
+    var lessonEls = $$("[data-lesson]", mod);
+    lessonEls.forEach(function(les){
+      var h3 = $("h3", les); if(!h3) return;
+      var label = h3.textContent.replace(/^\s*\d+\s*/,"").trim();
+      var a = el("a",null,label); a.href = "#"+les.id; a.dataset.target = les.id;
+      toc.appendChild(a);
+    });
+  });
+  function updateProgress(){
+    $("#progText").textContent = seen + " / " + total + " lessons";
+    $("#progBar").style.width = (total? (seen/total*100):0) + "%";
+  }
+  updateProgress();
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var id = en.target.id;
+      if(en.isIntersecting && !seenSet[id]){ seenSet[id]=1; seen++; updateProgress(); }
+    });
+  },{rootMargin:"-20% 0px -70% 0px"});
+  lessons.forEach(function(l){ io.observe(l); });
+
+  /* active TOC via scroll position */
+  var tocLinks = $$("#toc a");
+  function setActive(id){
+    tocLinks.forEach(function(a){ a.classList.toggle("active", a.dataset.target===id); });
+  }
+  var io2 = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting) setActive(en.target.id); });
+  },{rootMargin:"-15% 0px -75% 0px"});
+  lessons.forEach(function(l){ io2.observe(l); });
+
+  $$("[data-goto]").forEach(function(b){
+    b.addEventListener("click",function(){ var t=$(b.dataset.goto); if(t) t.scrollIntoView({behavior:"smooth"}); });
+  });
+
+  /* ---------------- funnels ---------------- */
+  var stages = [
+    {t:"Stage 1", n:"Candidate generation", d:"<b>Goal</b> — recall. Cut 10⁶–10⁹ items down to a few thousand, cheaply, using two-tower / FM / graph retrievers and an ANN index. Any item missed here can never be recommended."},
+    {t:"Stage 2", n:"Ranking",  d:"<b>Goal</b> — precision. Score the few thousand survivors with the expensive model (DeepFM / DCN-V2 / MaskNet) over rich user × item × context features."},
+    {t:"Stage 3", n:"Reranking", d:"<b>Goal</b> — constraints. Order the last few hundred for the final slate: diversity (DPP), freshness, exposure and business rules. The smallest candidate set in the system."}
+  ];
+  var funnel = $("#funnel"), fDetail = $("#funnelDetail");
+  if(funnel){
+    stages.forEach(function(s,i){
+      var c = el("div","stage"); c.setAttribute("role","button"); c.tabIndex=0;
+      c.setAttribute("aria-pressed", i===0 ? "true":"false");
+      c.appendChild(el("div","st",s.t)); c.appendChild(el("div","sn",s.n));
+      c.appendChild(el("div","sd", s.n==="Ranking"?"thousands → hundreds":(s.n==="Reranking"?"hundreds → final slate":"millions → thousands")));
+      function pick(){ $$(".stage",funnel).forEach(function(x){x.setAttribute("aria-pressed","false");}); c.setAttribute("aria-pressed","true"); fDetail.innerHTML=s.d; }
+      c.addEventListener("click",pick); c.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();} });
+      funnel.appendChild(c);
+    });
+    fDetail.innerHTML = stages[0].d;
+  }
+
+  /* ---------------- extreme multiclass ---------------- */
+  var ssN=$("#ssN"), ssK=$("#ssK"), ssS=$("#ssS");
+  function ssUpdate(){
+    var N=Math.pow(10,+ssN.value), K=+ssK.value, s=+ssS.value;
+    $("#ssNv").textContent = fmt(N);
+    $("#ssKv").textContent = fmt(K);
+    $("#ssSv").textContent = s.toFixed(2);
+    var speed = N/Math.max(K,1);
+    var frac = K/N*100;
+    $("#ssOut").innerHTML =
+      "<div><div class='k'>full-softmax terms</div><div class='v'>"+fmt(N)+"</div></div>"+
+      "<div><div class='k'>sampled terms/example</div><div class='v'>"+fmt(K)+"</div></div>"+
+      "<div><div class='k'>compute reduction</div><div class='v'>"+fmt(speed,1)+"×</div></div>"+
+      "<div><div class='k'>corpus seen / example</div><div class='v'>"+frac.toFixed(4)+"%</div></div>";
+    $("#ssNote").innerHTML = "<b>Bias is the price.</b> Full softmax is a true probability over "+fmt(N)+
+      " items; sampled softmax estimates it from "+fmt(K)+" draws and is exact only if those draws match the true item "+
+      "distribution. With popularity skew exponent s = "+s.toFixed(2)+", the tail is under-sampled and logits must be corrected (next widget).";
+  }
+  [ssN,ssK,ssS].forEach(function(x){ x.addEventListener("input",ssUpdate); });
+  if(ssN) ssUpdate();
+
+  /* ---------------- ECS / DI ---------------- */
+  var eA=$("#eA"), eB=$("#eB"), eC=$("#eC");
+  function ecsUpdate(){
+    var a=+eA.value, b=+eB.value, c=+eC.value;
+    var sum=a+b+c; var d=Math.max(0,100-sum);
+    var raw=[a,b,c,d], tot=raw.reduce(function(x,y){return x+y;},0)||1;
+    var p=raw.map(function(x){return x/tot;});
+    var di=1-p.reduce(function(s,x){return s+x*x;},0);
+    var inv=1/p.reduce(function(s,x){return s+x*x;},0);
+    $("#eAv").textContent=a; $("#eBv").textContent=b; $("#eCv").textContent=c; $("#eDv").textContent=d;
+    $("#eOut").innerHTML =
+      "<div><div class='k'>diversity index (1−Σp²)</div><div class='v'>"+di.toFixed(3)+"</div></div>"+
+      "<div><div class='k'>effective items (1/Σp²)</div><div class='v'>"+inv.toFixed(2)+"</div></div>"+
+      "<div><div class='k'>corpus exploited</div><div class='v'>"+((1-(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]+p[3]*p[3]))*100).toFixed(0)+"%</div></div>";
+  }
+  [eA,eB,eC].forEach(function(x){ x.addEventListener("input",ecsUpdate); });
+  if(eA) ecsUpdate();
+
+  /* ---------------- logQ ---------------- */
+  var lqS=$("#lqS"), lqQ=$("#lqQ");
+  function lqUpdate(){
+    var s=+lqS.value, q=Math.pow(10,+lqQ.value);
+    $("#lqSv").textContent=s.toFixed(1);
+    $("#lqQv").textContent=q.toFixed(q<0.01?5:4);
+    var corr = s - Math.log(q);
+    $("#lqOut").innerHTML=
+      "<div><div class='k'>raw logit s</div><div class='v'>"+s.toFixed(2)+"</div></div>"+
+      "<div><div class='k'>−log q(i)</div><div class='v'>"+(-Math.log(q)).toFixed(2)+"</div></div>"+
+      "<div><div class='k'>corrected logit</div><div class='v'>"+corr.toFixed(2)+"</div></div>";
+    $("#lqNote").innerHTML="Items the sampler sees often (large q, head items) get the biggest subtraction, so their "+
+      "over-penalisation as in-batch negatives is cancelled. Set q low (a rare, long-tail item) and the correction barely moves — which is correct: rare items were never over-penalised.";
+  }
+  [lqS,lqQ].forEach(function(x){ x.addEventListener("input",lqUpdate); });
+  if(lqS) lqUpdate();
+
+  /* ---------------- streaming frequency estimation ---------------- */
+  var frP=$("#frP"), frA=$("#frA");
+  var frState={A:-1,B:0,t:0,lastEst:0};
+  function frSim(steps,alpha,p){
+    for(var i=0;i<steps;i++){
+      frState.t++;
+      var hit = Math.random()<p;
+      if(hit){
+        if(frState.A>=0 && frState.B!==0) frState.B=(1-alpha)*frState.B + alpha*(frState.t-frState.A);
+        else frState.B=(1-alpha)*frState.B;
+        frState.A=frState.t;
+      }
+    }
+    frState.lastEst = frState.B>0 ? 1/frState.B : 0;
+  }
+  function frRender(){
+    var p=+frP.value/100, alpha=+frA.value/100;
+    $("#frPv").textContent=p.toFixed(3);
+    $("#frAv").textContent=alpha.toFixed(2);
+    var trueRate=p, est=frState.lastEst;
+    var err = trueRate>0 ? Math.abs(est-trueRate)/trueRate*100 : 0;
+    $("#frOut").innerHTML=
+      "<div><div class='k'>steps simulated</div><div class='v'>"+fmt(frState.t)+"</div></div>"+
+      "<div><div class='k'>true hit rate</div><div class='v'>"+trueRate.toFixed(4)+"</div></div>"+
+      "<div><div class='k'>estimated rate</div><div class='v'>"+(est?est.toFixed(4):"—")+"</div></div>"+
+      "<div><div class='k'>relative error</div><div class='v'>"+(est?err.toFixed(2)+"%":"—")+"</div></div>";
+  }
+  if(frP){ $("#frRun").addEventListener("click",function(){ frSim(4000,+frA.value/100,+frP.value/100); frRender(); });
+    $("#frStep").addEventListener("click",function(){ frSim(200,+frA.value/100,+frP.value/100); frRender(); });
+    frP.addEventListener("input",frRender); frA.addEventListener("input",frRender); frRender(); }
+
+  /* ---------------- MMoE gating ---------------- */
+  var mx1=$("#mx1"), mx2=$("#mx2");
+  function softmax(a){ var m=Math.max(a[0],a[1]); var e=[Math.exp(a[0]-m),Math.exp(a[1]-m)]; var s=e[0]+e[1]; return [e[0]/s,e[1]/s]; }
+  function relu(x){ return x>0?x:0; }
+  function moUpdate(){
+    var x1=+mx1.value, x2=+mx2.value;
+    $("#mx1v").textContent=x1.toFixed(2); $("#mx2v").textContent=x2.toFixed(2);
+    var e1=relu(1.0*x1+0.5*x2), e2=relu(-0.4*x1+0.9*x2);
+    var g1=softmax([1.2*x1-0.8*x2, 0.4*x1+1.1*x2]);
+    var g2=softmax([-0.9*x1+1.3*x2, 1.0*x1+0.6*x2]);
+    var y1=g1[0]*e1+g1[1]*e2, y2=g2[0]*e1+g2[1]*e2;
+    var bars=$("#moBars");
+    bars.innerHTML="";
+    function row(name,vals,color){
+      [["expert 1",vals[0]],["expert 2",vals[1]]].forEach(function(v){
+        var r=el("div","bar"); r.appendChild(el("div","nm",name+" · "+v[0]));
+        var tk=el("div","tk"); var i=el("i"); i.style.width=(v[1]*100).toFixed(1)+"%"; tk.appendChild(i);
+        r.appendChild(tk); r.appendChild(el("div","pc",(v[1]*100).toFixed(0)+"%"));
+        bars.appendChild(r);
+      });
+    }
+    row("task A gate",g1); row("task B gate",g2);
+    $("#moOut").innerHTML=
+      "<div><div class='k'>expert 1 output</div><div class='v'>"+e1.toFixed(2)+"</div></div>"+
+      "<div><div class='k'>expert 2 output</div><div class='v'>"+e2.toFixed(2)+"</div></div>"+
+      "<div><div class='k'>task A ŷ</div><div class='v'>"+y1.toFixed(2)+"</div></div>"+
+      "<div><div class='k'>task B ŷ</div><div class='v'>"+y2.toFixed(2)+"</div></div>";
+    $("#moNote").innerHTML="<b>Same experts, different gates.</b> Both tasks read expert 1 and expert 2, but each gate reweights them per input. "+
+      "That soft-sharing is what lets loosely-related tasks coexist without a shared bottom dragging them together.";
+  }
+  [mx1,mx2].forEach(function(x){ x.addEventListener("input",moUpdate); });
+  if(mx1) moUpdate();
+
+  /* ---------------- normalisation + temperature ---------------- */
+  var tpT=$("#tpT");
+  var tpBase=[2.4,1.8,1.1,0.4,-0.7];
+  function tpUpdate(){
+    var T=+tpT.value; $("#tpTv").textContent=T.toFixed(2);
+    var lg=tpBase.map(function(s){return s/T;});
+    var m=Math.max.apply(null,lg);
+    var e=lg.map(function(x){return Math.exp(x-m);});
+    var sum=e.reduce(function(a,b){return a+b;},0);
+    var p=e.map(function(x){return x/sum;});
+    var ent=-p.reduce(function(a,x){return a+(x>0?x*Math.log(x):0);},0);
+    var bars=$("#tpBars"); bars.innerHTML="";
+    p.forEach(function(v,i){
+      var r=el("div","bar"); r.appendChild(el("div","nm","item "+(i+1)));
+      var tk=el("div","tk"); var ii=el("i"); ii.style.width=(v*100).toFixed(1)+"%"; tk.appendChild(ii);
+      r.appendChild(tk); r.appendChild(el("div","pc",(v*100).toFixed(1)+"%")); bars.appendChild(r);
+    });
+    $("#tpOut").innerHTML=
+      "<div><div class='k'>top-item prob</div><div class='v'>"+(p[0]*100).toFixed(1)+"%</div></div>"+
+      "<div><div class='k'>entropy (nats)</div><div class='v'>"+ent.toFixed(3)+"</div></div>"+
+      "<div><div class='k'>logit spread</div><div class='v'>"+(tpBase[0]-tpBase[4]).toFixed(2)+"</div></div>";
+    $("#tpNote").innerHTML="Lower τ sharpens the distribution (higher top-item probability, lower entropy); higher τ flattens it. "+
+      "Because τ is learned, the model chooses how peaked retrieval should be — the paper reports roughly 5% recall gains from adding it together with embedding normalisation.";
+  }
+  if(tpT){ tpT.addEventListener("input",tpUpdate); tpUpdate(); }
+
+  /* ---------------- TOC filter ---------------- */
+  var tf=$("#tocFilter");
+  if(tf){
+    tf.addEventListener("input",function(){
+      var q=tf.value.trim().toLowerCase();
+      $$("#toc a").forEach(function(a){ a.style.display = (!q || a.textContent.toLowerCase().indexOf(q)>=0) ? "" : "none"; });
+      $$("#toc li.mod").forEach(function(m){ m.style.display = (!q || m.textContent.toLowerCase().indexOf(q)>=0) ? "" : "none"; });
+    });
+  }
+
+  /* ---------------- quizzes ---------------- */
+  var QUIZ = {
+    m1:[
+      {q:"In the standard recommendation funnel, which stage evaluates the fewest candidates?",
+       o:["Candidate generation","Ranking","Reranking","All three see the same set"],a:2,
+       e:"Reranking operates on the smallest set — the few hundred survivors of ranking — and applies diversity, freshness and business constraints."},
+      {q:"An A/B test reports “no significant difference” but the experiment was under-powered. What is the correct reading?",
+       o:["The change definitely has no effect","The test cannot tell “no effect” apart from an effect it failed to detect","The change is harmful","You can ship it because it is not worse"],a:1,
+       e:"Low power means the test had little chance of detecting a real effect, so a null result is uninformative. Run a power analysis / pre-register an MDE before the test."}
+    ],
+    m2:[
+      {q:"Why does two-tower retrieval need logQ sampling-bias correction?",
+       o:["Because embeddings are not normalised","Because in-batch negatives are not drawn from the true item distribution","Because the item tower is too large","Because softmax overflows"],a:1,
+       e:"In-batch negatives come from the batch, not the corpus, so popular items are over-represented as negatives. Subtracting log q(i) restores the correct weighting."},
+      {q:"The item tower is kept independent of the user so that…",
+       o:["training is faster only","item embeddings can be precomputed and served with ANN search","the loss is convex","it can memorise item IDs"],a:1,
+       e:"User-independent item embeddings can be computed offline and indexed, turning online recommendation into a nearest-neighbour lookup — the amortisation that makes retrieval tractable."}
+    ],
+    m3:[
+      {q:"Which model in the family models feature interactions vector-wise (like an FM) rather than bit-wise?",
+       o:["DCN","xDeepFM (CIN)","DLRM","FinalMLP"],a:1,
+       e:"xDeepFM’s Compressed Interaction Network keeps interactions at the vector level with a controllable order, unlike DCN/DeepFM’s bit-wise mixing."},
+      {q:"DLRM deliberately limits interactions to second order because…",
+       o:["it cannot represent more","higher-order interactions may not justify the extra compute/memory cost","Facebook had no data","the paper is about ranking only"],a:1,
+       e:"DLRM makes an explicit performance/cost trade-off: pairwise dot-product interactions, then spend the budget on training infrastructure instead."}
+    ],
+    m4:[
+      {q:"What makes SASRec a “next-item” model rather than a masked (cloze) one?",
+       o:["It uses no positional embeddings","A causal mask prevents position t from attending to the future","It predicts all items with a softmax","It is bidirectional"],a:1,
+       e:"The triangular causal mask means each position only sees the past, so the model is trained to predict the next item — the formulation you actually need at serving time."},
+      {q:"BERT4Rec differs from SASRec mainly by…",
+       o:["using a causal mask","training with a masked-item (cloze) objective and bidirectional attention","dropping embeddings","using LR instead of a Transformer"],a:1,
+       e:"BERT4Rec masks random items and predicts them from both directions, producing a softmax over the item vocabulary and richer context, at the cost of a non-causal objective."}
+    ],
+    m5:[
+      {q:"How does MMoE improve on a shared-bottom multi-task model?",
+       o:["It removes the task towers","It uses several experts and a separate gating network per task","It trains tasks one at a time","It uses a single shared gate"],a:1,
+       e:"Multiple experts soft-shared through per-task gates let tasks use the shared capacity differently — which helps most when task relatedness is low."},
+      {q:"ESMM’s core trick is to…",
+       o:["model only clicked samples","predict CTCVR over the entire impression space and divide by CTR","drop the CVR task","use a single tower"],a:1,
+       e:"By supervising the composite CTCVR on all impressions and deriving pCVR = pCTCVR / pCTR, ESMM avoids the biased clicked-only subset and fights label sparsity."}
+    ],
+    m6:[
+      {q:"Which Twitter component is responsible for real-time, fresh-signal retrieval?",
+       o:["RealGraph","GraphJet","SimClusters","TwHIN"],a:1,
+       e:"GraphJet is the in-memory real-time graph engine over a sliding window of recent interactions; RealGraph covers the stable graph, SimClusters the topical communities."},
+      {q:"What is distinctive about a SimClusters representation?",
+       o:["It is a dense MF embedding","Every dimension is an interpretable community","It is trained with BERT","It only works for users"],a:1,
+       e:"Each dimension is a community, which makes the vector interpretable, sparse (easy to index) and able to absorb new/churning content quickly."}
+    ]
+  };
+  Object.keys(QUIZ).forEach(function(mid){
+    var body=$("#quizBody-"+mid), score=$("#score-"+mid);
+    if(!body) return;
+    var qs=QUIZ[mid], answered=0, correct=0;
+    qs.forEach(function(q,qi){
+      var box=el("div","quiz");
+      var head=el("div","qh"); head.appendChild(el("span",null,"Question "+(qi+1)+" / "+qs.length));
+      var stat=el("span",null,"unanswered"); head.appendChild(stat);
+      box.appendChild(head);
+      box.appendChild(el("div","qq",q.q));
+      var opts=el("div","opts");
+      var fb=el("div","fb");
+      q.o.forEach(function(o,oi){
+        var b=el("button","opt",String.fromCharCode(65+oi)+".  "+o);
+        b.addEventListener("click",function(){
+          if(b.disabled) return;
+          $$(".opt",box).forEach(function(x){ x.disabled=true; });
+          if(oi===q.a){ b.classList.add("correct"); correct++; stat.textContent="correct"; }
+          else { b.classList.add("wrong"); $$(".opt",box)[q.a].classList.add("correct"); stat.textContent="review"; }
+          fb.style.display="block"; fb.innerHTML="<b>"+(oi===q.a?"Correct.":"Not quite.")+"</b> "+q.e;
+          answered++;
+          score.textContent="score "+correct+"/"+qs.length;
+        });
+        opts.appendChild(b);
+      });
+      box.appendChild(opts); box.appendChild(fb);
+      body.appendChild(box);
+    });
+    score.textContent="score 0/"+qs.length;
+  });
+})();
+</script>
+</body>
+</html>
