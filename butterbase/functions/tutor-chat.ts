@@ -1,11 +1,34 @@
-// RecSysTutor chat function for Butterbase (Deno runtime).
-// Grounds every answer in the `recsys-course` RAG collection, then calls the
-// app's AI gateway. Deployed via deploy_function with an http trigger (auth: none).
+// RecSysTutor live-chat backend — production build.
+// Butterbase serverless function (Deno runtime).
+//
+// Pipeline:  browser → [CORS + rate limit] → retrieval (native RAG, lexical fallback)
+//            → generation (provider from the course .env, Butterbase gateway fallback) → grounded answer
+//
+// Triggers:  POST /tutor-chat   (public chat)      GET /tutor-chat (health)
 
+const VERSION = "1.1.0";
 const COLLECTION = "recsys-course";
 
+const ALLOWED_ORIGINS = [
+  "https://olivistart.com",
+  "https://www.olivistart.com",
+  "https://recsytutor.github.io",
+];
+const RATE_LIMIT_PER_WINDOW = 30;   // requests per client per window
+const RATE_WINDOW_SECONDS = 600;    // 10 minutes
+const MAX_MESSAGE_CHARS = 2000;
+const MAX_HISTORY = 8;
+
+const SYSTEM_PROMPT = `You are RecSysTutor, a patient expert tutor for machine-learning engineers learning recommender systems.
+
+Rules:
+- Prefer the provided COURSE CONTEXT. When you use it, cite the source module in brackets, e.g. (m2 candidate generation).
+- If the context does not cover something, say so in one clause, then answer from general recommender-systems knowledge, clearly marked as "beyond the notes".
+- Be concise and technical: short paragraphs or bullets, plain-text formulas, no filler. Prefer mechanisms, numbers and trade-offs.
+- When a learner seems stuck, point them at a specific lesson, exercise, or paper in the course.
+- Never invent citations. If unsure, say so.`;
+
 // Fallback retrieval: lexical scoring over the published course markdown.
-// Used when the native RAG query is unavailable (e.g. embeddings not yet billed).
 const DOCS = [
   "00-overview.md", "m0-orientation.md", "m1-the-funnel-and-its-foundations.md",
   "m2-candidate-generation-retrieval.md", "m3-ranking-feature-interaction.md",
@@ -34,40 +57,35 @@ async function lexicalRetrieve(base: string, query: string, topN = 4) {
         const c = low.split(term).length - 1;
         if (c) s += Math.min(c, 6);
       }
-      if (s > 0) scored.push({ text: part.slice(0, 1600), score: s, metadata: { module: DOCS[i].replace(/\.md$/, "") } });
+      if (s > 0) {
+        scored.push({ text: part.slice(0, 1600), score: s, metadata: { module: DOCS[i].replace(/\.md$/, "") } });
+      }
     }
   });
   scored.sort((a, b) => b.score - a.score);
   return scored.slice(0, topN);
 }
 
-const SYSTEM_PROMPT = `You are RecSysTutor, a patient expert tutor for machine-learning engineers learning recommender systems.
-
-Rules:
-- Prefer the provided COURSE CONTEXT. When you use it, cite the source module in brackets, e.g. (m2 candidate generation).
-- If the context does not cover something, say so in one clause and then answer from general recommender-systems knowledge, clearly marked as "beyond the notes".
-- Be concise and technical: short paragraphs or bullets, plain-text formulas, no filler. Prefer concrete mechanisms, numbers and trade-offs.
-- When a learner seems stuck, point them at a specific lesson, exercise, or paper in the course.
-- Never invent citations. If unsure, say so.`;
-
-function cors(): Record<string, string> {
-  return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Max-Age": "86400",
-  };
+function clientIp(req: Request): string {
+  const h = req.headers;
+  const fwd = h.get("x-forwarded-for") ?? "";
+  return (h.get("cf-connecting-ip") || h.get("fly-client-ip") || fwd.split(",")[0] || "unknown").trim();
 }
 
 export default async function handler(req: Request, ctx: any): Promise<Response> {
-  const json = (obj: unknown, status = 200) =>
-    new Response(JSON.stringify(obj), {
-      status,
-      headers: { "Content-Type": "application/json", ...cors() },
-    });
+  const origin = req.headers.get("origin") ?? "";
+  const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : "https://olivistart.com";
+  const cors: Record<string, string> = {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+  const reply = (obj: unknown, status = 200) =>
+    new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", ...cors } });
 
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors() });
-  if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
 
   const env = ctx?.env ?? {};
   const denoEnv = (k: string): string => {
@@ -80,52 +98,81 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
   };
   const getEnv = (k: string): string => (env[k] ?? denoEnv(k) ?? "") as string;
 
-  const api: string = getEnv("BUTTERBASE_API_URL") || "https://api.butterbase.ai";
-  const app: string = getEnv("BUTTERBASE_APP_ID");
-  const key: string = getEnv("BB_SERVICE_KEY") || getEnv("BUTTERBASE_API_KEY");
-  if (!app || !key) return json({ error: "missing_platform_env", have: Object.keys(env).sort(), api }, 500);
-  const auth = "Bearer " + key;
-  const H = { Authorization: auth, "Content-Type": "application/json" };
+  const api = getEnv("BUTTERBASE_API_URL") || "https://api.butterbase.ai";
+  const app = getEnv("BUTTERBASE_APP_ID");
+  const key = getEnv("BB_SERVICE_KEY") || getEnv("BUTTERBASE_API_KEY");
+  if (!app) return reply({ error: "misconfigured", message: "missing app id" }, 500);
+  const H = { Authorization: "Bearer " + key, "Content-Type": "application/json" };
+
+  // ---- health check ------------------------------------------------------
+  if (req.method === "GET") {
+    return reply({
+      status: "ok",
+      version: VERSION,
+      collection: COLLECTION,
+      retrieval: "rag+lexical",
+      model: getEnv("TUTOR_MODEL") || "glm-5.2",
+      provider: getEnv("OPENAI_BASE_URL") || "https://api.openai.com/v1",
+      time: new Date().toISOString(),
+    });
+  }
+  if (req.method !== "POST") return reply({ error: "method_not_allowed" }, 405);
 
   let payload: any = {};
   try {
     payload = await req.json();
   } catch {
-    return json({ error: "invalid_json" }, 400);
+    return reply({ error: "invalid_json" }, 400);
+  }
+  const message = String(payload?.message ?? "").slice(0, MAX_MESSAGE_CHARS).trim();
+  if (!message) return reply({ error: "message_required" }, 400);
+  const history: any[] = Array.isArray(payload?.history) ? payload.history.slice(-MAX_HISTORY) : [];
+
+  // ---- rate limit (KV, fail-open) ---------------------------------------
+  const ip = clientIp(req);
+  const window = Math.floor(Date.now() / 1000 / RATE_WINDOW_SECONDS);
+  let limited = false;
+  let used = 0;
+  if (key) {
+    try {
+      const r = await fetch(`${api}/v1/${app}/kv/ratelimit:${ip}:${window}/incr`, {
+        method: "POST", headers: H, body: JSON.stringify({ by: 1, ttl: RATE_WINDOW_SECONDS + 120 }),
+      });
+      if (r.ok) {
+        const b = await r.json().catch(() => null);
+        used = Number(b?.value ?? b?.count ?? 0);
+        if (used > RATE_LIMIT_PER_WINDOW) limited = true;
+      }
+    } catch { /* fail open */ }
+  }
+  if (limited) {
+    return reply({ error: "rate_limited", message: `Limit is ${RATE_LIMIT_PER_WINDOW} questions per ${RATE_WINDOW_SECONDS / 60} minutes.` }, 429);
   }
 
-  const message = String(payload?.message ?? "").slice(0, 2000).trim();
-  if (!message) return json({ error: "message_required" }, 400);
-  const history: any[] = Array.isArray(payload?.history) ? payload.history.slice(-8) : [];
+  const requestId = crypto.randomUUID();
+  const started = Date.now();
 
-  let ragErr: string | null = null;
-  // 1) retrieve grounded context from the course knowledge base
+  // ---- retrieval ---------------------------------------------------------
   let chunks: any[] = [];
-  let ragStatus = 0, ragBody = "";
+  let retrievalMode = "rag";
   try {
     const r = await fetch(`${api}/v1/${app}/rag/collections/${COLLECTION}/query`, {
-      method: "POST",
-      headers: H,
-      body: JSON.stringify({ query: message, top_k: 6, threshold: 0.1 }),
+      method: "POST", headers: H, body: JSON.stringify({ query: message, top_k: 6, threshold: 0.1 }),
     });
-    ragStatus = r.status;
-    const body = await r.text();
-    ragBody = body.slice(0, 600);
-    if (r.ok) chunks = (JSON.parse(body)?.chunks ?? []).map((c: any) => ({ ...c, text: c.content ?? c.text }));
+    if (r.ok) chunks = (await r.json())?.chunks ?? [];
   } catch (e) {
-    ragErr = String(e);
     console.error("rag query failed", String(e));
   }
-
-  let retrievalMode = "rag";
   if (!chunks.length) {
     const base = getEnv("COURSE_CONTENT_BASE") || "https://olivistart.com/RecSysTutor/deeptutor/content/";
-    chunks = await lexicalRetrieve(base, message).catch(() => []);
+    chunks = (await lexicalRetrieve(base, message).catch(() => []))
+      .map((c: any) => ({ ...c, text: c.text }));
     retrievalMode = "lexical";
   }
+  chunks = chunks.map((c: any) => ({ ...c, text: c.content ?? c.text }));
 
   const context = chunks
-    .map((c, i) => {
+    .map((c: any, i: number) => {
       const src = c?.metadata?.module ?? c?.metadata?.filename ?? "notes";
       const sim = c?.score != null ? `, sim ${Number(c.score).toFixed(2)}` : "";
       return `[${i + 1}] (${src}${sim})\n${String(c?.text ?? "").trim()}`;
@@ -133,7 +180,7 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
     .join("\n\n")
     .slice(0, 12000);
 
-  // 2) compose the conversation
+  // ---- compose + generate -----------------------------------------------
   const messages: any[] = [{ role: "system", content: SYSTEM_PROMPT }];
   for (const h of history) {
     const role = h?.role === "assistant" ? "assistant" : "user";
@@ -147,33 +194,29 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
       : message,
   });
 
-  // 3) generate — prefer the app AI gateway, fall back to a direct provider call
-  //    (the gateway needs a funded balance; BYOK alone does not bypass that)
   const genGateway = async (m: string) => {
     const r = await fetch(`${api}/v1/${app}/chat/completions`, {
       method: "POST", headers: H,
-      body: JSON.stringify({ model: m, messages, max_tokens: 900, temperature: 0.25 }),
+      body: JSON.stringify({ model: m, messages, max_tokens: 2000, temperature: 0.25 }),
     });
     return { ok: r.ok, status: r.status, body: await r.json().catch(() => null) };
   };
   const genDirect = async (m: string) => {
     const base = getEnv("OPENAI_BASE_URL") || "https://api.openai.com/v1";
     const k = getEnv("OPENAI_API_KEY");
-    if (!k) return { ok: false, status: 0, body: { error: "no_direct_key" } };
+    if (!k) return { ok: false, status: 0, body: { error: "no_provider_key" } };
+    const body: any = { model: m, messages, max_tokens: 2400, temperature: 0.25 };
+    if (base.includes("bigmodel")) body.thinking = { type: "disabled" };
     const r = await fetch(`${base}/chat/completions`, {
       method: "POST", headers: { Authorization: "Bearer " + k, "Content-Type": "application/json" },
-      body: JSON.stringify(Object.assign({ model: m, messages, max_tokens: 2400, temperature: 0.25 },
-        base.includes("bigmodel") ? { thinking: { type: "disabled" } } : {})),
+      body: JSON.stringify(body),
     });
     return { ok: r.ok, status: r.status, body: await r.json().catch(() => null) };
   };
 
-  // primary: the provider configured in .env (OpenAI-compatible); fallback: Butterbase gateway
   const directModel = getEnv("TUTOR_MODEL") || "glm-5.2";
   const gatewayModel = getEnv("GATEWAY_MODEL") || "openai/gpt-4.1-mini";
-  let mode = "direct";
-  let model = directModel;
-  let res;
+  let mode = "direct", model = directModel, res;
   if (getEnv("OPENAI_API_KEY")) {
     res = await genDirect(directModel);
     if (!res.ok) {
@@ -185,27 +228,32 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
     mode = "gateway"; model = gatewayModel;
     res = await genGateway(gatewayModel);
   }
-  if (!res.ok) {
-    const kind = mode === "gateway" ? "ai_gateway_error" : "provider_error";
-    return json({ error: kind, status: res.status, detail: res.body }, 502);
-  }
 
-  if (payload?.debug) {
-    return json({
-      api, haveApp: !!app, haveEnvKey: !!key,
-      ragStatus, ragBody, ragErr, chunkCount: chunks.length, contextChars: context.length,
+  // ---- diagnostics (token-gated) ----------------------------------------
+  const dbg = payload?.debug;
+  if (dbg && getEnv("DEBUG_TOKEN") && dbg === getEnv("DEBUG_TOKEN")) {
+    return reply({
+      version: VERSION, requestId, retrievalMode, chunkCount: chunks.length, contextChars: context.length, used,
       llm: { mode, model, status: res.status, ok: res.ok, body: JSON.stringify(res.body).slice(0, 900) },
     });
+  }
+  if (!res.ok) {
+    console.error("generation failed", mode, res.status, JSON.stringify(res.body).slice(0, 300));
+    return reply({ error: "generation_failed", message: "The tutor model is unavailable right now.", requestId }, 502);
   }
 
   const answer: string = res.body?.choices?.[0]?.message?.content ?? "";
   const sources = chunks
-    .map((c) => ({
+    .map((c: any) => ({
       module: c?.metadata?.module ?? null,
       file: c?.metadata?.filename ?? null,
       similarity: c?.score != null ? Number(Number(c.score).toFixed(3)) : null,
     }))
-    .filter((s, i, a) => a.findIndex((x) => x.file === s.file && x.similarity === s.similarity) === i);
+    .filter((s: any, i: number, a: any[]) => a.findIndex((x) => x.module === s.module && x.similarity === s.similarity) === i)
+    .slice(0, 4);
 
-  return json({ answer, sources, model, mode, retrieval: retrievalMode, grounded: chunks.length > 0 }, 200);
+  return reply({
+    answer, sources, model, mode, retrieval: retrievalMode,
+    grounded: chunks.length > 0, version: VERSION, requestId, latencyMs: Date.now() - started,
+  }, 200);
 }

@@ -6,6 +6,7 @@ Uses Butterbase's MCP endpoint with the personal API key in ~/.butterbase/config
     python3 deploy.py            # deploy / update the tutor-chat function
     python3 deploy.py --rag      # also (re)ingest deeptutor/content into the RAG collection
     python3 deploy.py --test     # invoke the deployed function once
+    python3 deploy.py --health   # GET the health endpoint
 
 The LLM provider is read from the course `.env` (`model` / `API key` / `baseURL`), e.g. glm-5.2 on
 https://open.bigmodel.cn/api/paas/v4. The provider key is written as a *write-only* function env var.
@@ -78,19 +79,35 @@ def service_key():
     return key
 
 
+def debug_token():
+    """Persisted token gating the diagnostic probe."""
+    if os.environ.get("DEBUG_TOKEN"):
+        return os.environ["DEBUG_TOKEN"]
+    p = os.path.expanduser("~/.butterbase/tutor-debug-token")
+    if os.path.exists(p):
+        return open(p).read().strip()
+    import secrets
+    t = secrets.token_hex(8)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    open(p, "w").write(t)
+    os.chmod(p, 0o600)
+    return t
+
+
 def deploy():
     code = open(os.path.join(HERE, "functions", "tutor-chat.ts"), encoding="utf-8").read()
     ce = course_env()
     out = call("deploy_function", {
         "app_id": APP, "name": FN_NAME, "code": code,
-        "description": "Grounded RecSysTutor chat over the recsys-course notes",
-        "triggers": [{"type": "http", "config": {"method": "POST", "path": "/" + FN_NAME, "auth": "none"}}],
+        "description": "RecSysTutor live chat (production v1.1.0): grounded retrieval + tutor generation",
+        "triggers": [{"type": "http", "config": {"path": "/" + FN_NAME, "auth": "none"}}],
         "timeoutMs": 60000, "memoryLimitMb": 256,
         "envVars": {
             "BB_SERVICE_KEY": service_key(),
             "TUTOR_MODEL": os.environ.get("BB_MODEL") or ce.get("model", "glm-5.2"),
             "OPENAI_API_KEY": ce.get("api key", ""),
             "OPENAI_BASE_URL": ce.get("baseurl", "https://api.openai.com/v1"),
+            "DEBUG_TOKEN": debug_token(),
         },
     })
     print(out[:900])
@@ -116,7 +133,10 @@ def test(msg="Why does two-tower retrieval need logQ correction?"):
 if __name__ == "__main__":
     if "--rag" in sys.argv:
         ingest()
-    if "--test" in sys.argv:
+    if "--health" in sys.argv:
+        req = urllib.request.Request("%s/v1/%s/fn/%s" % (API, APP, FN_NAME), method="GET")
+        print(urllib.request.urlopen(req, timeout=60).read().decode())
+    elif "--test" in sys.argv:
         test()
     elif "--rag" not in sys.argv:
         deploy()

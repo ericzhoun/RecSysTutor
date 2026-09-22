@@ -1,57 +1,72 @@
-# Butterbase backend — RecSysTutor live chat
+# Butterbase backend — RecSysTutor live chat (production)
 
-The live chat runs on [Butterbase](https://butterbase.ai): a serverless function + the app's native RAG, deployed into
-the account's app (`herfield`, the only app allowed by the current plan) under namespaced, additive resources.
+The live chat runs on [Butterbase](https://butterbase.ai): a serverless function plus the app's native RAG, deployed
+into the account's app (`herfield` — the only project the current plan allows) under **namespaced, additive** resources.
 
 ```
 butterbase/
-├── functions/tutor-chat.ts   # Deno function: RAG/lexical retrieval + tutor generation
-├── deploy.py                 # deploy / ingest / test via Butterbase MCP
+├── functions/tutor-chat.ts   # Deno function — production build (v1.1.0)
+├── deploy.py                 # deploy / ingest / health / test via Butterbase MCP
 └── README.md
 ```
 
-- **Frontend:** `../chat.html` (served from the course's GitHub Pages, CORS already allowed on the app).
-- **Backend URL:** `https://api.butterbase.ai/v1/<app_id>/fn/tutor-chat` (public POST, rate-limited by the platform).
+- **Frontend:** `../chat.html` (served from the course's GitHub Pages; CORS-allowed on the app).
+- **Backend:** `POST https://api.butterbase.ai/v1/<app_id>/fn/tutor-chat`
+- **Health:** `GET  https://api.butterbase.ai/v1/<app_id>/fn/tutor-chat`
 
 ## Architecture
 
 ```
-browser (chat.html) ──POST──▶ Butterbase function `tutor-chat`
-                                ├─ retrieval: native RAG collection `recsys-course`
-                                │    └─ fallback: lexical scoring over the published course markdown
-                                └─ generation: LLM provider from the course .env (OpenAI-compatible)
-                                     └─ fallback: Butterbase AI gateway
+browser (chat.html)
+  └─POST─▶ Butterbase function `tutor-chat`
+            ├─ CORS allowlist + per-IP rate limit (KV incr, fail-open)
+            ├─ retrieval: native RAG collection `recsys-course`
+            │    └─ fallback: lexical scoring over the published course markdown
+            ├─ generation: LLM provider from the course .env  (gateway fallback)
+            └─ grounded answer + source modules + requestId
 ```
 
-The LLM provider is read from the course `.env` (`model` / `API key` / `baseURL`), e.g. `glm-5.2` via
-`https://open.bigmodel.cn/api/paas/v4`. The provider key is stored as a write-only function env var, never in the page.
+## Production characteristics (v1.1.0)
 
-## Setup
+| Property | Value |
+|---|---|
+| Rate limit | **30 questions / 10 min / IP**, KV counter with TTL, **fail-open** (never blocks chat if KV errors) |
+| CORS | allowlist: `olivistart.com`, `www.olivistart.com`, `recsytutor.github.io` (echoed, `Vary: Origin`) |
+| Input caps | message ≤ 2000 chars; history ≤ 8 turns × 4000 chars |
+| Timeout / memory | 60 s / 256 MB |
+| Error contract | `{ error, message, requestId }`; model failures return `502 generation_failed` (no internals leaked) |
+| Observability | `requestId`, `latencyMs`, `version`, `retrieval`, `grounded` in every response; `console.error` on failures |
+| Diagnostics | `{"debug": "<DEBUG_TOKEN>"}` returns RAG/LLM internals — token-gated, never public |
+| Health | `GET /fn/tutor-chat` → `{status:"ok",version,collection,model,provider}` |
 
-1. A service key is minted once via `manage_auth_config (generate_service_key)` and stored at
-   `~/.butterbase/tutor-fn-key.json` (never in the repo).
-2. Deploy / update the function:
+Provider key lives only in a **write-only** function env var. The service key is stored at
+`~/.butterbase/tutor-fn-key.json` (0600); the debug token at `~/.butterbase/tutor-debug-token` (0600). `.env` and both
+key files are gitignored.
 
-   ```bash
-   cd butterbase && python3 deploy.py
-   ```
+## Runbook
 
-   Optional flags: `--test` (invoke once), `--rag` (re-ingest `deeptutor/content` into the RAG collection).
+```bash
+cd butterbase
+python3 deploy.py            # deploy / update the function (reads the course .env)
+python3 deploy.py --health   # GET the health endpoint
+python3 deploy.py --test     # invoke once with a sample question
+python3 deploy.py --rag      # (re)ingest deeptutor/content into the RAG collection
+```
 
-3. The course notes are exported into the RAG collection by `../deeptutor/tools/export_kb.py` (see `../deeptutor/README.md`).
+## Known state / switching on the managed paths
 
-## Known state
+- The account's AI allowance is **$0** (balance ≈ −$0.09). Consequences:
+  - the AI gateway returns `insufficient_credits` (BYOK alone does not bypass it), so generation goes **direct** to the
+    provider in `.env` — currently **glm-5.2** on `open.bigmodel.cn` (OpenAI-compatible);
+  - the RAG collection's semantic query returns a server 500 because ingest-time embeddings could not be billed, so the
+    function falls back to **lexical retrieval** over the published notes (still grounded, with module citations).
+- To move back to the managed paths: top up the account / enable auto-refill. The function already prefers the
+  Butterbase gateway and native RAG, so no code change is needed — verify with `deploy.py --test` that
+  `mode` becomes `gateway` and `retrieval` becomes `rag`.
+- The endpoint is public by design (`auth: none`) so the static page can call it. Rate limiting is in place; if you
+  want stronger control, add a Durable Object limiter or switch the trigger to `auth: required` with app sign-in.
 
-- RAG collection `recsys-course` exists (11 documents, shared access). Its **semantic query endpoint currently returns
-  a server 500** — the account's AI allowance is $0, so the ingest-time embeddings could not complete. The function
-  therefore falls back to lexical retrieval over the published notes, which keeps the chat fully grounded.
-- The AI gateway itself rejects calls with `insufficient_credits` (balance ≈ −$0.09); BYOK alone does not bypass that,
-  so generation goes **direct** to the `.env` provider. If the account is topped up, the function will automatically
-  prefer the gateway again.
-- One caveat: the public endpoint is open by design. The platform rate-limits (300/min), but if abuse becomes a
-  concern, put a Durable Object rate limiter in front or switch the trigger to `auth: required`.
+## Limits / costs
 
-## Files of interest
-
-- `functions/tutor-chat.ts` — retrieval + generation + CORS + debug probe (`{"debug": true}`).
-- `deploy.py` — `deploy.py`, `deploy.py --rag`, `deploy.py --test`.
+Butterbase KV: 100k keys, 10 MB, 50 ops/s (rate-limit keys are tiny and self-expiring). Generation cost is billed to
+the provider in `.env`. Public endpoint abuse is bounded by the KV rate limit above.

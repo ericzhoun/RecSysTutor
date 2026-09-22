@@ -5,7 +5,9 @@ full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 <https://happystrongcoder.substack.com/archive?sort=top>.
 
 - **10 modules · 48 lessons · 9 live widgets · 8 graded self-checks · 16 exercises · 104 linked papers**
-- One self-contained HTML file — no build step, no dependencies, no network, works offline.
+- **Live chat:** <https://olivistart.com/RecSysTutor/chat.html> — grounded Q&A over the course notes, backed by a
+  [Butterbase](https://butterbase.ai) serverless function (see `butterbase/`)
+- One self-contained HTML file — no build step, no dependencies, no network, works offline (the chat needs the backend).
 
 ## Run it
 
