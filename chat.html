@@ -51,10 +51,10 @@ a{color:var(--accent-ink)}
 <div class="wrap">
   <div class="kicker">RecSysTutor · live tutor</div>
   <h1>Ask the course</h1>
-  <p class="lede">A grounded tutor over the RecSysTutor notes: 9 modules of recommender-systems content —
+  <p class="lede">A grounded tutor over the RecSysTutor notes: 10 modules of recommender-systems content —
     retrieval, ranking, sequential models, multi-task learning, the Twitter case study — plus the 104-paper atlas.
     Answers are retrieved from the course knowledge base and cite the module they came from.</p>
-  <div class="meta">backend: Butterbase serverless function + native RAG · model: app AI gateway</div>
+  <div class="meta">backend: Butterbase serverless function · retrieval: native RAG + lexical fallback · model: glm-5.2 (project .env)</div>
   <hr class="hr">
 
   <div class="thread" id="thread"></div>
@@ -75,9 +75,10 @@ a{color:var(--accent-ink)}
   <div class="status" id="status"></div>
 
   <div class="notice">
-    <strong>How it works.</strong> Your question is matched against the course knowledge base (Butterbase native RAG);
-    the retrieved passages plus your conversation history go to the tutor model through Butterbase's AI gateway.
-    The chips under each answer show which module documents were retrieved. The
+    <strong>How it works.</strong> Your question is scored against the course knowledge base — Butterbase's native RAG,
+    with a lexical fallback over the exported notes while the account's embedding quota is inactive. The retrieved
+    passages plus your conversation history go to the tutor model configured in the project <code>.env</code>
+    (currently glm-5.2). The chips under each answer show which modules were retrieved. The
     <a href="index.html">full interactive course</a> — lessons, widgets, exercises — lives on this site;
     a DeepTutor CLI integration also exists in the repo under <code>deeptutor/</code>.
   </div>
