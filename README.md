@@ -4,7 +4,7 @@ An **interactive, single-file course on recommender systems for machine-learning
 full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 <https://happystrongcoder.substack.com/archive?sort=top>.
 
-- **9 modules · 47 lessons · 9 live widgets · 8 graded self-checks · 16 exercises · 104 linked papers**
+- **10 modules · 48 lessons · 9 live widgets · 8 graded self-checks · 16 exercises · 104 linked papers**
 - One self-contained HTML file — no build step, no dependencies, no network, works offline.
 
 ## Run it
@@ -33,6 +33,7 @@ single problem it was invented to fix.
 | M6 Case study: Twitter | RealGraph · GraphJet · SimClusters · MaskNet · TwHIN |
 | M7 Practical toolkit | Criteo preprocessing with Pandas · end-to-end capstone |
 | M8 Paper atlas | The 104-paper Ads & RecSys collection — filter by stage / theme / company / year · curated lineage chains |
+| M9 AI tutor | DeepTutor integration — the course as a grounded knowledge base: RAG chat, quiz generation, mastery paths |
 
 Seven interactive widgets let you manipulate the mechanisms directly (funnel explorer, extreme-multiclass cost & bias,
 ECS/diversity index, normalisation & temperature, logQ correction, a runnable streaming frequency estimator, and MMoE
@@ -59,3 +60,17 @@ Module 8 folds in the **104 ads/recsys papers** (with tags, curated lineage and 
 repository `Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising`, sourced from its `ads_knowledge_graph/`
 graph. Papers can be filtered by pipeline stage, research theme, company and year, and the curated “builds on” lineage
 chains (e.g. `DIN → DIEN → SIM → TWIN → TWINv2`) are rendered as clickable paths. PDFs are hosted in that repository.
+
+## DeepTutor integration (module 9) — the course as a live tutor
+
+The whole course is also a [DeepTutor](https://github.com/HKUDS/DeepTutor) knowledge base (`recsys-course`), so you can
+chat with it, generate quizzes on demand, and request a personal mastery path. Everything lives in [`deeptutor/`](./deeptutor):
+
+```bash
+KB=recsys-course ./deeptutor/scripts/setup_kb.sh        # build the knowledge base from content/
+./deeptutor/scripts/tutor.sh                            # grounded RAG chat over the course
+./deeptutor/scripts/quiz.sh "multi-task learning" 5     # generate a quiz
+./deeptutor/scripts/study_plan.sh "beginner to HSTU"    # mastery path
+```
+
+Requires DeepTutor installed and an LLM + embedding provider configured. See [`deeptutor/README.md`](./deeptutor/README.md).

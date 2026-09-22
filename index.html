@@ -266,8 +266,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
     <div class="meta-row">
       <div><div class="k">Source</div><div class="v">31 posts</div></div>
       <div><div class="k">Papers</div><div class="v">104</div></div>
-      <div><div class="k">Modules</div><div class="v">9</div></div>
-      <div><div class="k">Lessons</div><div class="v">47</div></div>
+      <div><div class="k">Modules</div><div class="v">10</div></div>
+      <div><div class="k">Lessons</div><div class="v">48</div></div>
       <div><div class="k">Widgets · quizzes</div><div class="v">9 · 8</div></div>
       <div><div class="k">Exercises</div><div class="v">16</div></div>
     </div>
@@ -1568,6 +1568,44 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
   <div class="container"><div class="navbtns">
     <button class="btn ghost" data-goto="#m7">↑ Practical toolkit</button>
     <button class="btn" data-goto="#m1">Back to the funnel ↺</button>
+  </div></div>
+</section>
+
+<!-- ============ M9 ============ -->
+<section class="module" id="m9" data-mod="M9">
+  <div class="container">
+    <div class="module-head"><div class="folio">M9</div><h2>Study with an AI tutor (DeepTutor)</h2></div>
+    <p class="module-sub">This course is also a <strong>DeepTutor</strong> knowledge base: the same notes power a grounded tutor
+      that answers from the material, generates quizzes on demand, and builds a personal mastery path.</p>
+  </div>
+
+  <div class="container lesson" id="l9-1" data-lesson>
+    <h3><span class="n">01</span>From static page to personal tutor</h3>
+    <p>Every module you just read has been exported to Markdown and ingested into
+      <a class="plainlink" href="https://github.com/HKUDS/DeepTutor">DeepTutor</a> — HKUDS’s lifelong-personalised tutoring
+      platform — as the knowledge base <code>recsys-course</code>. Because answers are retrieved from these notes, the tutor
+      cites the module instead of guessing, and the same base drives quizzes, research and visualisation.</p>
+    <table class="grid">
+      <thead><tr><th>You want to…</th><th>DeepTutor capability</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>Ask questions</td><td>Grounded RAG chat</td><td><code>deeptutor chat --kb recsys-course -t rag</code></td></tr>
+        <tr><td>Get quizzed</td><td>Question generation</td><td><code>deeptutor run deep_question "&lt;topic&gt;" --kb recsys-course --config num_questions=5</code></td></tr>
+        <tr><td>Solve an exercise</td><td>Deep solve + code exec</td><td><code>deeptutor run deep_solve "&lt;exercise&gt;" --kb recsys-course</code></td></tr>
+        <tr><td>Research a theme</td><td>Deep research report</td><td><code>deeptutor run deep_research "&lt;theme&gt;" --kb recsys-course --config mode=report</code></td></tr>
+        <tr><td>See a concept</td><td>Visualise / animate</td><td><code>deeptutor run visualize "&lt;concept&gt;"</code></td></tr>
+        <tr><td>Plan your study</td><td>Mastery path</td><td><code>deeptutor run mastery_path "recommender systems" --kb recsys-course</code></td></tr>
+      </tbody>
+    </table>
+    <div class="note why"><div class="lab">The integration ships with the repo</div>
+      <p>The <code>deeptutor/</code> folder contains the exporter (<code>tools/export_kb.py</code>), the exported knowledge base
+        (<code>content/</code> — one document per module plus the 104-paper atlas), one-command wrappers in <code>scripts/</code>
+        (<code>setup_kb.sh</code>, <code>tutor.sh</code>, <code>quiz.sh</code>, <code>study_plan.sh</code>), and example outputs in
+        <code>generated/</code>. It needs DeepTutor installed and an LLM + embedding provider configured.</p>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m8">↑ Paper atlas</button>
+    <button class="btn" data-goto="#m0">Back to the top ↺</button>
   </div></div>
 </section>
 </main>

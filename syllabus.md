@@ -5,7 +5,7 @@ An interactive course for machine-learning engineers, built from the full archiv
 
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
-- **9 modules · 47 lessons · 9 interactive widgets · 8 self-checks · 16 exercises · 104 linked papers**
+- **10 modules · 48 lessons · 9 interactive widgets · 8 self-checks · 16 exercises · 104 linked papers · DeepTutor-powered tutor**
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
 Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
@@ -36,6 +36,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | **M6 Case study: Twitter** | RealGraph · GraphJet · SimClusters · MaskNet in production · TwHIN & the system picture | Dive into Twitter’s recommendation system I–VI |
 | **M7 Practical toolkit & capstone** | Data preprocessing with Pandas (Criteo) · Capstone — design one system end to end | Quick data preprocessing with Pandas on Criteo · (synthesis) |
 | **M8 Paper atlas** | The collection · Lineage chains · How to use the atlas | Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising (`ads_knowledge_graph/`) — 104 ads/recsys papers |
+| **M9 AI tutor** | From static page to personal tutor | DeepTutor (HKUDS) — knowledge base `recsys-course`, RAG chat, quiz generation, mastery paths |
 
 ---
 
@@ -92,6 +93,21 @@ Widgets run entirely in the page: no network, no tracking, nothing stored beyond
 
 All URLs are under `https://happystrongcoder.substack.com`. Figures and claims in the course are attributed
 to these posts; external papers are named by title in-lesson so you can find the originals.
+
+---
+
+## Module 9 — DeepTutor integration (interactive tutor)
+
+The course is exported to Markdown and ingested into **DeepTutor** (HKUDS) as the knowledge base `recsys-course`, so the
+same notes power a grounded tutor. The integration lives in `deeptutor/`:
+
+- `tools/export_kb.py` — converts the course HTML + papers graph into Markdown
+- `content/` — one document per module (lesson prose, formulas, code, exercises, quiz bank) plus `papers-atlas.md`
+- `scripts/` — `setup_kb.sh`, `tutor.sh`, `quiz.sh`, `study_plan.sh`
+- `generated/` — example outputs from DeepTutor capabilities
+
+Capabilities wired up: grounded **RAG chat**, **deep_question** (quiz generation), **deep_solve** (exercise solving),
+**deep_research**, **visualize**, and **mastery_path**. See `deeptutor/README.md` for commands and prerequisites.
 
 ---
 
