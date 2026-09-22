@@ -77,6 +77,20 @@ select.sel{font-family:var(--mono);font-size:12px;padding:6px 8px;border:1px sol
   cursor:pointer;background:var(--bg);color:var(--ink);}
 .chain .node:hover{border-color:var(--accent);color:var(--accent-ink);}
 .chain .arw{color:var(--faint);font-size:12px;}
+details.ex{border:1px solid var(--line-soft);background:var(--bg);margin:10px 0;}
+details.ex>summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:14.5px;list-style:none;}
+details.ex>summary::-webkit-details-marker{display:none;}
+details.ex>summary::before{content:"+ ";font-family:var(--mono);color:var(--accent-ink);}
+details.ex[open]>summary::before{content:\2013\2002;font-family:var(--mono);color:var(--accent-ink);}
+.ex-body{padding:2px 15px 14px;border-top:1px solid var(--line-soft);}
+details.ex-hint,details.ex-sol{margin:10px 0;border:1px solid var(--line-soft);background:var(--panel);}
+details.ex-hint>summary,details.ex-sol>summary{cursor:pointer;padding:7px 12px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);list-style:none;}
+details.ex-hint>summary::-webkit-details-marker,details.ex-sol>summary::-webkit-details-marker{display:none;}
+details.ex-sol>summary{color:var(--accent-ink);}
+.ex-body p{font-size:14.8px;max-width:68ch;}
+details.ex-sol pre{margin:0 12px 12px;}
+details.ex-hint p{padding:0 12px;margin:8px 0 12px;}
 
 /* ---------- layout helpers ---------- */
 .main{min-width:0;padding-bottom:110px;}
@@ -253,9 +267,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
       <div><div class="k">Source</div><div class="v">31 posts</div></div>
       <div><div class="k">Papers</div><div class="v">104</div></div>
       <div><div class="k">Modules</div><div class="v">9</div></div>
-      <div><div class="k">Lessons</div><div class="v">39</div></div>
-      <div><div class="k">Widgets · quizzes</div><div class="v">9 · 7</div></div>
-      <div><div class="k">Est. time</div><div class="v">~6 h</div></div>
+      <div><div class="k">Lessons</div><div class="v">47</div></div>
+      <div><div class="k">Widgets · quizzes</div><div class="v">9 · 8</div></div>
+      <div><div class="k">Exercises</div><div class="v">16</div></div>
     </div>
   </div>
 </header>
@@ -451,6 +465,58 @@ sampled estimator:   P̂ ∝ e^{v_i · u} / Σ_{j∈batch} e^{v_j · u} <span cl
     </div>
   </div>
 
+  <div class="container lesson" id="le1" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two hands-on tasks. Try them before opening the reference solution — the point is the arithmetic and the code, not the answer.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 1</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>1.1 — Compute ECS and the diversity index</summary>
+          <div class="ex-body">
+            <p>Item play-counts over a week are <code>[900, 60, 25, 10, 5]</code>. Compute the <strong>Diversity Index</strong>
+              (1 − Σpᵢ²) and the <strong>effective catalog size</strong> (1 / Σpᵢ²). Repeat for a flat distribution over the same
+              five items. Which direction do both metrics move, and why does that match “how many items carry a typical hour”?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Normalise counts to shares pᵢ = cᵢ / Σc first. Both metrics are functions of Σpᵢ², “the probability two draws are the same item”.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import numpy as np
+c = np.array([900, 60, 25, 10, 5], float)
+p = c / c.sum(); sumsq = (p**2).sum()
+print("DI (1 - sum p^2):", round(1 - sumsq, 3))   <span class="c"># ~0.186</span>
+print("effective size :", round(1 / sumsq, 2))    <span class="c"># ~1.23</span>
+flat = np.ones(5) / 5
+print("flat DI:", round(1 - (flat**2).sum(), 3))  <span class="c"># 0.8</span>
+print("flat eff:", round(1 / (flat**2).sum(), 2)) <span class="c"># 5.0</span></pre>
+              <p>Both rise as the distribution flattens: the skewed catalogue behaves like ≈1.2 items, the flat one like exactly 5 —
+                the effective catalog size is literally the number of items carrying the consumption.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>1.2 — Size an A/B test before you run it</summary>
+          <div class="ex-body">
+            <p>Baseline CTR is <code>4%</code>. You want to detect a relative <strong>+5%</strong> (absolute <code>0.2pp</code>)
+              with α = 0.05 and power = 0.8, two-sample. Estimate the per-arm sample size with
+              <code>n ≈ 2 (z<sub>α/2</sub> + z<sub>β</sub>)² · p(1−p) / δ²</code>. What happens to <em>n</em> if you halve the MDE?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>z<sub>α/2</sub> ≈ 1.96, z<sub>β</sub> ≈ 0.84. δ is the <em>absolute</em> effect (0.002), not the relative 5%.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>p, delta = 0.04, 0.002
+z_a, z_b = 1.96, 0.84
+n = 2 * (z_a + z_b)**2 * p * (1 - p) / delta**2
+print(round(n))   <span class="c"># ~150,500 per arm</span>
+<span class="c"># halving the MDE (delta/2) multiplies n by 4  -> ~602,000 per arm</span></pre>
+              <p>≈150k users per arm; halving the MDE quadruples the cost. Pre-register the MDE — a flat result from a 20k-user
+                test is not evidence of no effect.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq1" data-lesson>
     <h3><span class="n">✓</span>Module check</h3>
   </div>
@@ -578,6 +644,59 @@ user–item part:     ⟨ (Σ_{i∈user} v_i x_i) , (Σ_{j∈item} v_j x_j) ⟩ 
       <strong>DeepFM</strong> ranker. Retrieval and ranking are often the same primitive at different scales.</p>
   </div>
 
+  <div class="container lesson" id="le2" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Both tasks implement mechanisms the two-tower paper introduces. Run them and inspect the behaviour.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 2</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>2.1 — Implement the streaming frequency estimator</summary>
+          <div class="ex-body">
+            <p>Simulate a stream where an item appears with probability <code>p = 0.05</code> per step, and implement the estimator
+              (arrays A, B with learning rate α) so <code>1/B</code> converges to 0.05. Then: what does α → 1 do, and what does α → 0 do?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Only update on a hit. Keep the last hit step in A; on the next hit use the gap t − A.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import random
+def estimate(p, alpha=0.2, steps=300000):
+    last, b = -1, 0.0
+    for t in range(steps):
+        if random.random() &lt; p:
+            if last &gt;= 0 and b != 0:
+                b = (1 - alpha) * b + alpha * (t - last)
+            else:
+                b = (1 - alpha) * b
+            last = t
+    return 1 / b if b &gt; 0 else 0
+
+print(round(estimate(0.05), 4))   <span class="c"># ~0.05  (the true hit rate)</span></pre>
+              <p>High α tracks change fast but is noisy; low α is smooth but slow and sensitive to initialisation — a bias/variance
+                trade-off, not a free parameter.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>2.2 — logQ correction on a skewed corpus</summary>
+          <div class="ex-body">
+            <p>Write the in-batch softmax loss for a two-tower model in a few lines of PyTorch, then add the <strong>logQ
+              correction</strong>. Explain in two sentences what breaks without it when the item distribution is power-law.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Subtract <code>log(q)</code> from the logits, where q is each item’s sampling probability (batch frequency as a proxy).</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>logits = U @ I.T / tau                 <span class="c"># [B, B] in-batch scores</span>
+logits = logits - torch.log(q)         <span class="c"># q: [B] per-item sampling prob</span>
+loss = F.cross_entropy(logits, torch.arange(B))</pre>
+              <p>Without the correction, head items appear as negatives in nearly every batch and are over-penalised, so the model
+                learns to avoid popular items. The <code>−log q</code> term cancels that bias and restores correct softmax weighting.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq2"><h3><span class="n">✓</span>Module check</h3></div>
   <div class="bleed">
     <div class="widget" id="quiz-m2">
@@ -711,6 +830,54 @@ logit = MLP( concat(dense_mlp_out, inter) )</pre>
       </tbody>
     </table>
   </div>
+  <div class="container lesson" id="le3" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two exercises on explicit feature interaction — the core of every ranker in this module.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 3</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>3.1 — Build a DCN cross layer</summary>
+          <div class="ex-body">
+            <p>Implement one DCN cross layer <code>x<sub>l+1</sub> = x₀ · (wᵀx<sub>l</sub>) + b + x<sub>l</sub></code> in a few lines of
+              PyTorch. Then argue (not just assert) why stacking <em>two</em> such layers can produce a degree-3 interaction in the raw features.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Each layer keeps an outer-product-like term against <code>x₀</code>. Two layers = two factors of x₀ multiplied by a linear-in-x₀ expression.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import torch
+def cross_layer(x0, xl, w, b):
+    return x0 * (xl @ w).unsqueeze(-1) + b + xl   <span class="c"># x0, xl: [B, d]</span>
+
+<span class="c"># layer 1: x1 = x0 * (x0 @ w1) + ...        <- degree 2 in x0</span>
+<span class="c"># layer 2: x2 = x0 * (x1 @ w2) + ...        <- degree 3 in x0</span></pre>
+              <p>Because every layer multiplies by the original input x₀, <em>l</em> layers can represent polynomials up to degree
+                <em>l</em>+1 — and crucially, the coefficients are <strong>learned</strong>, so you get W&amp;D-style crossing without
+                hand-writing the crops.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>3.2 — Pairwise interactions with a triangular mask (DLRM)</summary>
+          <div class="ex-body">
+            <p>Given a batch of stacked embeddings <code>[B, F, d]</code>, compute all pairwise dot products, keep only the distinct
+              pairs with a triangular mask, and count the output size for F = 12. What is the compute cost in terms of B, F, d?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>The Gram matrix is symmetric — you only need one triangle, so the count is F(F+1)/2.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>e = torch.randn(8, 12, 16)              <span class="c"># [B, F, d]</span>
+gram = e @ e.transpose(1, 2)            <span class="c"># [B, F, F]</span>
+tri = torch.tril(torch.ones(12, 12)).bool()
+inter = gram[:, tri]                    <span class="c"># [B, F(F+1)/2] = [8, 78]</span></pre>
+              <p>78 interactions for F = 12; cost is O(B·F²·d) for the Gram matrix plus the downstream MLP. This O(F²) growth is why
+                DLRM stops at second order and why DCN-V2 reaches for a low-rank mixture.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq3"><h3><span class="n">✓</span>Module check</h3></div>
   <div class="bleed">
     <div class="widget" id="quiz-m3">
@@ -810,6 +977,62 @@ attn = softmax(S, dim=-1) @ v                  <span class="c"># only the past i
         offline numbers. HSTU is interesting precisely because it keeps those constraints in view.</p>
     </div>
   </div>
+  <div class="container lesson" id="le4" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two exercises that force you to write the pieces SASRec is built from.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 4</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>4.1 — Sinusoidal positional encoding</summary>
+          <div class="ex-body">
+            <p>Implement the sinusoidal positional encoding for length L and dimension d. Then verify numerically that the dot product
+              <code>PE[t] · PE[t+k]</code> depends mainly on the offset k rather than on the absolute position t — and explain why that matters.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Use <code>angle = pos / 10000^(2*(i//2)/d)</code>, then sin for even indices and cos for odd ones.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import numpy as np
+def pe(L, d):
+    pos = np.arange(L)[:, None]; i = np.arange(d)[None, :]
+    ang = pos / np.power(10000, (2 * (i // 2)) / d)
+    out = np.zeros((L, d))
+    out[:, 0::2] = np.sin(ang[:, 0::2])
+    out[:, 1::2] = np.cos(ang[:, 1::2])
+    return out
+P = pe(50, 32)
+print(round(float(P[3] @ P[8]), 3), round(float(P[20] @ P[25]), 3))  <span class="c"># both ~equal (offset 5)</span></pre>
+              <p>The encoding is a fixed “clock” whose relative offsets are learnable from the dot product, so the model can generalise
+                to sequence lengths it never saw — useful when behaviour histories grow.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>4.2 — SASRec’s causal mask and why it is not softmax</summary>
+          <div class="ex-body">
+            <p>Write the attention scores for a length-T sequence, apply the causal mask, and project to a per-position logit against
+              the target item. Compute the loss with sampled negatives (binary cross-entropy) rather than a full softmax, and explain the
+              trade-off.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>The mask is <code>torch.tril</code>; compare against the item vocabulary’s softmax alternative.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import math, torch
+S = q @ k.transpose(-1, -2) / math.sqrt(d)     <span class="c"># [B, T, T]</span>
+mask = torch.tril(torch.ones(T, T)).bool()     <span class="c"># j &gt; t masked out</span>
+S = S.masked_fill(~mask, float("-inf"))
+attn = torch.softmax(S, dim=-1) @ v
+logits = (attn * target_emb).sum(-1)           <span class="c"># score vs the true next item + negatives</span>
+loss = -(torch.log(torch.sigmoid(label * logits))).mean()</pre>
+              <p>A per-step binary objective over a handful of negatives costs O(T) instead of a softmax over the whole item vocabulary,
+                and it lets SASRec use the full sequence in one pass. The price is a weaker, sampled gradient and a harder negative
+                sampling problem.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq4"><h3><span class="n">✓</span>Module check</h3></div>
   <div class="bleed">
     <div class="widget" id="quiz-m4">
@@ -905,6 +1128,54 @@ Loss = L(CTR) + L(CTCVR)   <span class="mut">← CTCVR label is observed on ever
         not as a default. Loss weights are a hyper-parameter, and static ones are a strong baseline.</p>
     </div>
   </div>
+  <div class="container lesson" id="le5" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two exercises on the two multi-task patterns the module covers.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 5</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>5.1 — Implement MMoE with shared experts and per-task gates</summary>
+          <div class="ex-body">
+            <p>Build three expert MLPs and two gating networks (one per task). For each task, softmax the gate over the experts and
+              compute the weighted sum of expert outputs. Then perturb the input and show the two tasks use the experts differently.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>One <code>Linear(d, n_experts)</code> per task; <code>softmax</code> along the expert axis.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import torch, torch.nn.functional as F
+x = torch.randn(4, 8)                                  <span class="c"># [B, d]</span>
+experts = [torch.nn.Linear(8, 8) for _ in range(3)]
+expert_out = [e(x) for e in experts]
+for gate in [torch.nn.Linear(8, 3), torch.nn.Linear(8, 3)]:
+    w = F.softmax(gate(x), dim=-1)                     <span class="c"># [B, 3]</span>
+    y = sum(w[:, i:i+1] * expert_out[i] for i in range(3))
+    <span class="c"># y is the task’s tower input; the two gates give different w for the same x</span></pre>
+              <p>Same experts, different weights per task: that is the “soft sharing” that lets loosely-related tasks coexist where a
+                shared bottom would drag them together.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>5.2 — Derive the ESMM loss</summary>
+          <div class="ex-body">
+            <p>Starting from <code>pCTCVR = pCTR × pCVR</code>, derive what you compute at inference and write the training loss. Then
+              explain why you must <em>not</em> train the CVR head on clicked samples only.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Both labels are observed on every impression: the click label everywhere, the conversion label where a click happened (&amp; zero elsewhere).</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>loss = BCE(pCTR, y_click) + BCE(pCTCVR, y_convert)
+<span class="c"># at inference:</span>
+pCVR = pCTCVR / pCTR            <span class="c"># divide, don’t multiply</span></pre>
+              <p>The CVR head never sees a clicked-only subset, because CTCVR is supervised over the entire impression space; the division
+                at inference recovers pCVR. Training CVR on clicks alone exposes a sample-selection bias the model cannot undo.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq5"><h3><span class="n">✓</span>Module check</h3></div>
   <div class="bleed">
     <div class="widget" id="quiz-m5">
@@ -994,6 +1265,54 @@ Loss = L(CTR) + L(CTCVR)   <span class="mut">← CTCVR label is observed on ever
         cheap accurate scoring (MaskNet), shared representations (TwHIN).</p>
     </div>
   </div>
+  <div class="container lesson" id="le6" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>One systems-design exercise and one small implementation of the SimClusters idea.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 6</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>6.1 — Route retrieval: which subsystem, which freshness?</summary>
+          <div class="ex-body">
+            <p>For each query, decide whether it should be served by RealGraph, GraphJet or SimClusters, and at what refresh cadence:
+              (a) “people you may want to follow”, (b) “tweets you might like right now”, (c) “topics adjacent to your interests”.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>One is a stable user-user graph, one is a sliding window over recent interactions, one is topical communities.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+              <p><strong>(a)</strong> RealGraph — the relationship graph evolves slowly, so an offline batch score is fine.
+                <strong>(b)</strong> GraphJet — “right now” demands a sliding-window graph over the last minutes.
+                <strong>(c)</strong> SimClusters — topical adjacency is exactly what a community vector captures, refreshed
+                periodically. A real system fans out to all three and merges; the point is that each answers a different
+                time-scale/freshness question.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>6.2 — Build sparse community vectors (simplified SimClusters)</summary>
+          <div class="ex-body">
+            <p>Given a small user × item engagement matrix, cluster the items into k communities by co-engagement, then give each user
+              a sparse vector = the share of their engagement per community. Why is a sparse community vector easier to index than a
+              dense MF embedding?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Cluster columns of the matrix; user vectors are just row-restricted counts over the clusters, normalised.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>import numpy as np
+from sklearn.cluster import KMeans
+R = np.array([[1,1,0,0,0],[1,1,1,0,0],[0,0,1,1,0],[0,1,1,1,1]], float)  <span class="c"># users x items</span>
+k = 2
+labels = KMeans(n_clusters=k, n_init=10).fit_predict(R.T)          <span class="c"># cluster items</span>
+C = np.stack([R[:, labels == c].sum(1) for c in range(k)], axis=1)
+U = C / np.maximum(C.sum(1, keepdims=True), 1e-9)                  <span class="c"># sparse user vectors</span></pre>
+              <p>Most users touch a handful of communities, so the vectors are sparse → cheap inverted indices and ANN lookup; and each
+                dimension is interpretable (“this is community 3”), which a dense embedding is not.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
   <div class="container lesson" id="lq6"><h3><span class="n">✓</span>Module check</h3></div>
   <div class="bleed">
     <div class="widget" id="quiz-m6">
@@ -1064,6 +1383,59 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
     </div>
   </div>
 
+  <div class="container lesson" id="le7" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>A data-engineering exercise and the capstone design task.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 7</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>7.1 — Recalibrate after negative downsampling</summary>
+          <div class="ex-body">
+            <p>You keep only 10% of negatives (<code>w = 0.1</code>) to rebalance a 1-in-20 conversion dataset. The model predicts
+              <code>p̂ = 0.30</code> on the downsampled distribution. What is the probability on the true distribution?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Odds rescale by <code>1/w</code>; convert odds back to a probability.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>w = 0.1
+p_hat = 0.30
+p = p_hat / (p_hat + (1 - p_hat) / w)
+print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
+              <p>The downsampled prediction of 30% corresponds to a true rate of ≈4% — downsampling inflates the base rate, and serving the
+                raw score would massively over-predict. Recalibrate whenever you change the training prior.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>7.2 — Capstone: one-page system design</summary>
+          <div class="ex-body">
+            <p>Pick a domain and write one page covering: objective + guardrails; labels and weighting; retrieval sources; ranker;
+              multi-task heads; reranking constraints; offline and online evaluation. Defend each choice with a mechanism from
+              modules 1–6.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Reuse the capstone rubric table in this module — one row per stage, one sentence of justification each.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution (rubric)</summary>
+              <p>A strong answer: names a single north-star plus explicit guardrails (diversity, freshness); chooses a click label
+                <em>weighted by dwell</em> with a separate conversion head (ESMM) to avoid selection bias; retrieves from a two-tower
+                model <em>plus</em> a freshness source (GraphJet-style) and a popularity fallback; ranks with a feature-interaction
+                model (DeepFM/DCN-V2) over user × item × context crosses; reranks with DPP for diversity; evaluates with Recall@K
+                offline and a <em>powered</em> pre-registered A/B online. Weak answers pick models without tying them to a stage or a
+                failure mode.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+  <div class="container lesson" id="lq7"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m7">
+      <div class="widget-head"><span class="t">Self-check · Module 7</span><span class="s" id="score-m7">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m7"></div>
+    </div>
+  </div>
   <div class="container">
     <div class="colophon">
       <p style="max-width:66ch">Interactive course assembled from the 31 posts of <em>“Be a happy and strong coder”</em>
@@ -1143,6 +1515,47 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
       <p>Paper titles, tags, lineage and PDF links come from the companion repository
         <em>Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising</em> (<code>ads_knowledge_graph/</code>),
         reproduced here with attribution. The PDFs are hosted in that repository.</p>
+    </div>
+  </div>
+  <div class="container lesson" id="le8" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two tasks that put the atlas to work as a research tool.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 8</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>8.1 — Chart a theme over time using the atlas</summary>
+          <div class="ex-body">
+            <p>Filter the atlas to a theme (<em>Generative &amp; LLM</em> or <em>Debiasing &amp; Sample Selection</em>), order the
+              papers by year, and write the two-sentence story of how the theme evolved. Which stage do most of them fall into?</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Use the theme dropdown, then read the year column top-to-bottom; the stage tag on each row tells you where they sit.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+              <p>For <em>Generative &amp; LLM</em>: the theme sits mostly in the <em>Generative &amp; Unified</em> stage, moving from
+                early tokenised generative retrieval toward unified generative recommenders (HSTU-family and successors) — i.e. the
+                trend the course frames in module 4. For <em>Debiasing</em>: papers cluster around <em>CVR &amp; Conversion</em> and
+                <em>Delayed Feedback</em>, which map to ESMM (module 5) and the delayed-feedback family.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>8.2 — Read a lineage edge</summary>
+          <div class="ex-body">
+            <p>Pick a curated edge from the lineage explorer (e.g. <code>DCN → GDCN</code> or <code>DIN → DIEN</code>). Open both
+              papers from the atlas and write three sentences: what the parent did, what the child changed, and why the change mattered.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Click a chain node to jump to the paper in the atlas, then follow its PDF link.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+              <p>For <code>DCN → GDCN</code>: DCN introduced an explicit cross network to model bounded-order feature interactions
+                cheaply; GDCN (Gated DCN) adds gating to the cross layers so interaction strength is input-dependent. It mattered
+                because it fixed DCN’s fixed (input-independent) crossing, gaining expressiveness at little cost — the same
+                instance-conditioning idea as MaskNet’s guided mask.</p>
+            </details>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
   <div class="container lesson" id="lq8"><h3><span class="n">✓</span>Module check</h3></div>
@@ -1489,7 +1902,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"Reranking operates on the smallest set — the few hundred survivors of ranking — and applies diversity, freshness and business constraints."},
       {q:"An A/B test reports “no significant difference” but the experiment was under-powered. What is the correct reading?",
        o:["The change definitely has no effect","The test cannot tell “no effect” apart from an effect it failed to detect","The change is harmful","You can ship it because it is not worse"],a:1,
-       e:"Low power means the test had little chance of detecting a real effect, so a null result is uninformative. Run a power analysis / pre-register an MDE before the test."}
+       e:"Low power means the test had little chance of detecting a real effect, so a null result is uninformative. Run a power analysis / pre-register an MDE before the test."},
+      {q:"Why does the YouTube ranker weight each positive by watch time instead of using a plain click label?",
+       o:["To speed up training","A click alone mis-ranks: weighting by minutes watched pushes the model toward videos people actually finish","Because watch time is easier to log","To avoid negative sampling"],a:1,
+       e:"Click-only labels reward clickbait. Weighting positives by watch time (with the e^T·y + T odds trick) makes a longer-watched video genuinely more positive, aligning the objective with satisfaction."},
+      {q:"What does the “example age” feature let the model do?",
+       o:["Encode the user’s account age","Represent recency so predictions are not anchored to the average popularity of the training window","Store the video’s upload date in the embedding","Replace positional encoding"],a:1,
+       e:"Example age gives the model a handle on non-stationarity: at serving time it can express “as of now”, rather than baking in the average popularity observed during training."}
     ],
     m2:[
       {q:"Why does two-tower retrieval need logQ sampling-bias correction?",
@@ -1497,7 +1916,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"In-batch negatives come from the batch, not the corpus, so popular items are over-represented as negatives. Subtracting log q(i) restores the correct weighting."},
       {q:"The item tower is kept independent of the user so that…",
        o:["training is faster only","item embeddings can be precomputed and served with ANN search","the loss is convex","it can memorise item IDs"],a:1,
-       e:"User-independent item embeddings can be computed offline and indexed, turning online recommendation into a nearest-neighbour lookup — the amortisation that makes retrieval tractable."}
+       e:"User-independent item embeddings can be computed offline and indexed, turning online recommendation into a nearest-neighbour lookup — the amortisation that makes retrieval tractable."},
+      {q:"Mixed negative sampling (MNS) is introduced mainly to…",
+       o:["remove the need for logQ","train long-tail items better by mixing uniformly-sampled negatives with in-batch ones","make the item tower deeper","replace ANN search"],a:1,
+       e:"Pure in-batch negatives are dominated by head items, starving the long tail. MNS adds a uniformly-sampled batch and adapts the gradient weights so both pools contribute correctly."},
+      {q:"The production lesson from two-tower III is that the bias-correction table must be…",
+       o:["computed once and frozen","expirable, so stale counters are evicted and memory stays flat as the corpus churns","stored inside the item tower","recomputed each batch by a full scan"],a:1,
+       e:"Bias correction is streaming infrastructure, not a one-off formula: an expiring (mutable) table keeps memory bounded for a continually growing corpus."}
     ],
     m3:[
       {q:"Which model in the family models feature interactions vector-wise (like an FM) rather than bit-wise?",
@@ -1505,7 +1930,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"xDeepFM’s Compressed Interaction Network keeps interactions at the vector level with a controllable order, unlike DCN/DeepFM’s bit-wise mixing."},
       {q:"DLRM deliberately limits interactions to second order because…",
        o:["it cannot represent more","higher-order interactions may not justify the extra compute/memory cost","Facebook had no data","the paper is about ranking only"],a:1,
-       e:"DLRM makes an explicit performance/cost trade-off: pairwise dot-product interactions, then spend the budget on training infrastructure instead."}
+       e:"DLRM makes an explicit performance/cost trade-off: pairwise dot-product interactions, then spend the budget on training infrastructure instead."},
+      {q:"The low-rank “mixture of experts” cross network in DCN-V2 exists to…",
+       o:["add non-linearity to the MLP","approximate the full cross matrix while staying affordable at web-scale serving cost","remove the embedding layer","make the model interpretable"],a:1,
+       e:"A full cross weight matrix is too expensive to serve; DCN-V2 factorises it into low-rank experts, recovering expressiveness at acceptable cost."},
+      {q:"AutoInt’s distinctive advantage over DLRM-style pairwise interactions is…",
+       o:["lower training cost","attention-weighted, interpretable feature interactions","it needs no embeddings","it uses no MLP"],a:1,
+       e:"AutoInt applies multi-head self-attention over feature embeddings, so the attention weights expose which features interacted — interpretability the dot-product models lack."}
     ],
     m4:[
       {q:"What makes SASRec a “next-item” model rather than a masked (cloze) one?",
@@ -1513,7 +1944,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"The triangular causal mask means each position only sees the past, so the model is trained to predict the next item — the formulation you actually need at serving time."},
       {q:"BERT4Rec differs from SASRec mainly by…",
        o:["using a causal mask","training with a masked-item (cloze) objective and bidirectional attention","dropping embeddings","using LR instead of a Transformer"],a:1,
-       e:"BERT4Rec masks random items and predicts them from both directions, producing a softmax over the item vocabulary and richer context, at the cost of a non-causal objective."}
+       e:"BERT4Rec masks random items and predicts them from both directions, producing a softmax over the item vocabulary and richer context, at the cost of a non-causal objective."},
+      {q:"In HSTU, retrieval and ranking are reframed respectively as…",
+       o:["matrix factorisation and logistic regression","next content-token prediction and next action-token prediction","clustering and classification","collaborative filtering and CTR"],a:1,
+       e:"HSTU recasts recommendation as sequential transduction: retrieval predicts the next content token, ranking predicts the next action token — the same shape as a generative language model."},
+      {q:"Per the blog, why do academic sequential models (SASRec/BERT4Rec) underperform industry systems?",
+       o:["They use too many layers","They ignore non-stationary streaming data, the CG/ranker split, dense features and serving latency","They require GPUs","They cannot use attention"],a:1,
+       e:"Real logs are continuously evolving streams, and production systems separate candidate generation from ranking; the papers discuss neither that, nor dense features, nor latency budgets."}
     ],
     m5:[
       {q:"How does MMoE improve on a shared-bottom multi-task model?",
@@ -1521,7 +1958,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"Multiple experts soft-shared through per-task gates let tasks use the shared capacity differently — which helps most when task relatedness is low."},
       {q:"ESMM’s core trick is to…",
        o:["model only clicked samples","predict CTCVR over the entire impression space and divide by CTR","drop the CVR task","use a single tower"],a:1,
-       e:"By supervising the composite CTCVR on all impressions and deriving pCVR = pCTCVR / pCTR, ESMM avoids the biased clicked-only subset and fights label sparsity."}
+       e:"By supervising the composite CTCVR on all impressions and deriving pCVR = pCTCVR / pCTR, ESMM avoids the biased clicked-only subset and fights label sparsity."},
+      {q:"ESMM supervises CTCVR over all impressions primarily to…",
+       o:["double the model size","avoid training CVR on the biased clicked-only subset and use far more data","remove the need for a CTR head","speed up inference"],a:1,
+       e:"Observing the composite label everywhere sidesteps sample-selection bias and lets the shared CVR tower learn from the entire impression space, not just clicks."},
+      {q:"What did the late-2023 papers conclude about elaborate MTL optimisers?",
+       o:["They always beat scalarization","Most do not reliably beat a simple weighted-sum (scalarization)","They eliminate task conflict entirely","They are required for MMoE"],a:1,
+       e:"Two papers found most MTL optimisers unreliable; simple weighted-sum scalarization, better labels, or a shared trunk often match or beat them. Diagnose a real conflict before reaching for PCGrad/IMTL."}
     ],
     m6:[
       {q:"Which Twitter component is responsible for real-time, fresh-signal retrieval?",
@@ -1529,7 +1972,21 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"GraphJet is the in-memory real-time graph engine over a sliding window of recent interactions; RealGraph covers the stable graph, SimClusters the topical communities."},
       {q:"What is distinctive about a SimClusters representation?",
        o:["It is a dense MF embedding","Every dimension is an interpretable community","It is trained with BERT","It only works for users"],a:1,
-       e:"Each dimension is a community, which makes the vector interpretable, sparse (easy to index) and able to absorb new/churning content quickly."}
+       e:"Each dimension is a community, which makes the vector interpretable, sparse (easy to index) and able to absorb new/churning content quickly."},
+      {q:"Which two Twitter components together cover stable vs. fresh relationship signals?",
+       o:["RealGraph (stable) and GraphJet (fresh)","SimClusters and TwHIN","MaskNet and DLRM","GraphJet and BERT4Rec"],a:0,
+       e:"RealGraph scores the slowly-evolving user-user graph offline; GraphJet maintains a sliding-window real-time graph — freshness is a retrieval feature layered on stability."},
+      {q:"TwHIN mainly addresses which operational concern?",
+       o:["ranking latency only","shared heterogeneous embeddings and parameter drift across model versions","feature crossing","negative sampling"],a:1,
+       e:"TwHIN learns embeddings for a heterogeneous network and, crucially, keeps them compatible across model versions — the unglamorous deployment problem of drifting parameters."}
+    ],
+    m7:[
+      {q:"After downsampling negatives for training, what must you do at serving time?",
+       o:["Nothing — the model already outputs true rates","Recalibrate the probability back to the true prior","Retrain without downsampling","Clip predictions to 0/1"],a:1,
+       e:"Downsampling changes the training prior and inflates the base rate. Rescale odds by the keep-weight w (p = p̂ / (p̂ + (1−p̂)/w)) so served probabilities match reality."},
+      {q:"Why does the course treat preprocessing and calibration as higher-leverage than swapping rankers?",
+       o:["Because all rankers are identical","Because labels, priors and calibration change the target the model learns, while ranker choice is a small serving-cost trade-off","Because calibration removes the need for A/B tests","Because preprocessing is faster"],a:1,
+       e:"Public-dataset gaps between SOTA rankers are small compared with the effect of label design, negative sampling and calibration — and a miscalibrated served score makes the whole system over-predict."}
     ],
     m8:[
       {q:"In the paper atlas, what does the “stage” tag tell you about a paper?",
@@ -1537,7 +1994,13 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
        e:"Stage tags map each paper onto the pipeline: Survey & Systems, Ads Retrieval, Pre-Ranking, CTR Ranking, CVR & Conversion, Delayed Feedback, Calibration, Relevance, Generative & Unified. Themes, companies and venues are separate filter dimensions."},
       {q:"Which of these is one of the repository’s curated lineage chains?",
        o:["DIN → DIEN → SIM → TWIN → TWINv2","MaskNet → SASRec","BERT4Rec → DLRM","Wide & Deep → GraphJet"],a:0,
-       e:"The behaviour-sequence family DIN → DIEN → SIM → TWIN → TWINv2 is a curated “builds on” chain, alongside ESMM → ESM2 → HM3 and DCN → GDCN. The other options mix unrelated families."}
+       e:"The behaviour-sequence family DIN → DIEN → SIM → TWIN → TWINv2 is a curated “builds on” chain, alongside ESMM → ESM2 → HM3 and DCN → GDCN. The other options mix unrelated families."},
+      {q:"In the atlas, `lineage` edges represent…",
+       o:["citation counts","curated “builds on” relations that trace how ideas evolved across papers","venue rankings","co-author links"],a:1,
+       e:"Lineage edges are hand-curated, e.g. DIN → DIEN → SIM → TWIN → TWINv2; they turn the paper pile into ordered reading paths."},
+      {q:"Which atlas filter best surfaces the current frontier of the field?",
+       o:["venue","theme (e.g. Generative & LLM, Debiasing & Sample Selection)","year only","company size"],a:1,
+       e:"Themes group papers by research problem, so filtering by theme and reading in year order shows where the frontier is moving."}
     ]
   };
   Object.keys(QUIZ).forEach(function(mid){

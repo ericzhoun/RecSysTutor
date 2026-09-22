@@ -4,7 +4,7 @@ An **interactive, single-file course on recommender systems for machine-learning
 full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 <https://happystrongcoder.substack.com/archive?sort=top>.
 
-- **9 modules · 39 lessons · 9 live widgets · 7 graded self-checks · 104 linked papers · ~6 h**
+- **9 modules · 47 lessons · 9 live widgets · 8 graded self-checks · 16 exercises · 104 linked papers**
 - One self-contained HTML file — no build step, no dependencies, no network, works offline.
 
 ## Run it
@@ -36,8 +36,8 @@ single problem it was invented to fix.
 
 Seven interactive widgets let you manipulate the mechanisms directly (funnel explorer, extreme-multiclass cost & bias,
 ECS/diversity index, normalisation & temperature, logQ correction, a runnable streaming frequency estimator, and MMoE
-gating), and module 8 adds a **filterable paper atlas** plus a **lineage explorer**. Each module ends with a graded
-self-check.
+gating), and module 8 adds a **filterable paper atlas** plus a **lineage explorer**. Every module ends with **two
+hands-on exercises** (hint + reference solution) and a graded self-check, so the course is a workbook, not just a read.
 
 - `index.html` — the course (open this)
 - `syllabus.md` — module/lesson → source-post map, learning tracks, widget index

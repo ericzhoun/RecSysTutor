@@ -5,7 +5,7 @@ An interactive course for machine-learning engineers, built from the full archiv
 
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
-- **9 modules · 39 lessons · 9 interactive widgets · 7 self-checks · 104 linked papers · ~6 h**
+- **9 modules · 47 lessons · 9 interactive widgets · 8 self-checks · 16 exercises · 104 linked papers**
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
 Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
@@ -50,6 +50,14 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 7. **MMoE gating** — same experts, per-task gates, live softmax weights (M5).
 8. **Paper atlas** — filter 104 papers by stage, theme, company, year and free text (M8).
 9. **Lineage explorer** — the 70 curated “builds on” links rendered as clickable chains (M8).
+
+## Exercises
+
+Every module (M1–M8) ends with **two hands-on exercises** (16 total) with a progressive-disclosure **hint** and a
+**reference solution** (code where appropriate) — e.g. computing ECS/DI, sizing an A/B test, implementing the streaming
+frequency estimator, logQ correction, a DCN cross layer, DLRM pairwise masking, positional encodings, the SASRec causal
+objective, MMoE gating, the ESMM loss, retrieval routing, SimClusters-style community vectors, downsampling
+recalibration, and atlas/lineage research tasks. Each module also ends with a graded self-check (2–4 questions).
 
 Widgets run entirely in the page: no network, no tracking, nothing stored beyond the session.
 
