@@ -109,6 +109,10 @@ same notes power a grounded tutor. The integration lives in `deeptutor/`:
 Capabilities wired up: grounded **RAG chat**, **deep_question** (quiz generation), **deep_solve** (exercise solving),
 **deep_research**, **visualize**, and **mastery_path**. See `deeptutor/README.md` for commands and prerequisites.
 
+**Live chat** additionally runs on Butterbase (`butterbase/`): a serverless function (`tutor-chat`) plus the course notes
+as the `recsys-course` RAG collection, with the LLM provider from the project `.env`. Open it at
+[`chat.html`](./chat.html) or from the M9 lesson — answers cite the modules they were grounded in.
+
 ---
 
 ## Module 8 — paper atlas source

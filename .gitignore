@@ -1,0 +1,14 @@
+# secrets / local only
+.env
+.butterbase-fn-key.json
+*.key
+
+# python / tooling
+__pycache__/
+*.pyc
+
+# qa artefacts
+.qa/
+
+# os noise
+.DS_Store

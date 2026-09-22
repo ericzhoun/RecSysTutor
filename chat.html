@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RecSysTutor — live chat</title>
+<style>
+:root{
+  --bg:#f5f5f2; --panel:#fbfbf9; --ink:#17181a; --muted:#5d6167; --faint:#8b9097;
+  --line:rgba(20,22,24,.14); --line-soft:rgba(20,22,24,.08);
+  --accent:#0f6f66; --accent-ink:#0b544d; --accent-soft:rgba(15,111,102,.10);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 26px 90px}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ink);margin-top:40px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,46px);letter-spacing:-.02em;line-height:1.05;margin:14px 0 0}
+.lede{color:var(--muted);margin:14px 0 0;max-width:62ch}
+.meta{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.05em;margin-top:10px}
+.hr{border:0;border-top:2px solid var(--ink);margin:26px 0 0}
+.thread{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+.msg{border:1px solid var(--line);background:var(--panel);padding:14px 16px 12px;max-width:70ch}
+.msg.user{align-self:flex-end;background:var(--accent-soft);border-color:rgba(15,111,102,.35)}
+.msg .who{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.msg.user .who{color:var(--accent-ink)}
+.msg .body{white-space:pre-wrap;overflow-wrap:anywhere}
+.msg .body code{font-family:var(--mono);font-size:.88em;background:var(--line-soft);padding:1px 5px;border-radius:3px}
+.msg .srcs{margin-top:10px;padding-top:9px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:1px 6px;margin:0 6px 4px 0}
+.chip.ok{border-color:rgba(15,111,102,.5);color:var(--accent-ink)}
+.chip.no{color:var(--faint)}
+.suggest{margin-top:22px}
+.suggest .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.sbtn{font-family:var(--sans);font-size:13.5px;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:7px 12px;margin:0 8px 8px 0;cursor:pointer;text-align:left}
+.sbtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.composer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:14px 0 6px;margin-top:26px;display:flex;gap:10px}
+.composer textarea{flex:1;min-height:52px;max-height:160px;resize:vertical;font-family:var(--sans);font-size:15px;line-height:1.5;padding:11px 13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);outline:none}
+.composer textarea:focus{border-color:var(--accent)}
+.composer button{align-self:flex-end;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--panel);border:1px solid var(--ink);padding:12px 16px;cursor:pointer}
+.composer button:hover{background:var(--accent);border-color:var(--accent)}
+.composer button:disabled{opacity:.55;cursor:default}
+.status{font-family:var(--mono);font-size:11px;color:var(--faint);min-height:16px;margin-top:6px}
+a{color:var(--accent-ink)}
+.notice{margin-top:18px;border:1px solid var(--line);background:var(--panel);padding:12px 14px;font-size:13px;color:var(--muted);max-width:70ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">RecSysTutor · live tutor</div>
+  <h1>Ask the course</h1>
+  <p class="lede">A grounded tutor over the RecSysTutor notes: 9 modules of recommender-systems content —
+    retrieval, ranking, sequential models, multi-task learning, the Twitter case study — plus the 104-paper atlas.
+    Answers are retrieved from the course knowledge base and cite the module they came from.</p>
+  <div class="meta">backend: Butterbase serverless function + native RAG · model: app AI gateway</div>
+  <hr class="hr">
+
+  <div class="thread" id="thread"></div>
+
+  <div class="suggest" id="suggest">
+    <div class="lbl">Try one of these</div>
+    <button class="sbtn">Why does two-tower retrieval need logQ correction?</button>
+    <button class="sbtn">Compare DeepFM, DCN-V2 and xDeepFM — when would I pick each?</button>
+    <button class="sbtn">Quiz me on Module 2 with 3 questions.</button>
+    <button class="sbtn">What is the lineage chain behind TWINv2?</button>
+    <button class="sbtn">How does MMoE differ from a shared-bottom multi-task model?</button>
+  </div>
+
+  <div class="composer">
+    <textarea id="input" placeholder="Ask anything from the course… (Enter to send, Shift+Enter for a new line)" rows="2"></textarea>
+    <button id="send">Send</button>
+  </div>
+  <div class="status" id="status"></div>
+
+  <div class="notice">
+    <strong>How it works.</strong> Your question is matched against the course knowledge base (Butterbase native RAG);
+    the retrieved passages plus your conversation history go to the tutor model through Butterbase's AI gateway.
+    The chips under each answer show which module documents were retrieved. The
+    <a href="index.html">full interactive course</a> — lessons, widgets, exercises — lives on this site;
+    a DeepTutor CLI integration also exists in the repo under <code>deeptutor/</code>.
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ENDPOINT = "https://api.butterbase.ai/v1/app_48ul5eszfv7v/fn/tutor-chat";
+  var history = [];
+  var thread = document.getElementById("thread");
+  var input = document.getElementById("input");
+  var sendBtn = document.getElementById("send");
+  var status = document.getElementById("status");
+  var busy = false;
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+  function fmt(s){
+    var h = esc(s);
+    h = h.replace(/`([^`]+)`/g, "<code>$1</code>");
+    h = h.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    h = h.replace(/(^|\n)\s*\* /g, "\n• ");
+    return h;
+  }
+
+  function add(role, text, sources, grounded){
+    var m = document.createElement("div");
+    m.className = "msg " + (role === "user" ? "user" : "tutor");
+    var w = document.createElement("div"); w.className = "who";
+    w.textContent = role === "user" ? "you" : "recsystutor";
+    var b = document.createElement("div"); b.className = "body";
+    b.innerHTML = fmt(text);
+    m.appendChild(w); m.appendChild(b);
+    if (role === "tutor" && sources) {
+      var s = document.createElement("div"); s.className = "srcs";
+      var chips = sources.map(function(x){
+        var name = x.module || x.file || "notes";
+        var sim = x.similarity != null ? " " + x.similarity : "";
+        return '<span class="chip ' + (grounded ? "ok" : "no") + '">' + esc(name) + sim + "</span>";
+      }).join("");
+      s.innerHTML = (grounded ? "grounded in " : "no notes retrieved · ") + chips;
+      m.appendChild(s);
+    }
+    thread.appendChild(m);
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    return b;
+  }
+
+  function ask(text){
+    if (busy || !text.trim()) return;
+    busy = true; sendBtn.disabled = true;
+    add("user", text.trim());
+    history.push({ role: "user", content: text.trim() });
+    input.value = ""; input.style.height = "auto";
+    status.textContent = "retrieving from the course notes…";
+    var b = add("tutor", "…");
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text.trim(), history: history.slice(-8) })
+    }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        if (!res.ok || res.j.error) {
+          var d = res.j && res.j.error ? String(res.j.error) : "http " + res.ok;
+          b.textContent = "The tutor backend returned an error (" + d + "). Try again in a moment.";
+          status.textContent = "";
+        } else {
+          b.innerHTML = fmt(res.j.answer || "(empty response)");
+          var s = document.createElement("div"); s.className = "srcs";
+          var chips = (res.j.sources || []).map(function(x){
+            var name = x.module || x.file || "notes";
+            var sim = x.similarity != null ? " " + x.similarity : "";
+            return '<span class="chip ' + (res.j.grounded ? "ok" : "no") + '">' + esc(name) + sim + "</span>";
+          }).join("");
+          s.innerHTML = (res.j.grounded ? "grounded in " : "no notes retrieved · ") + chips +
+            ' <span class="chip">' + esc(res.j.model || "") + "</span>";
+          b.parentNode.appendChild(s);
+          history.push({ role: "assistant", content: res.j.answer || "" });
+          status.textContent = "";
+        }
+      })
+      .catch(function(e){
+        b.textContent = "Network error: " + e;
+        status.textContent = "";
+      })
+      .then(function(){ busy = false; sendBtn.disabled = false; input.focus(); });
+  }
+
+  sendBtn.addEventListener("click", function(){ ask(input.value); });
+  input.addEventListener("keydown", function(e){
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(input.value); }
+  });
+  input.addEventListener("input", function(){
+    input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 160) + "px";
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".sbtn"), function(b){
+    b.addEventListener("click", function(){ ask(b.textContent); });
+  });
+})();
+</script>
+</body>
+</html>

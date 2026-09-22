@@ -1576,7 +1576,8 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
   <div class="container">
     <div class="module-head"><div class="folio">M9</div><h2>Study with an AI tutor (DeepTutor)</h2></div>
     <p class="module-sub">This course is also a <strong>DeepTutor</strong> knowledge base: the same notes power a grounded tutor
-      that answers from the material, generates quizzes on demand, and builds a personal mastery path.</p>
+      that answers from the material, generates quizzes on demand, and builds a personal mastery path. A browser-based
+      <strong>live chat</strong> backend is deployed on Butterbase.</p>
   </div>
 
   <div class="container lesson" id="l9-1" data-lesson>
@@ -1585,6 +1586,10 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
       <a class="plainlink" href="https://github.com/HKUDS/DeepTutor">DeepTutor</a> — HKUDS’s lifelong-personalised tutoring
       platform — as the knowledge base <code>recsys-course</code>. Because answers are retrieved from these notes, the tutor
       cites the module instead of guessing, and the same base drives quizzes, research and visualisation.</p>
+    <p><a class="plainlink" href="chat.html"><strong>Open the live chat →</strong></a> — a browser chat backed by a serverless
+      function deployed on Butterbase: your question is retrieved against the course notes (native RAG, with a lexical
+      fallback over the exported content) and answered by the provider configured in the project <code>.env</code>; the
+      retrieved modules are shown as chips under each answer.</p>
     <table class="grid">
       <thead><tr><th>You want to…</th><th>DeepTutor capability</th><th>Command</th></tr></thead>
       <tbody>
