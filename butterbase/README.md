@@ -55,16 +55,25 @@ python3 deploy.py --rag      # (re)ingest deeptutor/content into the RAG collect
 
 ## Known state / switching on the managed paths
 
-- The account's AI allowance is **$0** (balance ≈ −$0.09). Consequences:
+- The account's AI allowance is **$0** (balance ≈ −$0.09). Confirmed by a clean probe: creating a second collection and
+  ingesting a single document ended in `status: "failed"` — the failure is the **embedding** step being unbilled, not
+  access mode (a `private` collection behaved identically). Consequences:
   - the AI gateway returns `insufficient_credits` (BYOK alone does not bypass it), so generation goes **direct** to the
     provider in `.env` — currently **glm-5.2** on `open.bigmodel.cn` (OpenAI-compatible);
-  - the RAG collection's semantic query returns a server 500 because ingest-time embeddings could not be billed, so the
-    function falls back to **lexical retrieval** over the published notes (still grounded, with module citations).
+  - the RAG collection reports 11 documents `ready` with chunk counts, but their vectors are missing, so the semantic
+    query endpoint returns `500 Failed to query collection`. The function therefore falls back to **lexical retrieval**
+    over the published notes (still grounded, with module citations). No amount of re-ingesting fixes this until the
+    account can be billed.
 - To move back to the managed paths: top up the account / enable auto-refill. The function already prefers the
   Butterbase gateway and native RAG, so no code change is needed — verify with `deploy.py --test` that
   `mode` becomes `gateway` and `retrieval` becomes `rag`.
 - The endpoint is public by design (`auth: none`) so the static page can call it. Rate limiting is in place; if you
   want stronger control, add a Durable Object limiter or switch the trigger to `auth: required` with app sign-in.
+
+## Monitoring
+
+A scheduled health check runs **every 6 hours** (AutoClaw cron job `RecSysTutor chat health`) that GETs the health
+endpoint and only messages the user when it is unhealthy. Manage it with the `cron` tool (list / run / disable).
 
 ## Limits / costs
 
