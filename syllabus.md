@@ -5,7 +5,7 @@ An interactive course for machine-learning engineers, built from the full archiv
 
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
-- **8 modules · 36 lessons · 6 interactive widgets · 6 self-checks · ~6 h**
+- **9 modules · 39 lessons · 9 interactive widgets · 7 self-checks · 104 linked papers · ~6 h**
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
 Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
@@ -35,6 +35,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | **M5 Multi-task learning** | MMoE · ESMM · MTL optimisation I / II / III | Modeling Task Relationships with MMoE · Entire Space Multi-Task Model · Optimization in Multi Task Learning I / II / III |
 | **M6 Case study: Twitter** | RealGraph · GraphJet · SimClusters · MaskNet in production · TwHIN & the system picture | Dive into Twitter’s recommendation system I–VI |
 | **M7 Practical toolkit & capstone** | Data preprocessing with Pandas (Criteo) · Capstone — design one system end to end | Quick data preprocessing with Pandas on Criteo · (synthesis) |
+| **M8 Paper atlas** | The collection · Lineage chains · How to use the atlas | Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising (`ads_knowledge_graph/`) — 104 ads/recsys papers |
 
 ---
 
@@ -47,6 +48,8 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 5. **logQ sampling-bias correction** — raw logit vs corrected logit (M2).
 6. **Streaming frequency estimator** — run the online Δ-estimation algorithm (M2).
 7. **MMoE gating** — same experts, per-task gates, live softmax weights (M5).
+8. **Paper atlas** — filter 104 papers by stage, theme, company, year and free text (M8).
+9. **Lineage explorer** — the 70 curated “builds on” links rendered as clickable chains (M8).
 
 Widgets run entirely in the page: no network, no tracking, nothing stored beyond the session.
 
@@ -81,3 +84,13 @@ Widgets run entirely in the page: no network, no tracking, nothing stored beyond
 
 All URLs are under `https://happystrongcoder.substack.com`. Figures and claims in the course are attributed
 to these posts; external papers are named by title in-lesson so you can find the originals.
+
+---
+
+## Module 8 — paper atlas source
+
+The atlas in module 8 is generated from the graph in the companion repository
+`Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising`, file `ads_knowledge_graph/knowledge_graph.json`
+(104 paper nodes · 9 stage hubs · 11 theme hubs · 16 company hubs · 70 `lineage` edges). Papers are tagged by pipeline
+stage, research theme, company, venue and year; the curated lineage chains are the repository's "builds on" relations.
+Reproduced with attribution; the linked PDFs are hosted in that repository.

@@ -4,7 +4,7 @@ An **interactive, single-file course on recommender systems for machine-learning
 full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 <https://happystrongcoder.substack.com/archive?sort=top>.
 
-- **8 modules · 36 lessons · 7 live widgets · 6 graded self-checks · ~6 h**
+- **9 modules · 39 lessons · 9 live widgets · 7 graded self-checks · 104 linked papers · ~6 h**
 - One self-contained HTML file — no build step, no dependencies, no network, works offline.
 
 ## Run it
@@ -32,10 +32,12 @@ single problem it was invented to fix.
 | M5 Multi-task learning | MMoE · ESMM · multi-task optimisation I–III |
 | M6 Case study: Twitter | RealGraph · GraphJet · SimClusters · MaskNet · TwHIN |
 | M7 Practical toolkit | Criteo preprocessing with Pandas · end-to-end capstone |
+| M8 Paper atlas | The 104-paper Ads & RecSys collection — filter by stage / theme / company / year · curated lineage chains |
 
 Seven interactive widgets let you manipulate the mechanisms directly (funnel explorer, extreme-multiclass cost & bias,
 ECS/diversity index, normalisation & temperature, logQ correction, a runnable streaming frequency estimator, and MMoE
-gating). Each module ends with a graded self-check.
+gating), and module 8 adds a **filterable paper atlas** plus a **lineage explorer**. Each module ends with a graded
+self-check.
 
 - `index.html` — the course (open this)
 - `syllabus.md` — module/lesson → source-post map, learning tracks, widget index
@@ -50,3 +52,10 @@ original to this repo.
 > **Reuse note:** the underlying ideas and any quoted material belong to the original author. This repo is a
 > transformative, attributed study guide. Confirm the source author's terms before redistributing or commercialising
 > the derived text.
+
+## Paper atlas (module 8)
+
+Module 8 folds in the **104 ads/recsys papers** (with tags, curated lineage and PDF links) curated in the companion
+repository `Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising`, sourced from its `ads_knowledge_graph/`
+graph. Papers can be filtered by pipeline stage, research theme, company and year, and the curated “builds on” lineage
+chains (e.g. `DIN → DIEN → SIM → TWIN → TWINv2`) are rendered as clickable paths. PDFs are hosted in that repository.
