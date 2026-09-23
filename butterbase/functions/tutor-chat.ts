@@ -6,7 +6,7 @@
 //
 // Triggers:  POST /tutor-chat   (public chat)      GET /tutor-chat (health)
 
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 const COLLECTION = "recsys-course";
 
 const ALLOWED_ORIGINS = [
@@ -39,7 +39,7 @@ const DOCS = [
 ];
 
 async function lexicalRetrieve(base: string, query: string, topN = 4) {
-  const terms = (query.toLowerCase().match(/[a-z0-9][a-z0-9-]{2,}/g) ?? []).slice(0, 12);
+  const terms = [...new Set((query.toLowerCase().match(/[a-z0-9][a-z0-9-]{2,}/g) ?? []).slice(0, 14))];
   const texts = await Promise.all(DOCS.map(async (f) => {
     try {
       const r = await fetch(base + f);
@@ -48,21 +48,36 @@ async function lexicalRetrieve(base: string, query: string, topN = 4) {
       return "";
     }
   }));
-  const scored: any[] = [];
+
+  // split every document into sections and index them
+  const secs: { text: string; name: string; low: string }[] = [];
   texts.forEach((t, i) => {
     if (!t) return;
+    const name = DOCS[i].replace(/\.md$/, "").toLowerCase();
     for (const part of t.split(/\n(?=#{2,3} )/)) {
-      const low = part.toLowerCase();
-      let s = 0;
-      for (const term of terms) {
-        const c = low.split(term).length - 1;
-        if (c) s += Math.min(c, 6);
-      }
-      if (s > 0) {
-        scored.push({ text: part.slice(0, 1600), score: s, metadata: { module: DOCS[i].replace(/\.md$/, "") } });
-      }
+      secs.push({ text: part, name, low: part.toLowerCase() });
     }
   });
+  const N = secs.length || 1;
+  const df: Record<string, number> = {};
+  for (const term of terms) {
+    let c = 0;
+    for (const s of secs) if (s.low.includes(term)) c++;
+    df[term] = c;
+  }
+
+  const scored: any[] = [];
+  for (const s of secs) {
+    let sc = 0;
+    for (const term of terms) {
+      const c = s.low.split(term).length - 1;
+      if (!c) continue;
+      const idf = 1 + Math.log(N / Math.max(df[term], 1));   // rare terms matter more
+      sc += Math.min(c, 6) * idf;
+      if (s.name.includes(term)) sc += 4;                    // module-name boost
+    }
+    if (sc > 0) scored.push({ text: s.text.slice(0, 1600), score: Number(sc.toFixed(2)), metadata: { module: s.name } });
+  }
   scored.sort((a, b) => b.score - a.score);
   return scored.slice(0, topN);
 }
