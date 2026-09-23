@@ -32,3 +32,7 @@ Every module you just read has been exported to Markdown and ingested into
         (`content/` — one document per module plus the 104-paper atlas), one-command wrappers in `scripts/`
         (`setup_kb.sh`, `tutor.sh`, `quiz.sh`, `study_plan.sh`), and example outputs in
         `generated/`. It needs DeepTutor installed and an LLM + embedding provider configured.
+
+- Ref DeepTutor (HKUDS) — lifelong personalised tutoring platform — the CLI/Web tutor this module integrates
+- Ref Butterbase — backend-as-a-service — hosts the live-chat function and knowledge base
+- Blog Dive into Twitter VI — shared representations across model versions (why grounding matters) — “Be a happy and strong coder”

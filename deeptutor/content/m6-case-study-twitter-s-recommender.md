@@ -64,6 +64,17 @@ The closing post ties it together with **TwHIN** — Twitter’s Heterogeneous I
         time-scale and recall problem — stable graph (RealGraph), fresh graph (GraphJet), topical communities (SimClusters),
         cheap accurate scoring (MaskNet), shared representations (TwHIN).
 
+- Blog Dive into Twitter’s recommendation system I — RealGraph — “Be a happy and strong coder”
+- Blog … II — GraphJet — “Be a happy and strong coder”
+- Blog … III — GraphJet internals — “Be a happy and strong coder”
+- Blog … IV — SimClusters — “Be a happy and strong coder”
+- Blog … V — MaskNet — “Be a happy and strong coder”
+- Blog … VI — TwHIN and the system — “Be a happy and strong coder”
+- Paper “RealGraph: User Interaction Prediction at Twitter” · Twitter engineering, 2014 (linked from the blog post)
+- Paper “GraphJet: Real-Time Content Recommendations at Twitter” · VLDB 2016 (linked from the blog post)
+- Paper “SimClusters: Community-Based Representations for Heterogeneous Recommendations at Twitter” · KDD 2020 (linked from the blog post)
+- Paper “TwHIN: Embedding the Twitter Heterogeneous Information Network” · arXiv 2022 (linked from the blog post)
+
 ### Exercises
 
 One systems-design exercise and one small implementation of the SimClusters idea.

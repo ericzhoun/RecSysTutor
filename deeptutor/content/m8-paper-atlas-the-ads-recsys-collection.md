@@ -35,6 +35,9 @@ The atlas also carries **curated “builds on” links** — 70 of them — that
         *Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising* (`ads_knowledge_graph/`),
         reproduced here with attribution. The PDFs are hosted in that repository.
 
+- Ref RecSysTutor paper atlas (module 8 data & viewer) — 104 ads/recsys papers, stages, themes, curated lineage
+- Paper Deep Learning to Rank in Industrial Search Engines, Recommender Systems and Online Advertising · TOIS 2026
+
 ### Exercises
 
 Two tasks that put the atlas to work as a research tool.

@@ -64,6 +64,11 @@ Everything upstream only matters if you can measure it. The blog’s AB-testing 
         faces of one relationship — fix three and the fourth is determined. A “flat” A/B result from an under-powered test tells
         you nothing, and a low-sample-size test is the most common source of false wins.
 
+- Blog Deep Neural Networks for YouTube Recommendations — “Be a happy and strong coder”
+- Blog Diversity in recommendation — “Be a happy and strong coder”
+- Blog Demystify AB Testing — “Be a happy and strong coder”
+- Ref Covington, Adams & Sargin — “Deep Neural Networks for YouTube Recommendations” — RecSys 2016, Google Research
+
 ### Exercises
 
 Two hands-on tasks. Try them before opening the reference solution — the point is the arithmetic and the code, not the answer.

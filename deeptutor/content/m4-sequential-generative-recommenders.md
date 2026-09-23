@@ -75,6 +75,18 @@ Bidirectional context helps when history is dense; the cost is that you can no l
         ignores serving latency, feature engineering, and the CG/ranker split is not a production model, however good its
         offline numbers. HSTU is interesting precisely because it keeps those constraints in view.
 
+- Blog Transformer with code I — positional encoding & self-attention — “Be a happy and strong coder”
+- Blog Transformer with code II — encoder & decoder — “Be a happy and strong coder”
+- Blog A Gentle Introduction to BERT — “Be a happy and strong coder”
+- Blog SASRec — “Be a happy and strong coder”
+- Blog BERT4Rec — “Be a happy and strong coder”
+- Blog HSTU — generative recommenders — “Be a happy and strong coder”
+- Paper Vaswani et al. — Attention Is All You Need · NeurIPS 2017
+- Paper Devlin et al. — BERT · NAACL 2019
+- Paper Kang & McAuley — SASRec · ICDM 2018
+- Paper Sun et al. — BERT4Rec · CIKM 2019
+- Paper Zhai et al. — Actions Speak Louder than Words (HSTU) · ICML 2024, Meta
+
 ### Exercises
 
 Two exercises that force you to write the pieces SASRec is built from.

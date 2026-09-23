@@ -56,6 +56,13 @@ a{color:inherit;}
   background:var(--bg);color:var(--ink);}
 .side-search input:focus{outline:none;border-color:var(--accent);}
 .side-search input::placeholder{color:var(--faint);}
+.sources{margin:30px 0 0;border-top:1px solid var(--line);padding-top:14px;}
+.sources-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:9px;}
+.sources ul{list-style:none;padding:0;margin:0;max-width:78ch;}
+.sources li{font-size:13.5px;color:var(--muted);margin:5px 0;display:flex;gap:10px;align-items:baseline;}
+.src-type{flex:0 0 52px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);}
+.sources a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+.src-note{color:var(--faint);font-style:italic;}
 select.sel{font-family:var(--mono);font-size:12px;padding:6px 8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);}
 .atlas-list{margin-top:14px;border-top:1px solid var(--line-soft);max-height:540px;overflow:auto;}
 .atlas-item{display:flex;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line-soft);align-items:baseline;}
@@ -467,6 +474,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
     </div>
   </div>
 
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/deep-neural-networks-for-youtube">Deep Neural Networks for YouTube Recommendations</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/diversity-in-recommendation">Diversity in recommendation</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/demystify-ab-testing">Demystify AB Testing</a> — “Be a happy and strong coder”</li><li><span class="src-type">Ref</span> <a href="https://research.google/pubs/archive/45530.pdf">Covington, Adams &amp; Sargin — “Deep Neural Networks for YouTube Recommendations”</a> — RecSys 2016, Google Research</li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le1" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Two hands-on tasks. Try them before opening the reference solution — the point is the arithmetic and the code, not the answer.</p>
@@ -645,6 +658,12 @@ loss     = cross_entropy(logits, labels=diagonal)            <span class="c"># i
       <strong>DeepFM</strong> ranker. Retrieval and ranking are often the same primitive at different scales.</p>
   </div>
 
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/two-tower-candidate-retriever-i">Two tower candidate retriever I — bias correction</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/two-tower-candidate-retriever-ii">Two tower candidate retriever II — mixed negative sampling</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/two-tower-candidate-retriever-iii">Two tower candidate retriever III — expiring tables</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/from-fm-to-deepfm-the-almighty-factorization">From FM to DeepFM — FM as a retriever</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> Yi et al. — “Sampling-Bias-Corrected Neural Modeling for Large Corpus Item Recommendations” · RecSys 2019 <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> Yang et al. — “Mixed Negative Sampling for Learning Two-tower Neural Networks” · WWW 2020 <span class="src-note">(linked from the blog post)</span></li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le2" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Both tasks implement mechanisms the two-tower paper introduces. Run them and inspect the behaviour.</p>
@@ -831,6 +850,12 @@ logit = MLP( concat(dense_mlp_out, inter) )</pre>
       </tbody>
     </table>
   </div>
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/wide-and-deep-learning-for-recommender">Wide &amp; Deep Learning for Recommender Systems</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/deep-and-cross-network-for-ad-click">Deep &amp; Cross Network for Ad Click Predictions</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dcn-v2-improved-deep-and-cross-network">DCN V2</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/xdeepfm-combining-explicit-and-implicit">xDeepFM</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/autoint-automatic-feature-interaction">AutoInt</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/deep-learning-recommendation-model">Deep Learning Recommendation Model (DLRM)</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/finalmlp-an-enhanced-two-stream-mlp">FinalMLP</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-6fc">MaskNet</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1606.07792">Cheng et al. — Wide &amp; Deep Learning for Recommender Systems</a> · DLRS 2016</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1703.04247">Guo et al. — DeepFM</a> · IJCAI 2017</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1708.05123">Wang et al. — DCN: Deep &amp; Cross Network</a> · ADKDD 2017</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/2008.13535">Wang et al. — DCN V2</a> · WWW 2021</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1803.05170">Lian et al. — xDeepFM</a> · KDD 2018</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1810.11921">Song et al. — AutoInt</a> · CIKM 2019</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1906.00091">Naumov et al. — DLRM</a> · arXiv 2019, Meta</li><li><span class="src-type">Paper</span> Mao et al. — “MaskNet: Introducing Feature-Wise Multiplication to CTR Ranking Models” · DLP-KDD 2021 <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> Yu et al. — “FinalMLP: An Enhanced Two-Stream MLP Model for CTR Prediction” · arXiv 2023, Huawei <span class="src-note">(linked from the blog post)</span></li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le3" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Two exercises on explicit feature interaction — the core of every ranker in this module.</p>
@@ -976,6 +1001,12 @@ attn = softmax(S, dim=-1) @ v                  <span class="c"># only the past i
       <p>Real recommendation logs are <em>non-stationary streams</em>, not static datasets you can epoch over. A model that
         ignores serving latency, feature engineering, and the CG/ranker split is not a production model, however good its
         offline numbers. HSTU is interesting precisely because it keeps those constraints in view.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/transformer-with-code-part-i-positional">Transformer with code I — positional encoding &amp; self-attention</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/transformer-with-code-part-ii-encoder">Transformer with code II — encoder &amp; decoder</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/a-gentle-introduction-to-bert-pre">A Gentle Introduction to BERT</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/sasrec-self-attentive-sequential">SASRec</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/bert4rec-sequential-recommendation">BERT4Rec</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/actions-speak-louder-than-words-trillion">HSTU — generative recommenders</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1706.03762">Vaswani et al. — Attention Is All You Need</a> · NeurIPS 2017</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1810.04805">Devlin et al. — BERT</a> · NAACL 2019</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1808.09781">Kang &amp; McAuley — SASRec</a> · ICDM 2018</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1904.06690">Sun et al. — BERT4Rec</a> · CIKM 2019</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/2402.17152">Zhai et al. — Actions Speak Louder than Words (HSTU)</a> · ICML 2024, Meta</li></ul>
     </div>
   </div>
   <div class="container lesson" id="le4" data-lesson>
@@ -1128,6 +1159,12 @@ loss = -(torch.log(torch.sigmoid(label * logits))).mean()</pre>
         not as a default. Loss weights are a hyper-parameter, and static ones are a strong baseline.</p>
     </div>
   </div>
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/modeling-task-relationships-in-multi">Modeling Task Relationships with MMoE</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/entire-space-multi-task-model-an">Entire Space Multi-Task Model (ESMM)</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/optimization-in-multi-task-learning">Optimization in Multi Task Learning I</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/optimization-in-multi-task-learning-d48">… II — DWA, DTP, multi-objective</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/optimization-in-multi-task-learning-919">… III — gradient surgery and the reality check</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1804.07931">Ma et al. — Entire Space Multi-Task Model (ESMM)</a> · SIGIR 2018, Alibaba</li><li><span class="src-type">Paper</span> Ma et al. — “Modeling Task Relationships with Multi-gate Mixture-of-Experts” · KDD 2018, Google <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/2001.06782">Yu et al. — Gradient Surgery for Multi-Task Learning (PCGrad)</a> · NeurIPS 2020</li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le5" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Two exercises on the two multi-task patterns the module covers.</p>
@@ -1265,6 +1302,12 @@ pCVR = pCTCVR / pCTR            <span class="c"># divide, don’t multiply</span
         cheap accurate scoring (MaskNet), shared representations (TwHIN).</p>
     </div>
   </div>
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation">Dive into Twitter’s recommendation system I — RealGraph</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-7cd">… II — GraphJet</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-6ce">… III — GraphJet internals</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-b83">… IV — SimClusters</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-6fc">… V — MaskNet</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-551">… VI — TwHIN and the system</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> “RealGraph: User Interaction Prediction at Twitter” · Twitter engineering, 2014 <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> “GraphJet: Real-Time Content Recommendations at Twitter” · VLDB 2016 <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> “SimClusters: Community-Based Representations for Heterogeneous Recommendations at Twitter” · KDD 2020 <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> “TwHIN: Embedding the Twitter Heterogeneous Information Network” · arXiv 2022 <span class="src-note">(linked from the blog post)</span></li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le6" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>One systems-design exercise and one small implementation of the SimClusters idea.</p>
@@ -1383,6 +1426,12 @@ meta = {c: int(df[c].nunique()) + 1 <span class="k">for</span> c <span class="k"
     </div>
   </div>
 
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/quick-data-preprocessing-with-pandas">Quick data preprocessing with Pandas on Criteo Ads click data</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> Criteo 1TB Click Logs dataset (13 numeric + 26 hashed categorical features, click label) · Criteo AI Lab <span class="src-note">(linked from the blog post)</span></li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le7" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>A data-engineering exercise and the capstone design task.</p>
@@ -1517,6 +1566,12 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
         reproduced here with attribution. The PDFs are hosted in that repository.</p>
     </div>
   </div>
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Ref</span> <a href="https://github.com/ericzhoun/RecSysTutor">RecSysTutor paper atlas (module 8 data &amp; viewer)</a> — 104 ads/recsys papers, stages, themes, curated lineage</li><li><span class="src-type">Paper</span> <a href="https://github.com/guyulongcs/Deep-Learning-for-Search-Recommendation-Advertisements/blob/master/00_Overview/2026%20%28TOIS%29%20%5BDLTR%5D%20Deep%20Learning%20to%20Rank%20in%20Industrial%20Search%20Engines%2C%20Recommender%20Systems%2C%20and%20Online%20Advertising%20-%20An%20Overview%20and%20New%20Perspectives.pdf">Deep Learning to Rank in Industrial Search Engines, Recommender Systems and Online Advertising</a> · TOIS 2026</li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le8" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Two tasks that put the atlas to work as a research tool.</p>
@@ -1609,6 +1664,12 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
     </div>
   </div>
   <div class="container"><div class="navbtns">
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Ref</span> <a href="https://github.com/HKUDS/DeepTutor">DeepTutor (HKUDS) — lifelong personalised tutoring platform</a> — the CLI/Web tutor this module integrates</li><li><span class="src-type">Ref</span> <a href="https://butterbase.ai">Butterbase — backend-as-a-service</a> — hosts the live-chat function and knowledge base</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-551">Dive into Twitter VI — shared representations across model versions (why grounding matters)</a> — “Be a happy and strong coder”</li></ul>
+    </div>
+  </div>
     <button class="btn ghost" data-goto="#m8">↑ Paper atlas</button>
     <button class="btn" data-goto="#m0">Back to the top ↺</button>
   </div></div>
@@ -1751,6 +1812,12 @@ opt.step()
     </div>
   </div>
 
+  <div class="container">
+    <div class="sources">
+      <div class="sources-h">Sources &amp; further reading</div>
+      <ul><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/deep-learning-recommendation-model">Deep Learning Recommendation Model (DLRM) — model parallelism for embeddings</a> — “Be a happy and strong coder”</li><li><span class="src-type">Blog</span> <a href="https://happystrongcoder.substack.com/p/dive-into-twitters-recommendation-551">Dive into Twitter’s recommendation system VI — parameter drift</a> — “Be a happy and strong coder”</li><li><span class="src-type">Paper</span> <a href="https://arxiv.org/abs/1906.00091">Naumov et al. — DLRM (embedding tables, hybrid parallelism)</a> · arXiv 2019, Meta</li><li><span class="src-type">Paper</span> “Distributed terabyte-scale embedding systems with DRAM + SSD tiering” (Baidu’s embedding service) · production systems literature <span class="src-note">(linked from the blog post)</span></li><li><span class="src-type">Paper</span> Shi et al. — “Compositional Embeddings Using Complementary Partitions” (quotient–remainder ids) · KDD 2020 <span class="src-note">(linked from the blog post)</span></li></ul>
+    </div>
+  </div>
   <div class="container lesson" id="le10" data-lesson>
     <h3><span class="n">EX</span>Exercises</h3>
     <p>Two exercises on sizing and on the sparsity mechanics.</p>

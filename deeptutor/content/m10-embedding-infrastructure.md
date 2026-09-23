@@ -108,6 +108,11 @@ Work the ladder from cheapest to most invasive. In practice you combine the firs
       rows the batch references, take sparse gradients, and update only those rows with a sparsity-aware optimiser — sharding the
       table only when it cannot fit, which makes the all-to-all the thing you then optimise.* “What if it is too big?” → quantise,
       shrink the id space, factorise the id, then shard, then tier — in that order.
+- Blog Deep Learning Recommendation Model (DLRM) — model parallelism for embeddings — “Be a happy and strong coder”
+- Blog Dive into Twitter’s recommendation system VI — parameter drift — “Be a happy and strong coder”
+- Paper Naumov et al. — DLRM (embedding tables, hybrid parallelism) · arXiv 2019, Meta
+- Paper “Distributed terabyte-scale embedding systems with DRAM + SSD tiering” (Baidu’s embedding service) · production systems literature (linked from the blog post)
+- Paper Shi et al. — “Compositional Embeddings Using Complementary Partitions” (quotient–remainder ids) · KDD 2020 (linked from the blog post)
 
 ### Exercises
 

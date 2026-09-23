@@ -81,6 +81,12 @@ Two-tower is not the only retriever. The blog’s FM→DeepFM post shows a secon
 
 This is the conceptual bridge to ranking: the same FM that retrieves can, with a deep component bolted on, become the
       **DeepFM** ranker. Retrieval and ranking are often the same primitive at different scales.
+- Blog Two tower candidate retriever I — bias correction — “Be a happy and strong coder”
+- Blog Two tower candidate retriever II — mixed negative sampling — “Be a happy and strong coder”
+- Blog Two tower candidate retriever III — expiring tables — “Be a happy and strong coder”
+- Blog From FM to DeepFM — FM as a retriever — “Be a happy and strong coder”
+- Paper Yi et al. — “Sampling-Bias-Corrected Neural Modeling for Large Corpus Item Recommendations” · RecSys 2019 (linked from the blog post)
+- Paper Yang et al. — “Mixed Negative Sampling for Learning Two-tower Neural Networks” · WWW 2020 (linked from the blog post)
 
 ### Exercises
 

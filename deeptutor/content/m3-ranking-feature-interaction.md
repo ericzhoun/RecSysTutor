@@ -119,6 +119,24 @@ Cheat-sheet for the whole family. In practice the gap between SOTA rankers on a 
 | FinalMLP | two-stream MLP + bilinear fusion | low | simplicity with SOTA-ish results |
 | MaskNet | instance-guided mask | low | cheap instance-level gating |
 
+- Blog Wide & Deep Learning for Recommender Systems — “Be a happy and strong coder”
+- Blog Deep & Cross Network for Ad Click Predictions — “Be a happy and strong coder”
+- Blog DCN V2 — “Be a happy and strong coder”
+- Blog xDeepFM — “Be a happy and strong coder”
+- Blog AutoInt — “Be a happy and strong coder”
+- Blog Deep Learning Recommendation Model (DLRM) — “Be a happy and strong coder”
+- Blog FinalMLP — “Be a happy and strong coder”
+- Blog MaskNet — “Be a happy and strong coder”
+- Paper Cheng et al. — Wide & Deep Learning for Recommender Systems · DLRS 2016
+- Paper Guo et al. — DeepFM · IJCAI 2017
+- Paper Wang et al. — DCN: Deep & Cross Network · ADKDD 2017
+- Paper Wang et al. — DCN V2 · WWW 2021
+- Paper Lian et al. — xDeepFM · KDD 2018
+- Paper Song et al. — AutoInt · CIKM 2019
+- Paper Naumov et al. — DLRM · arXiv 2019, Meta
+- Paper Mao et al. — “MaskNet: Introducing Feature-Wise Multiplication to CTR Ranking Models” · DLP-KDD 2021 (linked from the blog post)
+- Paper Yu et al. — “FinalMLP: An Enhanced Two-Stream MLP Model for CTR Prediction” · arXiv 2023, Huawei (linked from the blog post)
+
 ### Exercises
 
 Two exercises on explicit feature interaction — the core of every ranker in this module.

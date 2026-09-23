@@ -65,6 +65,15 @@ L = ∑_k [(1) / (2 σ_k^2) ⋅ L_k + log σ_k]  (uncertainty weighting)
         weights — or to better labels and a shared trunk. Reach for PCGrad/IMTL when you have a diagnosed, reproducible conflict;
         not as a default. Loss weights are a hyper-parameter, and static ones are a strong baseline.
 
+- Blog Modeling Task Relationships with MMoE — “Be a happy and strong coder”
+- Blog Entire Space Multi-Task Model (ESMM) — “Be a happy and strong coder”
+- Blog Optimization in Multi Task Learning I — “Be a happy and strong coder”
+- Blog … II — DWA, DTP, multi-objective — “Be a happy and strong coder”
+- Blog … III — gradient surgery and the reality check — “Be a happy and strong coder”
+- Paper Ma et al. — Entire Space Multi-Task Model (ESMM) · SIGIR 2018, Alibaba
+- Paper Ma et al. — “Modeling Task Relationships with Multi-gate Mixture-of-Experts” · KDD 2018, Google (linked from the blog post)
+- Paper Yu et al. — Gradient Surgery for Multi-Task Learning (PCGrad) · NeurIPS 2020
+
 ### Exercises
 
 Two exercises on the two multi-task patterns the module covers.

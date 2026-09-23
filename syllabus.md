@@ -99,6 +99,9 @@ to these posts; external papers are named by title in-lesson so you can find the
 
 ---
 
+Each module ends with a **Sources & further reading** block: the blog post(s) it derives from plus the primary
+papers, each with a verified link (all 51 cited links resolve).
+
 ## Module 9 — DeepTutor integration (interactive tutor)
 
 The course is exported to Markdown and ingested into **DeepTutor** (HKUDS) as the knowledge base `recsys-course`, so the

@@ -50,6 +50,9 @@ Pick a domain you know (videos, products, music, jobs). Work the funnel top to b
       If you can defend each row above with a mechanism from modules 1–6, you can read almost any recommender paper and place
         it — which stage it is, what problem it fixes, and what it costs.
 
+- Blog Quick data preprocessing with Pandas on Criteo Ads click data — “Be a happy and strong coder”
+- Paper Criteo 1TB Click Logs dataset (13 numeric + 26 hashed categorical features, click label) · Criteo AI Lab (linked from the blog post)
+
 ### Exercises
 
 A data-engineering exercise and the capstone design task.
