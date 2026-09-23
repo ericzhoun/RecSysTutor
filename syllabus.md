@@ -5,7 +5,7 @@ An interactive course for machine-learning engineers, built from the full archiv
 
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
-- **10 modules · 48 lessons · 9 interactive widgets · 8 self-checks · 16 exercises · 104 linked papers · DeepTutor-powered tutor**
+- **11 modules · 53 lessons · 10 interactive widgets · 9 self-checks · 18 exercises · 104 linked papers · DeepTutor-powered tutor**
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
 Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
@@ -37,6 +37,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | **M7 Practical toolkit & capstone** | Data preprocessing with Pandas (Criteo) · Capstone — design one system end to end | Quick data preprocessing with Pandas on Criteo · (synthesis) |
 | **M8 Paper atlas** | The collection · Lineage chains · How to use the atlas | Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising (`ads_knowledge_graph/`) — 104 ads/recsys papers |
 | **M9 AI tutor** | From static page to personal tutor | DeepTutor (HKUDS) — knowledge base `recsys-course`, RAG chat, quiz generation, mastery paths |
+| **M10 Embedding infrastructure** | The table *is* the model · loading & training it · when it doesn't fit · decision table | DLRM (parallelism) + TwHIN (parameter drift) from earlier modules; production practice |
 
 ---
 
@@ -51,14 +52,16 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 7. **MMoE gating** — same experts, per-task gates, live softmax weights (M5).
 8. **Paper atlas** — filter 104 papers by stage, theme, company, year and free text (M8).
 9. **Lineage explorer** — the 70 curated “builds on” links rendered as clickable chains (M8).
+10. **Embedding table memory planner** — size a table (features × cardinality × dim × precision × optimiser state) against device memory and get the ordered plan (M10).
 
 ## Exercises
 
-Every module (M1–M8) ends with **two hands-on exercises** (16 total) with a progressive-disclosure **hint** and a
+Every module (M1–M10) ends with **hands-on exercises** (18 total) with a progressive-disclosure **hint** and a
 **reference solution** (code where appropriate) — e.g. computing ECS/DI, sizing an A/B test, implementing the streaming
 frequency estimator, logQ correction, a DCN cross layer, DLRM pairwise masking, positional encodings, the SASRec causal
 objective, MMoE gating, the ESMM loss, retrieval routing, SimClusters-style community vectors, downsampling
-recalibration, and atlas/lineage research tasks. Each module also ends with a graded self-check (2–4 questions).
+recalibration, atlas/lineage research tasks, and sizing/sharding an embedding table. Each module also ends with a graded
+self-check (2–4 questions).
 
 Widgets run entirely in the page: no network, no tracking, nothing stored beyond the session.
 

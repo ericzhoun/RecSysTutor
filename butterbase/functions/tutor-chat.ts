@@ -6,7 +6,7 @@
 //
 // Triggers:  POST /tutor-chat   (public chat)      GET /tutor-chat (health)
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 const COLLECTION = "recsys-course";
 
 const ALLOWED_ORIGINS = [
@@ -34,7 +34,8 @@ const DOCS = [
   "m2-candidate-generation-retrieval.md", "m3-ranking-feature-interaction.md",
   "m4-sequential-generative-recommenders.md", "m5-multi-task-learning.md",
   "m6-case-study-twitter-s-recommender.md", "m7-practical-toolkit-capstone.md",
-  "m8-paper-atlas-the-ads-recsys-collection.md", "papers-atlas.md",
+  "m8-paper-atlas-the-ads-recsys-collection.md", "m9-study-with-an-ai-tutor-deeptutor.md",
+  "m10-embedding-infrastructure.md", "papers-atlas.md",
 ];
 
 async function lexicalRetrieve(base: string, query: string, topN = 4) {

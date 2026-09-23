@@ -99,7 +99,7 @@ def deploy():
     ce = course_env()
     out = call("deploy_function", {
         "app_id": APP, "name": FN_NAME, "code": code,
-        "description": "RecSysTutor live chat (production v1.1.0): grounded retrieval + tutor generation",
+        "description": "RecSysTutor live chat (production v1.2.0): grounded retrieval + tutor generation",
         "triggers": [{"type": "http", "config": {"path": "/" + FN_NAME, "auth": "none"}}],
         "timeoutMs": 60000, "memoryLimitMb": 256,
         "envVars": {

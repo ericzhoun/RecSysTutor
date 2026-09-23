@@ -110,7 +110,7 @@ def quiz_bank(src):
     if not m:
         return {}
     body = m.group(1)
-    parts = re.split(r"\n    (m\d):\[", body)
+    parts = re.split(r"\n    (m\d+):\[", body)
     banks = {}
     for i in range(1, len(parts), 2):
         mid, chunk = parts[i], parts[i + 1]

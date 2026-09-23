@@ -6,6 +6,7 @@ An interactive course on recommender systems for machine-learning engineers, ass
 
 - **m0** — Orientation
 - **m1** — The funnel and its foundations
+- **m10** — Embedding infrastructure
 - **m2** — Candidate generation / retrieval
 - **m3** — Ranking & feature interaction
 - **m4** — Sequential & generative recommenders
@@ -13,6 +14,7 @@ An interactive course on recommender systems for machine-learning engineers, ass
 - **m6** — Case study: Twitter’s recommender
 - **m7** — Practical toolkit & capstone
 - **m8** — Paper atlas: the Ads & RecSys collection
+- **m9** — Study with an AI tutor (DeepTutor)
 
 ## How to study with DeepTutor
 

@@ -266,10 +266,10 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
     <div class="meta-row">
       <div><div class="k">Source</div><div class="v">31 posts</div></div>
       <div><div class="k">Papers</div><div class="v">104</div></div>
-      <div><div class="k">Modules</div><div class="v">10</div></div>
-      <div><div class="k">Lessons</div><div class="v">48</div></div>
-      <div><div class="k">Widgets · quizzes</div><div class="v">9 · 8</div></div>
-      <div><div class="k">Exercises</div><div class="v">16</div></div>
+      <div><div class="k">Modules</div><div class="v">11</div></div>
+      <div><div class="k">Lessons</div><div class="v">53</div></div>
+      <div><div class="k">Widgets · quizzes</div><div class="v">10 · 9</div></div>
+      <div><div class="k">Exercises</div><div class="v">18</div></div>
     </div>
   </div>
 </header>
@@ -1613,6 +1613,208 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
     <button class="btn" data-goto="#m0">Back to the top ↺</button>
   </div></div>
 </section>
+
+<!-- ============ M10 ============ -->
+<section class="module" id="m10" data-mod="M10">
+  <div class="container">
+    <div class="module-head"><div class="folio">M10</div><h2>Embedding infrastructure</h2></div>
+    <p class="module-sub">The rankers, retrievers and sequence models in this course are mostly a thin network wrapped around one very
+      large matrix. This module is about operating that matrix: how the table is looked up and trained, and what you do when
+      it does not fit on the device.</p>
+  </div>
+
+  <div class="container lesson" id="l10-1" data-lesson>
+    <h3><span class="n">01</span>The table <em>is</em> the model</h3>
+    <p>In a CTR or retrieval model you have <code>F</code> sparse features (user id, item id, category, hashed tokens…), each with
+      its own cardinality <code>C</code>, projected to <code>d</code> dimensions at <code>p</code> bytes per value. The dense MLP is
+      megabytes; the tables are everything else:</p>
+    <div class="formula">table bytes  =  Σ_f  C_f · d · p
+optimiser  =  × 1 (SGD)   × 2 (Adagrad: +1 accumulator)   × 3 (Adam: +m, +v)</div>
+    <p>Twenty features at 5M cardinality, <code>d = 128</code>, fp32 is already <strong>51 GB</strong> — and <strong>154 GB</strong>
+      once Adam keeps its two extra fp32 slots. This is why recommendation training papers spend half their space on
+      parallelism: the parameter count lives almost entirely in the tables.</p>
+    <div class="note why"><div class="lab">Why this changes the whole training design</div>
+      <p>A dense layer touches every parameter each step. A table touches only the rows named by the batch — typically a tiny
+        fraction. That single fact drives sparse gradients, sparse optimisers, sharding, caching and tiering. Every technique in
+        this module follows from “the table is huge and almost entirely cold at any instant”.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l10-2" data-lesson>
+    <h3><span class="n">02</span>How the table is loaded and trained</h3>
+    <p>The short answer to “how do you load the embedding table during training?” is: <strong>you mostly don’t</strong>. You hold a
+      <em>gather</em> of the rows your batch references, and a <em>scatter-add</em> of their gradients back — the untouched rows are
+      never read or written.</p>
+    <ul>
+      <li><strong>Forward = gather.</strong> A batch of <code>[B, F]</code> integer ids indexes the table into <code>[B, F, d]</code>.
+        Duplicate ids in a batch are coalesced before the lookup.</li>
+      <li><strong>Backward = scatter-add.</strong> Gradients land only on the rows in the batch, which is what “sparse gradient”
+        means — a gradient tensor with as many non-zeros as the batch touched.</li>
+      <li><strong>The optimiser must understand sparsity.</strong> <code>SparseAdam</code>, Adagrad or FTRL update only the touched
+        rows. A dense optimiser such as AdamW <em>densifies</em> the gradient, materialising <code>m</code> and <code>v</code> for the
+        whole table — the single most common way to turn a 50 GB problem into a 150 GB one.</li>
+      <li><strong>Per-row adaptive learning rates are the reason Adagrad/FTRL dominate.</strong> Feature frequencies span many orders
+        of magnitude; one global learning rate is wrong for most rows. Adagrad gives each row its own effective rate, needs only
+        one extra slot, and FTRL adds L1 for a sparse, deployable table.</li>
+      <li><strong>Ids must be remapped.</strong> Build a vocabulary offline (or with online hashing) mapping raw ids to contiguous
+        <code>[0, C)</code>; reserve a row for unknown/OOV and a zeroed padding row (<code>padding_idx</code>).</li>
+      <li><strong>Initialise small.</strong> Row embeddings from a narrow normal (e.g. <code>N(0, 0.01)</code>), scaled per feature by
+        cardinality — a large init on a 10⁸-row table is both unstable and slow to converge.</li>
+    </ul>
+    <div class="codecap">sparse lookup + sparse optimiser (PyTorch)</div>
+<pre>emb = nn.Embedding(num_embeddings=C, embedding_dim=d, sparse=True, padding_idx=0)
+opt = torch.optim.SparseAdam(emb.parameters(), lr=1e-3)   <span class="c"># touched rows only</span>
+
+ids = batch_ids                      <span class="c"># [B, F] int64, coalesced</span>
+x   = emb(ids)                       <span class="c"># [B, F, d] gather</span>
+logit = mlp(flatten(x))
+loss  = F.binary_cross_entropy_with_logits(logit, y)
+loss.backward()                      <span class="c"># scatter-add into ~|unique ids| rows</span>
+opt.step()
+<span class="c"># embedding_bag handles variable-length id lists per example</span></pre>
+    <div class="note why"><div class="lab">Operational details that bite</div>
+      <p><strong>Checkpointing:</strong> a 100 GB table does not fit in one all-gather — write sharded, streamed checkpoints and
+        warm-start from the previous version. <strong>Version skew:</strong> embeddings must stay meaningful across model releases
+        (this is exactly the “parameter drift” problem the TwHIN post raises in module 6). <strong>Sparsity hygiene:</strong> threshold
+        the vocabulary by frequency, map the tail to OOV, and never let a one-off id allocate a permanent 512-byte row.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l10-3" data-lesson>
+    <h3><span class="n">03</span>If the table does not fit</h3>
+    <p>Work the ladder from cheapest to most invasive. In practice you combine the first three before adding hardware.</p>
+    <table class="grid">
+      <thead><tr><th>Lever</th><th>Mechanism</th><th>Saves</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Quantise</td><td>fp32 → fp16/bf16 → int8 with per-row scales; product quantisation for more</td><td>2–4× (or more)</td><td>small accuracy loss; int8 needs careful scaling</td></tr>
+        <tr><td>Shrink the space</td><td>frequency thresholding, hashing trick, dynamic/evolving vocabulary</td><td>often 2–10×</td><td>collisions and cold-start on new ids</td></tr>
+        <tr><td>Factorise the id</td><td>quotient-remainder / compositional embeddings: one big table → a product of small ones</td><td>up to ~√C per feature</td><td>extra compute; restructuring the feature</td></tr>
+        <tr><td>Shard (model parallel)</td><td>split the table across ranks; all-to-all gather + scatter each step</td><td>capacity = Σ device memory</td><td><strong>communication</strong> becomes the bottleneck</td></tr>
+        <tr><td>Tier the storage</td><td>hot rows in HBM, warm in host DRAM, cold on NVMe with an LFU cache</td><td>10×+ capacity</td><td>cache misses, prefetch complexity</td></tr>
+      </tbody>
+    </table>
+    <h4>Sharding: row-wise vs column-wise</h4>
+    <ul>
+      <li><strong>Row-wise</strong> — every rank owns a contiguous slice of rows of every table. Storage is balanced, but each step
+        needs an <em>all-to-all</em> to fetch the rows a rank’s batch needs and another to return gradients. Bytes per step ≈
+        <code>2 × rows_touched × d × p</code> × 2 (gather + scatter). This is what DLRM describes as model parallelism for the
+        embeddings alongside data parallelism for the MLP.</li>
+      <li><strong>Column-wise</strong> — each rank owns whole features (tables). No cross-rank gather, but the split is unbalanced
+        (one 10⁹-row feature dominates). Hybrid splits exist for exactly this reason.</li>
+      <li><strong>Measure the trade:</strong> if step time is dominated by all-to-all, quantising the table halves the bytes moved —
+        usually a bigger win than adding ranks.</li>
+    </ul>
+    <div class="note why"><div class="lab">The pattern that scales furthest</div>
+      <p>Because only the batch’s rows matter, you can keep the table <em>off</em> the accelerator entirely: shard it across host
+        DRAM and NVMe, and stream the touched rows into HBM per step. This is the design behind distributed terabyte-scale
+        embedding systems (Baidu’s DRAM+SSD service is the classic write-up) and the reason “cached lookups” are a first-class
+        metric: hit rate, not FLOPs, decides throughput.</p>
+    </div>
+  </div>
+
+  <div class="container lesson" id="l10-4" data-lesson>
+    <h3><span class="n">04</span>Decision table &amp; interview framing</h3>
+    <table class="grid">
+      <thead><tr><th>Symptom</th><th>First move</th><th>Then</th></tr></thead>
+      <tbody>
+        <tr><td>Table ≈ 1–2× device memory</td><td>int8/fp16 values + sparse optimiser</td><td>frequency thresholding, coalesce ids</td></tr>
+        <tr><td>Table ≫ device memory</td><td>row-wise shard + all-to-all</td><td>quantise to halve the comms, tier cold rows</td></tr>
+        <tr><td>Step time dominated by comms</td><td>quantise; larger batch (amortise the all-to-all)</td><td>column-wise/hybrid split</td></tr>
+        <tr><td>Huge tail of rare ids</td><td>threshold + OOV bucket</td><td>hashing, dynamic vocabulary</td></tr>
+        <tr><td>Checkpointing takes hours</td><td>sharded, streamed, asynchronous snapshots</td><td>versioned warm-start</td></tr>
+        <tr><td>Embeddings drift across releases</td><td>versioned tables + re-indexing</td><td>shared embedding space (TwHIN-style)</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Interview framing.</strong> “How do you load an embedding table during training?” → <em>You don’t load it; you gather the
+      rows the batch references, take sparse gradients, and update only those rows with a sparsity-aware optimiser — sharding the
+      table only when it cannot fit, which makes the all-to-all the thing you then optimise.</em> “What if it is too big?” → quantise,
+      shrink the id space, factorise the id, then shard, then tier — in that order.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Widget · Embedding table memory planner</span><span class="s">does it fit?</span></div>
+      <div class="widget-body">
+        <div class="wrow"><label>sparse features</label><input type="range" id="emF" min="1" max="64" value="20"><span class="wval" id="emFv">20</span></div>
+        <div class="wrow"><label>cardinality per feature</label><input type="range" id="emC" min="3" max="9" step="0.1" value="6.7"><span class="wval" id="emCv">5.0M</span></div>
+        <div class="wrow"><label>embedding dim</label><input type="range" id="emD" min="8" max="512" step="8" value="128"><span class="wval" id="emDv">128</span></div>
+        <div class="wrow"><label>precision</label>
+          <select id="emP" class="sel"><option value="4">fp32 (4 B)</option><option value="2">fp16 / bf16 (2 B)</option><option value="1">int8 (1 B)</option></select>
+          <label style="margin-left:14px">optimiser</label>
+          <select id="emO" class="sel"><option value="3">Adam (×3)</option><option value="2">Adagrad (×2)</option><option value="1">SGD (×1)</option></select>
+        </div>
+        <div class="wrow"><label>devices (shards)</label><input type="range" id="emN" min="1" max="64" value="8"><span class="wval" id="emNv">8</span></div>
+        <div class="wrow"><label>memory per device</label>
+          <select id="emM" class="sel"><option value="24">24 GB</option><option value="40">40 GB</option><option value="80">80 GB</option></select>
+        </div>
+        <div class="readout" id="emOut"></div>
+        <div class="fb" id="emNote" style="display:block"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="le10" data-lesson>
+    <h3><span class="n">EX</span>Exercises</h3>
+    <p>Two exercises on sizing and on the sparsity mechanics.</p>
+  </div>
+  <div class="bleed">
+    <div class="widget">
+      <div class="widget-head"><span class="t">Exercises · Module 10</span><span class="s">click to reveal hint / solution</span></div>
+      <div class="widget-body">
+        <details class="ex"><summary>10.1 — Size the table and pick a plan</summary>
+          <div class="ex-body">
+            <p>20 sparse features, 5M cardinality each, <code>d = 128</code>, fp32, trained with Adam. Compute the table size and the
+              size with optimiser state. Then propose an ordered plan for 8× 80 GB devices, and say which single lever buys the most.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p><code>F · C · d · p</code> bytes; Adam keeps two extra fp32 slots (×3). Compare against 8 × 80 GB.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>F, C, d, p = 20, 5_000_000, 128, 4
+raw   = F * C * d * p / 1e9          <span class="c"># 51.2 GB</span>
+total = raw * 3                      <span class="c"># 153.6 GB with Adam (m, v)</span>
+per_dev = total / 8                  <span class="c"># 19.2 GB of 80 GB — fits</span></pre>
+              <p>The table fits comfortably once sharded — but only ~26% of each device is used, so the honest answer is
+                “quantise to int8 first”: 153.6 GB → 38.4 GB, which fits on <em>two</em> devices and halves any all-to-all bytes.
+                Order: int8/int8-optimiser → threshold the vocabulary → shard → tier cold rows.</p>
+            </details>
+          </div>
+        </details>
+        <details class="ex"><summary>10.2 — Prove the gradient is sparse</summary>
+          <div class="ex-body">
+            <p>Build a small <code>nn.Embedding</code> with <code>sparse=True</code>, run one backward pass on a batch of ids, and show
+              that the gradient has fewer non-zeros than the table. Then repeat with <code>sparse=False</code> and explain the memory
+              consequence.</p>
+            <details class="ex-hint"><summary>Hint</summary>
+              <p>Count <code>grad != 0</code> versus <code>C · d</code>; then check the dtype/shape with <code>sparse=False</code>.</p>
+            </details>
+            <details class="ex-sol"><summary>Reference solution</summary>
+<pre>emb = nn.Embedding(C, d, sparse=True)
+out = emb(ids)                      <span class="c"># ids: [B, F]</span>
+out.sum().backward()
+g = emb.weight.grad
+print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <span class="c">"of", C * d</span>)
+<span class="c"># sparse=True  -> nnz ~ |unique ids in the batch|</span>
+<span class="c"># sparse=False -> dense [C, d] gradient: a full table-sized tensor</span></pre>
+              <p>With <code>sparse=False</code> every step materialises a dense gradient, and a momentum optimiser then allocates two
+                more dense tensors of the same size. That is the mechanism behind the “AdamW blew up my embedding memory” failure.</p>
+            </details>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="container lesson" id="lq10"><h3><span class="n">✓</span>Module check</h3></div>
+  <div class="bleed">
+    <div class="widget" id="quiz-m10">
+      <div class="widget-head"><span class="t">Self-check · Module 10</span><span class="s" id="score-m10">score 0/0</span></div>
+      <div class="widget-body" id="quizBody-m10"></div>
+    </div>
+  </div>
+  <div class="container"><div class="navbtns">
+    <button class="btn ghost" data-goto="#m9">↑ AI tutor</button>
+    <button class="btn" data-goto="#m0">Back to the top ↺</button>
+  </div></div>
+</section>
 </main>
 </div>
 
@@ -1937,6 +2139,43 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
     }
   })();
 
+  /* ---------------- embedding table memory planner ---------------- */
+  var emF=$("#emF"), emC=$("#emC"), emD=$("#emD"), emP=$("#emP"), emO=$("#emO"), emN=$("#emN"), emM=$("#emM");
+  function emGB(x){
+    if (x >= 1024) return (x/1024).toFixed(2)+" TB";
+    if (x >= 1) return x.toFixed(1)+" GB";
+    return (x*1024).toFixed(0)+" MB";
+  }
+  function emUpdate(){
+    var F=+emF.value, C=Math.pow(10,+emC.value), D=+emD.value, p=+emP.value;
+    var o=+emO.value, N=+emN.value, M=+emM.value;
+    var raw = F*C*D*p/1e9;
+    var total = raw*o;
+    var per = total/N;
+    var budget = M*0.8;
+    $("#emFv").textContent=F; $("#emDv").textContent=D; $("#emNv").textContent=N;
+    $("#emCv").textContent = C>=1e6 ? (C/1e6).toFixed(1)+"M" : Math.round(C/1e3)+"K";
+    var fits = per<=budget;
+    $("#emOut").innerHTML =
+      "<div><div class='k'>table (values)</div><div class='v'>"+emGB(raw)+"</div></div>"+
+      "<div><div class='k'>+ optimiser state</div><div class='v'>"+emGB(total)+"</div></div>"+
+      "<div><div class='k'>per device</div><div class='v'>"+emGB(per)+"</div></div>"+
+      "<div><div class='k'>budget (80% of device)</div><div class='v'>"+M+" GB</div></div>";
+    var note;
+    if (fits) {
+      note = "Fits, with "+((1-per/budget)*100).toFixed(0)+"% headroom. Before adding devices, check the cheapest levers: int8/fp16 values "+
+             "plus a sparse optimiser usually shrink this 2–4× — which also reduces any all-to-all traffic.";
+    } else {
+      var need = Math.ceil(per/budget*N);
+      note = "Does not fit — "+emGB(per)+" per device against a "+M+" GB budget. Ordered plan: quantise to int8 → threshold the "+
+             "vocabulary → shard across ≥"+need+" devices → tier cold rows to DRAM/NVMe. Quantising first typically halves the ranks you "+
+             "need <em>and</em> the bytes moved per step.";
+    }
+    $("#emNote").innerHTML = note;
+  }
+  [emF,emC,emD,emP,emO,emN,emM].forEach(function(x){ x.addEventListener("input",emUpdate); x.addEventListener("change",emUpdate); });
+  if(emF) emUpdate();
+
   /* ---------------- quizzes ---------------- */
   var QUIZ = {
     m1:[
@@ -2044,6 +2283,17 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
       {q:"Which atlas filter best surfaces the current frontier of the field?",
        o:["venue","theme (e.g. Generative & LLM, Debiasing & Sample Selection)","year only","company size"],a:1,
        e:"Themes group papers by research problem, so filtering by theme and reading in year order shows where the frontier is moving."}
+    ],
+    m10:[
+      {q:"Why does switching from a sparse optimiser to AdamW blow up memory on a large embedding table?",
+       o:["AdamW has a larger learning rate","A dense optimiser densifies the gradient, materialising m and v tensors for every row, not just the touched ones","AdamW needs fp64","It duplicates the table on each device"],a:1,
+       e:"Sparse gradients only carry the rows the batch touched. A dense optimiser treats the gradient as dense, so it allocates full-table momentum and variance — roughly tripling a 50 GB table to 150 GB."},
+      {q:"With row-wise sharding, what becomes the bottleneck each step?",
+       o:["Disk reads","The all-to-all gather of touched rows plus the scatter of their gradients","Tokenizer throughput","Checkpoint writes"],a:1,
+       e:"Row-wise sharding balances storage but every step needs an all-to-all to fetch the rows a rank's batch references and another to return gradients. That is why quantising the table (halving the bytes moved) often beats adding ranks."},
+      {q:"Which lever should you try first when the table does not fit?",
+       o:["Add more devices","Quantise (int8/fp16) and use a sparse optimiser","Increase the embedding dimension","Rebuild the vocabulary from scratch"],a:1,
+       e:"Quantisation and sparse updates are cheap, reversible and multiplicative — they shrink both the memory and the communication before you spend hardware. Only then shard, and only then tier cold rows to DRAM/NVMe."}
     ]
   };
   Object.keys(QUIZ).forEach(function(mid){

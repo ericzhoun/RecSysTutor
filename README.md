@@ -4,7 +4,7 @@ An **interactive, single-file course on recommender systems for machine-learning
 full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 <https://happystrongcoder.substack.com/archive?sort=top>.
 
-- **10 modules · 48 lessons · 9 live widgets · 8 graded self-checks · 16 exercises · 104 linked papers**
+- **11 modules · 53 lessons · 10 live widgets · 9 graded self-checks · 18 exercises · 104 linked papers**
 - **Live chat:** <https://olivistart.com/RecSysTutor/chat.html> — grounded Q&A over the course notes, backed by a
   [Butterbase](https://butterbase.ai) serverless function (see `butterbase/`)
 - One self-contained HTML file — no build step, no dependencies, no network, works offline (the chat needs the backend).
@@ -36,6 +36,7 @@ single problem it was invented to fix.
 | M7 Practical toolkit | Criteo preprocessing with Pandas · end-to-end capstone |
 | M8 Paper atlas | The 104-paper Ads & RecSys collection — filter by stage / theme / company / year · curated lineage chains |
 | M9 AI tutor | DeepTutor integration — the course as a grounded knowledge base: RAG chat, quiz generation, mastery paths |
+| M10 Embedding infrastructure | The embedding table as the model: gather/scatter training, sparse optimisers, quantisation, sharding, tiered storage |
 
 Seven interactive widgets let you manipulate the mechanisms directly (funnel explorer, extreme-multiclass cost & bias,
 ECS/diversity index, normalisation & temperature, logQ correction, a runnable streaming frequency estimator, and MMoE
