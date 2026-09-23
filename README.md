@@ -8,6 +8,8 @@ full post archive of the *“Be a happy and strong coder”* blog (Fan) —
 - **Live chat:** <https://olivistart.com/RecSysTutor/chat.html> — grounded Q&A over the course notes, backed by a
   [Butterbase](https://butterbase.ai) serverless function (see `butterbase/`)
 - One self-contained HTML file — no build step, no dependencies, no network, works offline (the chat needs the backend).
+- Equations are typeset with **native MathML** — stacked fractions, sums with limits, subscripts and Greek letters —
+  with no KaTeX/MathJax and no external fonts.
 
 ## Run it
 

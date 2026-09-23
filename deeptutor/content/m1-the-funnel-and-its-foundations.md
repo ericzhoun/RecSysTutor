@@ -24,8 +24,7 @@ The YouTube paper reframes “what should we show?” as a multiclass problem: p
       problem, and its solution — **sampled softmax** — is the reason retrieval models look the way they do.
 
 ```
-P(video = i | U, C) = e^{v_i · u} / Σ_j e^{v_j · u}   ← softmax over the whole corpus is intractable
-sampled estimator:   P̂ ∝ e^{v_i · u} / Σ_{j∈batch} e^{v_j · u} ← negatives drawn from a background distribution
+P (video = i ∣ U, C) = (e^v_i ⋅ u) / (∑_j e^v_j ⋅ u)  (softmax over the whole corpus is intractable)  sampled estimator: P^ ∝ (e^v_i ⋅ u) / (∑_j ∈ batch e^v_j ⋅ u)  (negatives drawn from a background distribution)
 ```
 
 The catch the blog stresses: the sampling distribution is **not** the true item distribution, so the

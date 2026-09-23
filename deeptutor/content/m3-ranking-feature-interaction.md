@@ -25,7 +25,7 @@ Factorization Machines learn a polynomial kernel by representing interactions as
       adds a deep MLP: **no manual feature crosses at all**.
 
 ```
-ŷ_DeepFM = sigmoid( ŷ_FM + ŷ_Deep )   ← FM and deep share the same embeddings
+y^_DeepFM = sigmoid (y^_FM + y^_Deep)  (FM and the deep part share the same embeddings)
 ```
 
 ### DCN → DCN-V2
@@ -34,7 +34,7 @@ DCN replaces the wide path with an explicit **Cross Network** that models bounde
       without feature engineering:
 
 ```
-x_{l+1} = x_0 · (w_lᵀ x_l) + b_l + x_l
+x_l + 1 = x_0 ⋅ (w_l^⊤ x_l) + b_l + x_l
 ```
 
 The first version is cheap but the expressiveness of each layer is limited. **DCN-V2** upgrades it with a
@@ -60,7 +60,7 @@ AutoInt reaches for **multi-head self-attention** to model feature interactions,
       attention layer from scratch, which is exactly the mechanism that returns in module 4’s sequential models.
 
 ```
-α_{i,j} = softmax_j( wᵀ [ e_i || e_j ] )   ← e_i are feature embeddings, not tokens
+α_i, j = softmax_j (w^⊤ [e_i ‖ e_j])  (e_i are feature embeddings, not tokens)
 ```
 
 ### DLRM (Facebook)
@@ -96,7 +96,7 @@ Twitter’s main ranker. The idea: an **instance-guided mask** — a per-example
       instance-level non-linearity at low cost.
 
 ```
-MaskBlock:  h = ReLU( W₂ · ReLU( W₁ · ( x ⊙ m ) ) ) ,  m = ReLU( W_g · x )
+MaskBlock: h = ReLU (W_2 ⋅ ReLU (W_1 ⋅ (x ⊙ m))), m = ReLU (W_g x)
 ```
 
 Two variants — **SerialMaskNet** and **ParallelMaskNet** — trade depth for width. The blog notes

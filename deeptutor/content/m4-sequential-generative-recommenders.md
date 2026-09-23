@@ -14,7 +14,7 @@ The blog builds the Transformer in code before using it for recommendation, beca
 - **Multi-head self-attention.** Project to Q, K, V; score, scale, mask, softmax, aggregate — in parallel heads.
 
 ```
-Attention(Q,K,V) = softmax( Q Kᵀ / √d_k ) V        PE(pos,2i) = sin(pos / 10000^{2i/d})
+Attention (Q, K, V) = softmax ((Q K^⊤) / (sqrt(d_k))) V  (positional encoding)  PE (pos, 2 i) = sin ((pos) / (10000^2 i / d))
 ```
 
 ### BERT

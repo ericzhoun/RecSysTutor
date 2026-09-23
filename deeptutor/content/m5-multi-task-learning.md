@@ -12,7 +12,7 @@ Start from the baseline: a **shared bottom** MLP feeding task-specific towers. I
       *experts* and gives each task its own **gating network**:
 
 ```
-f_k(x) = Σ_i g^k(x)_i · f_i(x) ,   g^k(x) = softmax(W_{g_k} x)
+f_k (x) = ∑_i g^k (x) f_i (x), g^k (x) = softmax (W_g_k x)
 ```
 
 Each task soft-shares the experts through its own gate — the same “multiple heads, weighted combination” idea as
@@ -25,8 +25,7 @@ Conversion prediction has two traps: **sample selection bias** (you only observe
       by modelling the *entire space* with two towers that share embeddings:
 
 ```
-pCVR = pCTCVR / pCTR
-Loss = L(CTR) + L(CTCVR)   ← CTCVR label is observed on every impression
+pCVR = (pCTCVR) / (pCTR)  Loss = L (CTR) + L (CTCVR)  (the CTCVR label is observed on every impression)
 ```
 
 By predicting the composite CTCVR on *all* impressions and dividing by CTR at inference, the CVR tower trains on
@@ -42,7 +41,7 @@ Once you have several losses, how do you weight them? The first family adapts th
         balancing by *learning speed* rather than by loss value.
 
 ```
-L = Σ_k [ (1/(2σ_k²)) · L_k + log σ_k ]   ← uncertainty weighting
+L = ∑_k [(1) / (2 σ_k^2) ⋅ L_k + log σ_k]  (uncertainty weighting)
 ```
 
 ### Multi-task optimisation II — schedules and multi-objective views

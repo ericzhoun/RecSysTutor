@@ -137,8 +137,11 @@ h1.display{font-family:var(--serif);font-weight:600;font-size:clamp(38px,5.4vw,6
   color:var(--accent-ink);margin-bottom:8px;}
 .note p{max-width:66ch;font-size:15.6px;}
 .note.why>.lab{color:var(--muted);}
-.formula{font-family:var(--mono);font-size:14.5px;background:#111315;color:#e9ece8;padding:14px 16px;
-  overflow-x:auto;line-height:1.8;margin:16px 0;}
+.formula{background:#111315;color:#e9ece8;padding:16px 18px;overflow-x:auto;margin:16px 0;
+  display:flex;flex-direction:column;gap:12px;}
+.formula math{font-family:"STIX Two Math","Cambria Math","Latin Modern Math","DejaVu Math TeX Gyre",serif;
+  font-size:1.22rem;line-height:1.4;}
+.formula .fnote{font-family:var(--mono);font-size:11.5px;color:#8a938c;letter-spacing:.02em;}
 .formula .mut{color:#8a938c;}
 
 /* ---------- code ---------- */
@@ -396,8 +399,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
     <p>The YouTube paper reframes “what should we show?” as a multiclass problem: predict which of millions of videos a user
       will watch next, given user features <code>U</code> and context <code>C</code>. That is an <strong>extreme multiclass</strong>
       problem, and its solution — <strong>sampled softmax</strong> — is the reason retrieval models look the way they do.</p>
-    <div class="formula">P(video = i | U, C) = e^{v_i · u} / Σ_j e^{v_j · u}   <span class="mut">← softmax over the whole corpus is intractable</span>
-sampled estimator:   P̂ ∝ e^{v_i · u} / Σ_{j∈batch} e^{v_j · u} <span class="mut">← negatives drawn from a background distribution</span></div>
+    <div class="formula"><math display="block"><mrow><mi>P</mi><mo>(</mo><mtext>video</mtext><mo>=</mo><mi>i</mi><mo>&#x2223;</mo><mi>U</mi><mo>,</mo><mi>C</mi><mo>)</mo><mo>=</mo><mfrac><msup><mi>e</mi><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>&#x22C5;</mo><mi>u</mi></mrow></msup><mrow><munder><mo>&#x2211;</mo><mi>j</mi></munder><msup><mi>e</mi><mrow><msub><mi>v</mi><mi>j</mi></msub><mo>&#x22C5;</mo><mi>u</mi></mrow></msup></mrow></mfrac></mrow></math><div class="fnote">softmax over the whole corpus is intractable</div><math display="block"><mrow><mtext>sampled estimator:</mtext><mover><mi>P</mi><mo>^</mo></mover><mo>&#x221D;</mo><mfrac><msup><mi>e</mi><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>&#x22C5;</mo><mi>u</mi></mrow></msup><mrow><munder><mo>&#x2211;</mo><mrow><mi>j</mi><mo>&#x2208;</mo><mtext>batch</mtext></mrow></munder><msup><mi>e</mi><mrow><msub><mi>v</mi><mi>j</mi></msub><mo>&#x22C5;</mo><mi>u</mi></mrow></msup></mrow></mfrac></mrow></math><div class="fnote">negatives drawn from a background distribution</div></div>
     <p>The catch the blog stresses: the sampling distribution is <strong>not</strong> the true item distribution, so the
       logits are biased and must be corrected by importance weighting — which becomes module 2’s central topic.</p>
     <div class="note why"><div class="lab">Three details the paper gets right that most re-implementations miss</div>
@@ -545,7 +547,7 @@ print(round(n))   <span class="c"># ~150,500 per arm</span>
     <p>The reference implementation is Google’s <em>Sampling-Bias-Corrected Neural Modeling for Large Corpus Item
       Recommendations</em>. Two independent towers encode <code>&lt;user, context&gt;</code> and <code>&lt;item&gt;</code> into the
       same vector space; relevance is a dot product.</p>
-    <div class="formula">score(u, i) = ⟨ φ_user(U, C), ψ_item(I) ⟩</div>
+    <div class="formula"><math display="block"><mrow><mtext>score</mtext><mo>(</mo><mi>u</mi><mo>,</mo><mi>i</mi><mo>)</mo><mo>=</mo><mo>&#x27E8;</mo><msub><mi>&#x3C6;</mi><mtext>user</mtext></msub><mo>(</mo><mi>U</mi><mo>,</mo><mi>C</mi><mo>)</mo><mo>,</mo><msub><mi>&#x3C8;</mi><mtext>item</mtext></msub><mo>(</mo><mi>I</mi><mo>)</mo><mo>&#x27E9;</mo></mrow></math></div>
     <p>Because the item tower does not see the user at inference, every item embedding can be precomputed and indexed — turning
       “recommend” into an <strong>approximate nearest-neighbour search</strong>. That amortisation is the entire reason retrieval
       is tractable at YouTube scale: <em>item modelling is separated from user modelling</em>.</p>
@@ -638,8 +640,7 @@ loss     = cross_entropy(logits, labels=diagonal)            <span class="c"># i
     <p>Two-tower is not the only retriever. The blog’s FM→DeepFM post shows a second route: a <strong>Factorization Machine
       can act as a candidate retriever</strong> by “splitting features” — keep the user side, freeze the item side, and the
       second-order term collapses into an inner product you can precompute and index.</p>
-    <div class="formula">FM 2nd-order term:  Σ_{i&lt;j} ⟨v_i, v_j⟩ x_i x_j
-user–item part:     ⟨ (Σ_{i∈user} v_i x_i) , (Σ_{j∈item} v_j x_j) ⟩  <span class="mut">← one dot product, indexable</span></div>
+    <div class="formula"><div class="fnote">FM second-order term</div><math display="block"><mrow><munder><mo>&#x2211;</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow></munder><mo>&#x27E8;</mo><msub><mi>v</mi><mi>i</mi></msub><mo>,</mo><msub><mi>v</mi><mi>j</mi></msub><mo>&#x27E9;</mo><msub><mi>x</mi><mi>i</mi></msub><msub><mi>x</mi><mi>j</mi></msub></mrow></math><div class="fnote">user&#8211;item part</div><math display="block"><mrow><mo>&#x27E8;</mo><mo>(</mo><munder><mo>&#x2211;</mo><mrow><mi>i</mi><mo>&#x2208;</mo><mtext>user</mtext></mrow></munder><msub><mi>v</mi><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo><mo>,</mo><mo>(</mo><munder><mo>&#x2211;</mo><mrow><mi>j</mi><mo>&#x2208;</mo><mtext>item</mtext></mrow></munder><msub><mi>v</mi><mi>j</mi></msub><msub><mi>x</mi><mi>j</mi></msub><mo>)</mo><mo>&#x27E9;</mo></mrow></math><div class="fnote">one dot product, indexable</div></div>
     <p>This is the conceptual bridge to ranking: the same FM that retrieves can, with a deep component bolted on, become the
       <strong>DeepFM</strong> ranker. Retrieval and ranking are often the same primitive at different scales.</p>
   </div>
@@ -739,14 +740,14 @@ loss = F.cross_entropy(logits, torch.arange(B))</pre>
     <p>Factorization Machines learn a polynomial kernel by representing interactions as inner products of latent vectors — so
       second-order interactions are learned even when a pair is never co-observed. DeepFM keeps the FM as the “wide” side and
       adds a deep MLP: <strong>no manual feature crosses at all</strong>.</p>
-    <div class="formula">ŷ_DeepFM = sigmoid( ŷ_FM + ŷ_Deep )   <span class="mut">← FM and deep share the same embeddings</span></div>
+    <div class="formula"><math display="block"><mrow><msub><mover><mi>y</mi><mo>^</mo></mover><mtext>DeepFM</mtext></msub><mo>=</mo><mtext>sigmoid</mtext><mo>(</mo><msub><mover><mi>y</mi><mo>^</mo></mover><mtext>FM</mtext></msub><mo>+</mo><msub><mover><mi>y</mi><mo>^</mo></mover><mtext>Deep</mtext></msub><mo>)</mo></mrow></math><div class="fnote">FM and the deep part share the same embeddings</div></div>
   </div>
 
   <div class="container lesson" id="l3-3" data-lesson>
     <h3><span class="n">03</span>DCN → DCN-V2</h3>
     <p>DCN replaces the wide path with an explicit <strong>Cross Network</strong> that models bounded-order, explicit interactions
       without feature engineering:</p>
-    <div class="formula">x_{l+1} = x_0 · (w_lᵀ x_l) + b_l + x_l</div>
+    <div class="formula"><math display="block"><mrow><msub><mi>x</mi><mrow><mi>l</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>x</mi><mn>0</mn></msub><mo>&#x22C5;</mo><mo>(</mo><msubsup><mi>w</mi><mi>l</mi><mo>&#x22A4;</mo></msubsup><msub><mi>x</mi><mi>l</mi></msub><mo>)</mo><mo>+</mo><msub><mi>b</mi><mi>l</mi></msub><mo>+</mo><msub><mi>x</mi><mi>l</mi></msub></mrow></math></div>
     <p>The first version is cheap but the expressiveness of each layer is limited. <strong>DCN-V2</strong> upgrades it with a
       weight matrix and a <em>mixture of low-rank experts</em>, so the cross network can approximate the full matrix while staying
       efficient for web-scale serving. This “expressiveness vs. serving cost” tension runs through the entire module.</p>
@@ -772,7 +773,7 @@ loss = F.cross_entropy(logits, torch.arange(B))</pre>
     <p>AutoInt reaches for <strong>multi-head self-attention</strong> to model feature interactions, and — unlike the models
       above — is <strong>interpretable</strong>: the attention weights tell you which features interacted. The post builds the
       attention layer from scratch, which is exactly the mechanism that returns in module 4’s sequential models.</p>
-    <div class="formula">α_{i,j} = softmax_j( wᵀ [ e_i || e_j ] )   <span class="mut">← e_i are feature embeddings, not tokens</span></div>
+    <div class="formula"><math display="block"><mrow><msub><mi>&#x3B1;</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><msub><mtext>softmax</mtext><mi>j</mi></msub><mo>(</mo><msup><mi>w</mi><mo>&#x22A4;</mo></msup><mo>[</mo><msub><mi>e</mi><mi>i</mi></msub><mo>&#x2016;</mo><msub><mi>e</mi><mi>j</mi></msub><mo>]</mo><mo>)</mo></mrow></math><div class="fnote">e_i are feature embeddings, not tokens</div></div>
   </div>
 
   <div class="container lesson" id="l3-6" data-lesson>
@@ -806,7 +807,7 @@ logit = MLP( concat(dense_mlp_out, inter) )</pre>
     <p>Twitter’s main ranker. The idea: an <strong>instance-guided mask</strong> — a per-example gate derived from the input —
       is used to multiply the feature embeddings <em>before</em> the MLP. This is feature-wise multiplication (cf. FiLM), giving
       instance-level non-linearity at low cost.</p>
-    <div class="formula">MaskBlock:  h = ReLU( W₂ · ReLU( W₁ · ( x ⊙ m ) ) ) ,  m = ReLU( W_g · x )</div>
+    <div class="formula"><math display="block"><mrow><mtext>MaskBlock:</mtext><mi>h</mi><mo>=</mo><mtext>ReLU</mtext><mo>(</mo><msub><mi>W</mi><mn>2</mn></msub><mo>&#x22C5;</mo><mtext>ReLU</mtext><mo>(</mo><msub><mi>W</mi><mn>1</mn></msub><mo>&#x22C5;</mo><mo>(</mo><mi>x</mi><mo>&#x2299;</mo><mi>m</mi><mo>)</mo><mo>)</mo><mo>)</mo><mo>,</mo><mi>m</mi><mo>=</mo><mtext>ReLU</mtext><mo>(</mo><msub><mi>W</mi><mi>g</mi></msub><mi>x</mi><mo>)</mo></mrow></math></div>
     <p>Two variants — <strong>SerialMaskNet</strong> and <strong>ParallelMaskNet</strong> — trade depth for width. The blog notes
       the idea originally came from Sina Weibo (2021), a good reminder that production recsys ideas flow in both directions
       across industry.</p>
@@ -908,7 +909,7 @@ inter = gram[:, tri]                    <span class="c"># [B, F(F+1)/2] = [8, 78
         each position a unique signature that generalises to unseen lengths.</li>
       <li><strong>Multi-head self-attention.</strong> Project to Q, K, V; score, scale, mask, softmax, aggregate — in parallel heads.</li>
     </ul>
-    <div class="formula">Attention(Q,K,V) = softmax( Q Kᵀ / √d_k ) V        PE(pos,2i) = sin(pos / 10000^{2i/d})</div>
+    <div class="formula"><math display="block"><mrow><mtext>Attention</mtext><mo>(</mo><mi>Q</mi><mo>,</mo><mi>K</mi><mo>,</mo><mi>V</mi><mo>)</mo><mo>=</mo><mtext>softmax</mtext><mo>(</mo><mfrac><mrow><mi>Q</mi><msup><mi>K</mi><mo>&#x22A4;</mo></msup></mrow><msqrt><msub><mi>d</mi><mi>k</mi></msub></msqrt></mfrac><mo>)</mo><mi>V</mi></mrow></math><div class="fnote">positional encoding</div><math display="block"><mrow><mtext>PE</mtext><mo>(</mo><mtext>pos</mtext><mo>,</mo><mn>2</mn><mi>i</mi><mo>)</mo><mo>=</mo><mtext>sin</mtext><mo>(</mo><mfrac><mtext>pos</mtext><msup><mn>10000</mn><mrow><mn>2</mn><mi>i</mi><mo>/</mo><mi>d</mi></mrow></msup></mfrac><mo>)</mo></mrow></math></div>
   </div>
 
   <div class="container lesson" id="l4-2" data-lesson>
@@ -1059,7 +1060,7 @@ loss = -(torch.log(torch.sigmoid(label * logits))).mean()</pre>
     <p>Start from the baseline: a <strong>shared bottom</strong> MLP feeding task-specific towers. Its weakness is that
       performance collapses when tasks are only loosely related. <strong>MMoE</strong> replaces the shared bottom with several
       <em>experts</em> and gives each task its own <strong>gating network</strong>:</p>
-    <div class="formula">f_k(x) = Σ_i g^k(x)_i · f_i(x) ,   g^k(x) = softmax(W_{g_k} x)</div>
+    <div class="formula"><math display="block"><mrow><msub><mi>f</mi><mi>k</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><munder><mo>&#x2211;</mo><mi>i</mi></munder><msup><mi>g</mi><mi>k</mi></msup><mo>(</mo><mi>x</mi><mo>)</mo><msub><mi>f</mi><mi>i</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo><mo>,</mo><msup><mi>g</mi><mi>k</mi></msup><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mtext>softmax</mtext><mo>(</mo><msub><mi>W</mi><msub><mi>g</mi><mi>k</mi></msub></msub><mi>x</mi><mo>)</mo></mrow></math></div>
     <p>Each task soft-shares the experts through its own gate — the same “multiple heads, weighted combination” idea as
       multi-head attention, applied to tasks instead of features.</p>
   </div>
@@ -1082,8 +1083,7 @@ loss = -(torch.log(torch.sigmoid(label * logits))).mean()</pre>
     <p>Conversion prediction has two traps: <strong>sample selection bias</strong> (you only observe conversion on clicked
       samples, which are a biased subset) and <strong>sparse labels</strong> (conversions are rare). Alibaba’s ESMM sidesteps both
       by modelling the <em>entire space</em> with two towers that share embeddings:</p>
-    <div class="formula">pCVR = pCTCVR / pCTR
-Loss = L(CTR) + L(CTCVR)   <span class="mut">← CTCVR label is observed on every impression</span></div>
+    <div class="formula"><math display="block"><mrow><mtext>pCVR</mtext><mo>=</mo><mfrac><mtext>pCTCVR</mtext><mtext>pCTR</mtext></mfrac></mrow></math><math display="block"><mrow><mtext>Loss</mtext><mo>=</mo><mi>L</mi><mo>(</mo><mtext>CTR</mtext><mo>)</mo><mo>+</mo><mi>L</mi><mo>(</mo><mtext>CTCVR</mtext><mo>)</mo></mrow></math><div class="fnote">the CTCVR label is observed on every impression</div></div>
     <p>By predicting the composite CTCVR on <em>all</em> impressions and dividing by CTR at inference, the CVR tower trains on
       far more data and never sees the biased clicked-only subset directly. Two tasks, two patterns of MTL — the blog calls this
       the <strong>sequential / additive</strong> pattern.</p>
@@ -1099,7 +1099,7 @@ Loss = L(CTR) + L(CTCVR)   <span class="mut">← CTCVR label is observed on ever
       <li><strong>Gradient normalisation (GradNorm)</strong> — rescale gradient magnitudes so all tasks train at similar rates,
         balancing by <em>learning speed</em> rather than by loss value.</li>
     </ul>
-    <div class="formula">L = Σ_k [ (1/(2σ_k²)) · L_k + log σ_k ]   <span class="mut">← uncertainty weighting</span></div>
+    <div class="formula"><math display="block"><mrow><mi>L</mi><mo>=</mo><munder><mo>&#x2211;</mo><mi>k</mi></munder><mo>[</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msup><msub><mi>&#x3C3;</mi><mi>k</mi></msub><mn>2</mn></msup></mrow></mfrac><mo>&#x22C5;</mo><msub><mi>L</mi><mi>k</mi></msub><mo>+</mo><mtext>log</mtext><msub><mi>&#x3C3;</mi><mi>k</mi></msub><mo>]</mo></mrow></math><div class="fnote">uncertainty weighting</div></div>
   </div>
 
   <div class="container lesson" id="l5-4" data-lesson>
@@ -1628,8 +1628,7 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
     <p>In a CTR or retrieval model you have <code>F</code> sparse features (user id, item id, category, hashed tokens…), each with
       its own cardinality <code>C</code>, projected to <code>d</code> dimensions at <code>p</code> bytes per value. The dense MLP is
       megabytes; the tables are everything else:</p>
-    <div class="formula">table bytes  =  Σ_f  C_f · d · p
-optimiser  =  × 1 (SGD)   × 2 (Adagrad: +1 accumulator)   × 3 (Adam: +m, +v)</div>
+    <div class="formula"><math display="block"><mrow><mtext>table bytes</mtext><mo>=</mo><munder><mo>&#x2211;</mo><mi>f</mi></munder><msub><mi>C</mi><mi>f</mi></msub><mo>&#x22C5;</mo><mi>d</mi><mo>&#x22C5;</mo><mi>p</mi></mrow></math><math display="block"><mrow><mtext>optimiser</mtext><mo>=</mo><mo>&#xD7;</mo><mn>1</mn><mo>(</mo><mtext>SGD</mtext><mo>)</mo><mspace width="1em"/><mo>&#xD7;</mo><mn>2</mn><mo>(</mo><mtext>Adagrad: +1</mtext><mo>)</mo><mspace width="1em"/><mo>&#xD7;</mo><mn>3</mn><mo>(</mo><mtext>Adam: m, v</mtext><mo>)</mo></mrow></math></div>
     <p>Twenty features at 5M cardinality, <code>d = 128</code>, fp32 is already <strong>51 GB</strong> — and <strong>154 GB</strong>
       once Adam keeps its two extra fp32 slots. This is why recommendation training papers spend half their space on
       parallelism: the parameter count lives almost entirely in the tables.</p>

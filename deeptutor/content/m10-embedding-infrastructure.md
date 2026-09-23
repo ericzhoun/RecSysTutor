@@ -13,8 +13,7 @@ In a CTR or retrieval model you have `F` sparse features (user id, item id, cate
       megabytes; the tables are everything else:
 
 ```
-table bytes  =  Σ_f  C_f · d · p
-optimiser  =  × 1 (SGD)   × 2 (Adagrad: +1 accumulator)   × 3 (Adam: +m, +v)
+table bytes = ∑_f C_f ⋅ d ⋅ p  optimiser = × 1 (SGD) × 2 (Adagrad: +1) × 3 (Adam: m, v)
 ```
 
 Twenty features at 5M cardinality, `d = 128`, fp32 is already **51 GB** — and **154 GB**

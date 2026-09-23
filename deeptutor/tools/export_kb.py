@@ -46,6 +46,46 @@ def md_inline(el):
     return "".join(out)
 
 
+def math_text(el):
+    """Render MathML back to a readable plain-text form for the knowledge base."""
+    t = el.tag
+    if t in ("math", "mrow", "mstyle", "semantics"):
+        return " ".join(math_text(c) for c in el)
+    if t in ("mi", "mn", "mo", "mtext"):
+        return (el.text or "").strip()
+    if t == "msub":
+        return math_text(el[0]) + "_" + math_text(el[1])
+    if t == "msup":
+        return math_text(el[0]) + "^" + math_text(el[1])
+    if t == "msubsup":
+        return math_text(el[0]) + "_" + math_text(el[1]) + "^" + math_text(el[2])
+    if t == "mfrac":
+        return "(" + math_text(el[0]) + ") / (" + math_text(el[1]) + ")"
+    if t == "munder":
+        return math_text(el[0]) + "_" + math_text(el[1])
+    if t == "mover":
+        return math_text(el[0]) + "^"
+    if t == "msqrt":
+        return "sqrt(" + " ".join(math_text(c) for c in el) + ")"
+    if t == "mspace":
+        return " "
+    return " ".join(math_text(c) for c in el) if len(el) else (el.text or "")
+
+
+def formula_text(el):
+    parts = []
+    for ch in el.iterchildren():
+        cls = (ch.get("class") or "").split()
+        if ch.tag == "math":
+            txt = re.sub(r"\s+", " ", math_text(ch)).strip()
+            txt = re.sub(r"\s+([,)\]}])", r"\1", txt)
+            txt = re.sub(r"([([{])\s+", r"\1", txt)
+            parts.append(txt)
+        elif "fnote" in cls:
+            parts.append("(" + md_inline(ch).strip() + ")")
+    return "  ".join(p for p in parts if p.strip())
+
+
 def md_block(el, lines):
     tag = el.tag
     cls = (el.get("class") or "").split()
@@ -87,7 +127,9 @@ def md_block(el, lines):
         lines += ["", "---", ""]
     elif tag == "div":
         if "formula" in cls:
-            lines += ["", "```", md_inline(el).strip(), "```", ""]
+            txt = formula_text(el)
+            if txt:
+                lines += ["", "```", txt, "```", ""]
         elif "note" in cls:
             lines += ["", "> " + md_inline(el).strip(), ""]
         else:

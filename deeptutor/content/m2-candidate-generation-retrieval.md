@@ -12,7 +12,7 @@ The reference implementation is Google’s *Sampling-Bias-Corrected Neural Model
       same vector space; relevance is a dot product.
 
 ```
-score(u, i) = ⟨ φ_user(U, C), ψ_item(I) ⟩
+score (u, i) = ⟨ φ_user (U, C), ψ_item (I) ⟩
 ```
 
 Because the item tower does not see the user at inference, every item embedding can be precomputed and indexed — turning
@@ -76,8 +76,7 @@ Two-tower is not the only retriever. The blog’s FM→DeepFM post shows a secon
       second-order term collapses into an inner product you can precompute and index.
 
 ```
-FM 2nd-order term:  Σ_{i<j} ⟨v_i, v_j⟩ x_i x_j
-user–item part:     ⟨ (Σ_{i∈user} v_i x_i) , (Σ_{j∈item} v_j x_j) ⟩  ← one dot product, indexable
+(FM second-order term)  ∑_i < j ⟨ v_i, v_j ⟩ x_i x_j  (user–item part)  ⟨ (∑_i ∈ user v_i x_i), (∑_j ∈ item v_j x_j) ⟩  (one dot product, indexable)
 ```
 
 This is the conceptual bridge to ranking: the same FM that retrieves can, with a deep component bolted on, become the
