@@ -64,6 +64,9 @@ deeptutor run mastery_path "recommender systems, beginner to HSTU" --kb recsys-c
 
 - `content/m0..m8-*.md` — one document per module: lesson prose, formulas, code, exercises (with solutions), and the quiz bank.
 - `content/papers-atlas.md` — all 104 papers grouped by pipeline stage, with venues, themes, notes, PDF links, and the curated lineage chains.
+- `content/m11-*.md` — companion reading-library module (topic map + reading paths)
+- `content/mls-*.md` — text-only corpus of the 164 free posts from the
+  *Machine Learning at Scale* reading library (paid previews excluded)
 - `content/00-overview.md` — structure + study commands.
 
 Re-export after editing the course:

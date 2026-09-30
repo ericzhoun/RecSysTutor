@@ -15,6 +15,7 @@ An interactive course on recommender systems for machine-learning engineers, ass
 - **m7** — Practical toolkit & capstone
 - **m8** — Paper atlas: the Ads & RecSys collection
 - **m9** — Study with an AI tutor (DeepTutor)
+- **m11** — Reading library: *Machine Learning at Scale* (244-post companion collection)
 
 ## How to study with DeepTutor
 

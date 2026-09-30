@@ -1,0 +1,97 @@
+---
+title: "A $27K/Month Ranking System That Silently Buried 45,000 New Listings Daily [Edition #4]"
+subtitle: "Learn how MGET serialization on 500 candidates and positional bias caused a massive offline-online gap and how to slash P99 latency by 170ms using two-tiered fetching."
+date: 2026-04-11
+author: Ludovico Bessi
+collection: Machine Learning at Scale
+topics: [recsys]
+series: "Production war stories"
+paywalled: true
+words: 697
+---
+
+# A $27K/Month Ranking System That Silently Buried 45,000 New Listings Daily [Edition #4]
+
+*Learn how MGET serialization on 500 candidates and positional bias caused a massive offline-online gap and how to slash P99 latency by 170ms using two-tiered fetching.*
+
+> Paid post — only the publicly visible preview is included.
+
+*Learn how MGET serialization on 500 candidates and positional bias caused a massive offline-online gap and how to slash P99 latency by 170ms using two-tiered fetching.*
+
+[![](../assets/7df8fc3f4982875d.jpg)](../assets/7df8fc3f4982875d.jpg)
+
+# The system
+
+SwiftMarket is a Series B e-commerce marketplace company that recently raised 45 million dollars to scale their discovery engine. They have reached a milestone of 3.2 million completed transactions per month across a catalog of 1.5 million active listings.
+
+Their engineering team built a learning-to-rank (LTR) system that powers the main search results page. Here is their setup.
+
+# Architecture Overview
+
+When a user enters a search term, the request hits the Search Gateway, which coordinates a multi-stage retrieval and ranking process.
+
+[![](../assets/bb3d6c1561818c40.png)](../assets/bb3d6c1561818c40.png)
+
+### Traffic patterns:
+
+Search Requests: 520 million/month
+
+Catalog Updates: 45,000 new listings/day
+
+Average: 200 req/sec
+
+Peak: 1,150 req/sec
+
+The ML Pipeline:
+
+The model is an XGBoost Ranker trained weekly on S3 data lakes containing raw click logs. The labels are binary (1 for click, 0 for no click).
+
+Features include historical Click-Through Rate (CTR) and conversion rates, which are computed via a Spark job every 24 hours and pushed to the Redis Feature Store.
+
+### Current performance:
+
+P99 Latency: 380ms
+
+Availability: 99.92%
+
+Business impact: 12% increase in Search CTR (Offline test predicted +35%)
+
+Costs:
+
+Infra (EC2/Elasticsearch): $14,200/month
+
+Managed Feature Store (Redis): $12,800/month
+
+Total: $27,000/month
+
+### Recent incidents:
+
+Incident 1: Search latency spiked to 2 seconds after a marketing campaign; the Feature Store couldn’t handle the concurrent read IOPS on the primary shard.
+
+Incident 2: Recovery took 4 hours when the daily Spark job failed, leaving the Feature Store with stale data for 48 hours and causing a 5% drop in conversion.
+
+# The Analysis
+
+Now let me show you what is actually happening here.
+
+**Critical Issue #1: The 24-Hour Cold Start Blackout**
+
+Look at the Architecture Overview: the Feature Store is updated via a daily batch job. If a seller lists an item at 9:00 AM, the features for that item (CTR, popularity, etc.) do not exist in Redis until the next day’s job finishes. Because the XGBoost model relies heavily on historical CTR features to rank items, these new listings receive a default “null” value. In a marketplace with 45,000 new listings daily, you are effectively burying 100% of your fresh inventory at the bottom of page 10 for the first 24 hours of their life.
+
+**Critical Issue #2: The Positional Bias Feedback Loop**
+
+The training setup uses raw click logs as binary labels. In the current UI, users naturally click the top 3 results more often because they are visible without scrolling. By training on these raw clicks without debiasing for position, the model is simply learning to predict what was already at the top of the page. This explains why the offline metrics looked amazing (the model predicted the status quo perfectly) while the online impact is underwhelming. You aren’t ranking for relevance; you are ranking for historical UI placement.
+
+**Critical Issue #3: Feature Store Latency Bloat**
+
+The Feature Store is taking 110ms per request, which is nearly 30% of the total P99 latency budget. This is happening because the Main Ranking Service is fetching features for all 500 candidates retrieved from Elasticsearch. Fetching 500 keys from a remote Redis instance (even with MGET) introduces significant network serialization overhead. This is why the system choked during the marketing peak mentioned in the incidents.
+
+**Critical Issue #4: The Accuracy Mirage (Offline/Online Gap)**
+
+The team is training on “clicks” but the business cares about “transactions.” The architecture shows the model treats every click as a success. However, in e-commerce, a click on a low-priced, clickbait item that never converts is actually a failure for the marketplace. The 35% predicted offline lift was based on a click-prediction task, but the actual 12% online lift reflects the fact that you are driving high-volume, low-value clicks that don’t lead to sales.
+
+**Critical Issue #5: Redundant Computation and Cost**
+
+They have 12 nodes of Elasticsearch just for BM25 retrieval. Since the XGBoost model is only re-ranking the top 500, they are paying for high-performance Elasticsearch instances to do simple text matching that is then ignored or overridden by the second stage.
+
+# WHAT I WOULD DO INSTEAD

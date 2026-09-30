@@ -49,6 +49,17 @@ hands-on exercises** (hint + reference solution) and a graded self-check, so the
 
 - `index.html` — the course (open this)
 - `syllabus.md` — module/lesson → source-post map, learning tracks, widget index
+- `ml-at-scale/` — companion reading library: 244 production-ML posts (Ludovico Bessi, *Machine Learning at Scale*) with local images, topic index and DeepTutor KB corpus
+
+## Reading library (module 11) — `ml-at-scale/`
+
+A companion library of **244 production-ML posts** from the *Machine Learning at Scale*
+collection by **Ludovico Bessi** (collected 2026-09-30): recommender deep-dives (TikTok,
+xAI, Airbnb, LinkedIn, ByteDance, Alibaba, Pinterest, a full [RecSys] series), LLM/RAG and
+serving engineering, and production war stories. Copies are platform-free with local
+images; 80 paid posts appear as previews only. Topic map and course cross-references:
+`ml-at-scale/README.md`, full table: `ml-at-scale/index.md`, course companion module:
+`deeptutor/content/m11-ml-at-scale-reading-library.md`.
 
 ## Source & attribution
 

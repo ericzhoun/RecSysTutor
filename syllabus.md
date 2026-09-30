@@ -38,6 +38,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | **M8 Paper atlas** | The collection · Lineage chains · How to use the atlas | Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising (`ads_knowledge_graph/`) — 104 ads/recsys papers |
 | **M9 AI tutor** | From static page to personal tutor | DeepTutor (HKUDS) — knowledge base `recsys-course`, RAG chat, quiz generation, mastery paths |
 | **M10 Embedding infrastructure** | The table *is* the model · loading & training it · when it doesn't fit · decision table | DLRM (parallelism) + TwHIN (parameter drift) from earlier modules; production practice |
+| **M11 Reading library** | 244-post companion library: topic map · reading paths · production war stories | *Machine Learning at Scale* (Ludovico Bessi) — see `ml-at-scale/` |
 
 ---
 
@@ -128,3 +129,13 @@ The atlas in module 8 is generated from the graph in the companion repository
 (104 paper nodes · 9 stage hubs · 11 theme hubs · 16 company hubs · 70 `lineage` edges). Papers are tagged by pipeline
 stage, research theme, company, venue and year; the curated lineage chains are the repository's "builds on" relations.
 Reproduced with attribution; the linked PDFs are hosted in that repository.
+
+---
+
+## Module 11 — companion reading library (`ml-at-scale/`)
+
+244 production-ML posts from the *Machine Learning at Scale* collection (Ludovico Bessi,
+collected 2026-09-30), stored platform-free with local images. `deeptutor/content/m11-*.md`
+holds the topic map and reading paths cross-referenced to M1–M10; `deeptutor/content/mls-*.md`
+is the text-only corpus of the 164 free posts for the knowledge base. Paid posts (80) appear
+as previews in `ml-at-scale/posts/`.
