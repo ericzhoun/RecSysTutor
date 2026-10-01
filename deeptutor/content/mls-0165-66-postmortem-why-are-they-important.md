@@ -2,4 +2,160 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2024-12-08 · topic: ml-theory*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/620ae9455b78f014.webp" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/620ae9455b78f014.webp 424w, ../assets/620ae9455b78f014.webp 848w, ../assets/620ae9455b78f014.webp 1272w, ../assets/620ae9455b78f014.webp 1456w" sizes="100vw"><img src="../assets/620ae9455b78f014.webp" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/620ae9455b78f014.webp" class="sizing-normal" alt="" srcset="../assets/620ae9455b78f014.webp 424w, ../assets/620ae9455b78f014.webp 848w, ../assets/620ae9455b78f014.webp 1272w, ../assets/620ae9455b78f014.webp 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a><figcaption class="image-caption">Google’s servers when I push code to prod.</figcaption></figure></div><h1>Introduction</h1><p>Another meta article about a software engineer career. Today, I will give a perspective on postmortems.</p><p>I admit, my guilty pleasure when I do some small error at work is opening the internal postmortem page (called OMG, lol) to check some ongoing postmortems and make myself feel better :D.</p><p>Even better, I now can just look <strong>at my personal postmortem</strong>. </p><p>Yeah.. you read that right! After almost 3 years, I am no longer post mortem free!</p><p>Let’s see how to structure a good postmortem (but hoping that you never have to write one!). </p><blockquote><p>"Let’s plan for a future where we’re all as stupid as we are today."</p><p>– Dan Milstein</p></blockquote><h1>Blameless postmortem culture leads to less outages (AND more risk taking!)</h1><p>Blameless postmortems are all about creating a culture where we focus on <em>what</em> happened rather than <em>who</em> did it.</p><p>The idea is simple: if engineers aren’t afraid of being blamed for outages, they are more likely to take risks, innovate, and flag problems early, ultimately leading to fewer outages in the long run. </p><p>This openness encourages honest conversations, ensuring that everyone has the opportunity to learn from mistakes.</p><p>When you remove fear from the equation, you increase transparency and a willingness to take necessary risks.</p><p><strong>This culture is alive and strong at Google and I LOVE IT!</strong></p><h1>WHAT DID I DO?</h1><div class="paywall-jump" data-component-name="PaywallToDOM"></div><div class="subscription-widget-wrap-editor" data-attrs="{&quot;url&quot;:&quot;" data-component-name="SubscribeWidgetToDOM"><div class="subscription-widget show-subscribe"><div class="preamble"><p class="cta-caption">Want to stay up to date with all my fuckups? Only one way to do that!</p></div><form class="subscription-widget-subscribe"><input type="email" class="email-input" name="email" placeholder="Type your email…" tabindex="-1"><input type="submit" class="button primary" value="Subscribe"><div class="fake-input-wrapper"><div class="fake-input"></div><div class="fake-button"></div></div></form></div></div><p>I know you only care about this, so here we are. It’s actually pretty boring lol. </p><p>I misconfigured a configuration file and submitted it.</p><p>The configuration file is immediately pushed to prod, working as intended.</p><p>The change affected prod, we see spike in error and we immediately roll back.</p><p>The end! :D</p><p>We detected immediately something was wrong and we reacted immediately, but…</p><p>In the ads world, every minute costs . So had to write a postmortem on it!!</p><p>Let’s see how to craft the perfect postmortem, so you can shine even in a bad time!</p><h1>How to craft a perfect postmortem</h1><p>Here’s a solid framework to follow, from [1]:</p><h4>Executive Summary</h4><p>Provide a concise overview of the incident—what happened and what the outcome was. Include the time, date, and brief description of the issue.</p><h4>Impact</h4><p>Assess the damage in clear, quantifiable terms:</p><ul><li><p><strong>Number of impacted users</strong>: Did the incident affect a subset or all users?</p></li><li><p><strong>Lost revenue</strong>: Was there a financial impact? Estimate the monetary loss.</p></li><li><p><strong>Duration</strong>: How long did the issue persist before resolution?</p></li><li><p><strong>Team impact</strong>: Did this issue require urgent interventions, overtime, or emergency meetings? How did it affect the team's workflow?</p></li></ul><h4>Timeline</h4><p>Provide a detailed, chronological breakdown of events:</p><ol><li><p><strong>Detection</strong>: How was the issue first noticed? Was it flagged by automated systems or reported by users?</p></li><li><p><strong>Resolution</strong>: Outline the steps taken to mitigate the issue and how long it took.</p></li></ol><h4>Root Cause Analysis</h4><p>Go beyond surface-level explanations and dig into the underlying factors:</p><ul><li><p>What technical flaw triggered the issue?</p></li><li><p>Were there any pre-existing vulnerabilities?</p></li><li><p>Were human or process errors involved?</p></li></ul><h4>Lessons Learned</h4><p>This is one of the most critical sections, as it helps you and the team grow from the experience:</p><ul><li><p><strong>Things that went well</strong>: What strategies or tools worked during the resolution? Did anything prevent the problem from escalating further?</p></li><li><p><strong>Things that went poorly</strong>: Were there delays in detection or communication breakdowns? Highlight the areas that need improvement.</p></li></ul><h4>Action Items</h4><p>End with concrete, actionable steps to prevent future occurrences:</p><ol><li><p><strong>Tasks to improve prevention</strong>: Are there process changes or additional training required?</p></li><li><p><strong>Tasks to improve detection</strong>: Should you update monitoring tools or establish new alerting thresholds?</p></li><li><p><strong>Tasks to improve mitigation</strong>: Do emergency response plans need updating? Do engineers need faster access to resources or decision-makers?</p></li></ol><h1>What can you get out of a good postmortem?</h1><p>Conducting a thorough and well-structured postmortem offers significant benefits!</p><p>1. <strong>Personal Growth and Skill Development:</strong><br>By diving into the details of a postmortem, you learn to dissect complex issues, identify root causes, and understand the broader impact of incidents. This deepens your technical expertise and sharpens your ability to address and prevent future problems.</p><p>2. <strong>Increased Credibility and Respect:</strong><br>Executing a postmortem well demonstrates your commitment to transparency and continuous improvement. Colleagues and leaders will see you as a proactive problem-solver who is dedicated to learning from mistakes rather than avoiding responsibility. This builds your reputation as a competent and reliable engineer.</p><p>3. <strong>Enhanced Problem-Solving Abilities:</strong><br>By identifying and addressing system weaknesses, you develop an eye for potential issues and solutions. This experience improves your problem-solving abilities, making you better equipped to handle future challenges with confidence and efficiency.</p><p>4. <strong>Stronger Collaborative Skills:</strong><br>Postmortems often involve working closely with cross-functional teams. Successfully navigating these discussions and integrating diverse perspectives can improve your communication and teamwork skills. This collaborative experience fosters better relationships and teamwork across your organization.</p><p>5. <strong>A Clear Path for Career Advancement:</strong><br>Consistently applying the lessons learned from postmortems can lead to measurable improvements in system performance and reliability. This track record of success is often recognized in performance reviews and can contribute to career advancement and professional recognition.</p><p>7. <strong>Greater Confidence in Handling Incidents:</strong><br>Experience with postmortems builds confidence in your ability to manage and mitigate incidents effectively. You become adept at navigating complex situations, communicating clearly under pressure, and implementing solutions that prevent recurrence.</p><h1>[Bonus points] My personal mistakes that *almost* made me write a postmortem in the past. (yeah, it was bound to happen sooner or later…)</h1><p>In no particular order:</p><ul><li><p>Forgot a flag in an experiment, which lead to less ads being shown on the home page of youtube for a small percentage of users. (Got pinged by on-call and fixed very fast!)</p></li><li><p>DB migration led to a spike of +300% of QPS (for the biggest QPS system at google…). We almost did not even notice, thanks Google infra!</p></li><li><p>Polluted training data with predicted labels of the model, leading to 100% precision offline :D, too good to be true!</p></li><li><p>Messed up an integration where I added a boolean to some <a href="https://protobuf.dev/">proto</a> message. The whole message was empty, except for the boolean. Not very useful by itself!</p></li><li><p>While optimizing CPU consumption with some “look I am so smart” C++, I shooted myself in the foot (a classic) and deleted 1/3 of ML features from the training data. Whops!</p></li></ul><div class="subscription-widget-wrap-editor" data-attrs="{&quot;url&quot;:&quot;" data-component-name="SubscribeWidgetToDOM"><div class="subscription-widget show-subscribe"><div class="preamble"><p class="cta-caption">Want to stay up to date with all my mistakes? Only one way to do that!</p></div><form class="subscription-widget-subscribe"><input type="email" class="email-input" name="email" placeholder="Type your email…" tabindex="-1"><input type="submit" class="button primary" value="Subscribe"><div class="fake-input-wrapper"><div class="fake-input"></div><div class="fake-button"></div></div></form></div></div><h1>Closing thoughts</h1><p>A postmortem isn't about pointing fingers; it's about learning and making sure the same mistake doesn’t happen twice.</p><p>The more we embrace blameless postmortems, the more we encourage open discussion and prevent recurrence!</p><p>Hope you enjoyed this and share some of your personal fuck-ups too! :)</p><p>Ludo</p><h1>References</h1><ol><li><p><a href="https://www.etsy.com/codeascraft/blameless-postmortems/">Blameless postmortems</a></p></li><li><p><a href="https://sre.google/workbook/postmortem-culture/">Chapter 10 - Postmortem Culture: Learning from Failure</a></p></li></ol><p></p><p></p><p></p>
+[](../assets/620ae9455b78f014.webp)
+
+Google’s servers when I push code to prod.
+
+# Introduction
+
+Another meta article about a software engineer career. Today, I will give a perspective on postmortems.
+
+I admit, my guilty pleasure when I do some small error at work is opening the internal postmortem page (called OMG, lol) to check some ongoing postmortems and make myself feel better :D.
+
+Even better, I now can just look **at my personal postmortem**.
+
+Yeah.. you read that right! After almost 3 years, I am no longer post mortem free!
+
+Let’s see how to structure a good postmortem (but hoping that you never have to write one!).
+
+> "Let’s plan for a future where we’re all as stupid as we are today."
+>
+> – Dan Milstein
+
+# Blameless postmortem culture leads to less outages (AND more risk taking!)
+
+Blameless postmortems are all about creating a culture where we focus on _what_ happened rather than _who_ did it.
+
+The idea is simple: if engineers aren’t afraid of being blamed for outages, they are more likely to take risks, innovate, and flag problems early, ultimately leading to fewer outages in the long run.
+
+This openness encourages honest conversations, ensuring that everyone has the opportunity to learn from mistakes.
+
+When you remove fear from the equation, you increase transparency and a willingness to take necessary risks.
+
+**This culture is alive and strong at Google and I LOVE IT!**
+
+# WHAT DID I DO?
+
+I know you only care about this, so here we are. It’s actually pretty boring lol.
+
+I misconfigured a configuration file and submitted it.
+
+The configuration file is immediately pushed to prod, working as intended.
+
+The change affected prod, we see spike in error and we immediately roll back.
+
+The end! :D
+
+We detected immediately something was wrong and we reacted immediately, but…
+
+In the ads world, every minute costs . So had to write a postmortem on it!!
+
+Let’s see how to craft the perfect postmortem, so you can shine even in a bad time!
+
+# How to craft a perfect postmortem
+
+Here’s a solid framework to follow, from [1]:
+
+#### Executive Summary
+
+Provide a concise overview of the incident—what happened and what the outcome was. Include the time, date, and brief description of the issue.
+
+#### Impact
+
+Assess the damage in clear, quantifiable terms:
+
+  * **Number of impacted users** : Did the incident affect a subset or all users?
+
+  * **Lost revenue** : Was there a financial impact? Estimate the monetary loss.
+
+  * **Duration** : How long did the issue persist before resolution?
+
+  * **Team impact** : Did this issue require urgent interventions, overtime, or emergency meetings? How did it affect the team's workflow?
+
+#### Timeline
+
+Provide a detailed, chronological breakdown of events:
+
+  1. **Detection** : How was the issue first noticed? Was it flagged by automated systems or reported by users?
+
+  2. **Resolution** : Outline the steps taken to mitigate the issue and how long it took.
+
+#### Root Cause Analysis
+
+Go beyond surface-level explanations and dig into the underlying factors:
+
+  * What technical flaw triggered the issue?
+
+  * Were there any pre-existing vulnerabilities?
+
+  * Were human or process errors involved?
+
+#### Lessons Learned
+
+This is one of the most critical sections, as it helps you and the team grow from the experience:
+
+  * **Things that went well** : What strategies or tools worked during the resolution? Did anything prevent the problem from escalating further?
+
+  * **Things that went poorly** : Were there delays in detection or communication breakdowns? Highlight the areas that need improvement.
+
+#### Action Items
+
+End with concrete, actionable steps to prevent future occurrences:
+
+  1. **Tasks to improve prevention** : Are there process changes or additional training required?
+
+  2. **Tasks to improve detection** : Should you update monitoring tools or establish new alerting thresholds?
+
+  3. **Tasks to improve mitigation** : Do emergency response plans need updating? Do engineers need faster access to resources or decision-makers?
+
+# What can you get out of a good postmortem?
+
+Conducting a thorough and well-structured postmortem offers significant benefits!
+
+1\. **Personal Growth and Skill Development:**
+By diving into the details of a postmortem, you learn to dissect complex issues, identify root causes, and understand the broader impact of incidents. This deepens your technical expertise and sharpens your ability to address and prevent future problems.
+
+2\. **Increased Credibility and Respect:**
+Executing a postmortem well demonstrates your commitment to transparency and continuous improvement. Colleagues and leaders will see you as a proactive problem-solver who is dedicated to learning from mistakes rather than avoiding responsibility. This builds your reputation as a competent and reliable engineer.
+
+3\. **Enhanced Problem-Solving Abilities:**
+By identifying and addressing system weaknesses, you develop an eye for potential issues and solutions. This experience improves your problem-solving abilities, making you better equipped to handle future challenges with confidence and efficiency.
+
+4\. **Stronger Collaborative Skills:**
+Postmortems often involve working closely with cross-functional teams. Successfully navigating these discussions and integrating diverse perspectives can improve your communication and teamwork skills. This collaborative experience fosters better relationships and teamwork across your organization.
+
+5\. **A Clear Path for Career Advancement:**
+Consistently applying the lessons learned from postmortems can lead to measurable improvements in system performance and reliability. This track record of success is often recognized in performance reviews and can contribute to career advancement and professional recognition.
+
+7\. **Greater Confidence in Handling Incidents:**
+Experience with postmortems builds confidence in your ability to manage and mitigate incidents effectively. You become adept at navigating complex situations, communicating clearly under pressure, and implementing solutions that prevent recurrence.
+
+# [Bonus points] My personal mistakes that *almost* made me write a postmortem in the past. (yeah, it was bound to happen sooner or later…)
+
+In no particular order:
+
+  * Forgot a flag in an experiment, which lead to less ads being shown on the home page of youtube for a small percentage of users. (Got pinged by on-call and fixed very fast!)
+
+  * DB migration led to a spike of +300% of QPS (for the biggest QPS system at google…). We almost did not even notice, thanks Google infra!
+
+  * Polluted training data with predicted labels of the model, leading to 100% precision offline :D, too good to be true!
+
+  * Messed up an integration where I added a boolean to some proto message. The whole message was empty, except for the boolean. Not very useful by itself!
+
+  * While optimizing CPU consumption with some “look I am so smart” C++, I shooted myself in the foot (a classic) and deleted 1/3 of ML features from the training data. Whops!
+
+# Closing thoughts
+
+A postmortem isn't about pointing fingers; it's about learning and making sure the same mistake doesn’t happen twice.
+
+The more we embrace blameless postmortems, the more we encourage open discussion and prevent recurrence!
+
+Hope you enjoyed this and share some of your personal fuck-ups too! :)
+
+Ludo
+
+# References
+
+  1. Blameless postmortems
+
+  2. Chapter 10 - Postmortem Culture: Learning from Failure

@@ -2,9 +2,9 @@
 
 A curated, platform-free reading library of **244 production-ML posts** from the
 *Machine Learning at Scale* collection by **Ludovico Bessi** (collected 2026-09-30),
-living in `ml-at-scale/` at the repo root. Full texts for all free posts are also in
-the knowledge base as `mls-*.md` documents; the 80 paid posts appear in the library as
-publicly visible previews only.
+living in `ml-at-scale/` at the repo root. The full texts are also in the knowledge base
+as `mls-*.md` documents; the collection's paid posts were retrieved under the owner's own
+subscription for personal study, so **rights remain with the author**.
 
 Use this module as the entry point: pick a topic below, follow a reading path that
 cross-references modules m1–m10, and open the corresponding file in `ml-at-scale/posts/`.
@@ -12,8 +12,8 @@ cross-references modules m1–m10, and open the corresponding file in `ml-at-sca
 ## Size and shape
 
 - **244 posts**, 2023-01-01 → 2026-09-30.
-- **244 full-text free posts** (KB corpus `mls-*.md`),
-  0 paid previews (library only).
+- **244 posts in the KB corpus** (`mls-*.md`), all retrieved in full;
+  0 truncated previews.
 - **254,798 words** of cleaned text; images stored locally under `ml-at-scale/assets/`.
 
 ## Topic map

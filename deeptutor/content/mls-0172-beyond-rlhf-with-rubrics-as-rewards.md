@@ -2,4 +2,76 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2025-10-22 · topic: rl-agents*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/05d14a05c18819e8.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/05d14a05c18819e8.png 424w, ../assets/05d14a05c18819e8.png 848w, ../assets/05d14a05c18819e8.png 1272w, ../assets/05d14a05c18819e8.png 1456w" sizes="100vw"><img src="../assets/05d14a05c18819e8.png" width="1126" height="348" data-attrs="{&quot;src&quot;:&quot;../assets/05d14a05c18819e8.png" class="sizing-normal" alt="" srcset="../assets/05d14a05c18819e8.png 424w, ../assets/05d14a05c18819e8.png 848w, ../assets/05d14a05c18819e8.png 1272w, ../assets/05d14a05c18819e8.png 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p><strong>TL;DR:</strong> The paper "Rubrics as Rewards (RaR)" introduces a framework for LLM alignment that replaces opaque preference-based reward models with structured, prompt-specific checklists (rubrics).</p><p>For on-policy training with GRPO, an LLM judge scores model outputs against these rubrics.</p><p>This approach enhances reward signal quality and interpretability and allows smaller, cheaper judge models to align more closely with human preferences.</p><p>Defining reliable reward signals for language model alignment is a persistent challenge, particularly in domains lacking unambiguous ground truth. Current paradigms present a trade-off:</p><ul><li><p><strong>Reinforcement Learning with Verifiable Rewards (RLVR):</strong> Highly effective for tasks with deterministic verifiers (e.g., unit tests in code, correct answers in math). However, its applicability is limited in subjective domains like creative writing or medical reasoning.</p></li><li><p><strong>Preference-Based RL (RLHF/DPO):</strong> Uses human preferences to train a reward model, offering broad applicability. The resulting reward function is often an opaque neural network, prone to overfitting on superficial heuristics (e.g., length, verbosity, formatting) and susceptible to reward hacking.</p></li></ul><p>The paper "Rubrics as Rewards" from Scale AI proposes a framework to bridge this gap, offering a more structured, interpretable, and robust reward mechanism for on-policy optimization.</p><p>Love all the research going on in the space!!</p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>Thank you so much for being a paid sub!! &lt;3</p><p>Now back to the article!!</p><p>The core idea is to decompose the notion of a "high-quality" response into a set of explicit, verifiable criteria tailored to each prompt.</p><p>This is formalized as a structured reward function where the final scalar reward r for a prompt x and response ŷ is a normalized, weighted sum of satisfied criteria:</p><p>r(x, ŷ) = (Σ wj * cj(x, ŷ)) / (Σ wj)</p><p>Here, cj(x, ŷ) is a binary correctness function—evaluated by a judge LLM—that returns 1 if the response ŷ satisfies criterion j, and wj is the criterion's assigned weight.</p><h3><strong>Reward Aggregation Strategies</strong></h3><p>The authors investigate two primary methods for aggregating rubric evaluations into a scalar reward:</p><ol><li><p><strong>Explicit Aggregation:</strong> Each rubric criterion cj is evaluated independently by an LLM judge. The resulting boolean scores are then aggregated externally via a weighted summation using predefined weights (e.g., Essential=1.0, Important=0.7, Pitfall=0.8). This approach offers maximum transparency and control over the reward calculation.</p></li><li><p><strong>Implicit Aggregation:</strong> The prompt, model response, and the <em>entire set of rubric criteria</em> are passed as context to a single LLM judge. The judge is then prompted to output a holistic scalar reward (e.g., a 1-10 Likert score), effectively learning to perform the weighting and trade-off analysis internally.</p></li></ol><p>Empirically, <strong>implicit aggregation consistently outperformed the explicit method.</strong> This suggests that allowing a capable judge model to dynamically weigh criteria based on the specific nuances of a response is more effective than relying on a fixed, universal weighting scheme.</p><h3><strong>Implementation Pipeline for On-Policy Optimization</strong></h3><p>The RaR framework is integrated into an on-policy RL loop using the GRPO algorithm:</p><ol><li><p><strong>Rubric Generation (Offline):</strong> For each prompt in the training dataset, a strong LLM (e.g., GPT-4o) synthesizes a detailed, self-contained rubric. This process is grounded by providing an expert-written reference answer as guidance, ensuring the rubric captures key factual and reasoning components.</p></li><li><p><strong>On-Policy Loop:</strong></p><ul><li><p><strong>Generation:</strong> The policy model samples a batch of k responses for a given prompt.</p></li><li><p><strong>Reward Computation:</strong> A judge LLM evaluates each sampled response against the prompt-specific rubric using the implicit aggregation method, outputting a scalar reward.</p></li><li><p><strong>Policy Update:</strong> The policy is updated using GRPO with the computed rewards.</p></li></ul></li></ol><h3><strong>Empirical Findings and Implications</strong></h3><ul><li><p><strong>Superior Performance on Subjective Benchmarks:</strong> RaR-Implicit achieved a <strong>28% relative improvement</strong> on HealthBench-1k and a 13% improvement on GPQA over a simple Likert-based baseline. It also matched or exceeded the performance of a Reference-Likert baseline, where the judge compares the output to a high-quality reference answer. This indicates that a structured reward signal can be more effective and targeted than an unstructured, dense reference.</p></li><li><p><strong>Improved Judge Model Efficiency and Alignment:</strong> A key finding is that rubrics act as a cognitive scaffold for the judge LLM. As shown in Figure 2 of the paper, providing a rubric significantly improves the accuracy of judge models in aligning with human preferences across all model scales. This effect is most pronounced for smaller models, narrowing the performance gap with larger, more expensive judges and making the alignment process more cost-effective.</p></li><li><p><strong>Enhanced Reward Transparency and Debuggability:</strong> Unlike the black-box nature of RLHF reward models, RaR provides clear, interpretable feedback. If a policy is consistently penalized, developers can directly inspect the rubric criteria it fails to meet, enabling targeted debugging and model improvement. This moves alignment from "art" to a more structured engineering discipline.</p></li></ul><h3><strong>Main take-ways</strong></h3><p>Rubrics as Rewards is a robust and practical framework for LLM alignment in complex domains where simple verifiers are insufficient.</p><p>By formalizing subjective quality into a machine-readable, multi-dimensional checklist, RaR creates reward signals that are more transparent, less susceptible to hacking (even though they are still there!!), and more efficient to compute than traditional preference-based methods.</p><p>Pretty cool work! And IMHO it’s the next step of RL, now it almost looks too easy with verifiable rewards!!</p><h1>References</h1><ol><li><p><a href="https://arxiv.org/pdf/2507.17746">Rubrics as Rewards: Reinforcement Learning Beyond Verifiable Domains</a></p></li></ol>
+[](../assets/05d14a05c18819e8.png)
+
+**TL;DR:** The paper "Rubrics as Rewards (RaR)" introduces a framework for LLM alignment that replaces opaque preference-based reward models with structured, prompt-specific checklists (rubrics).
+
+For on-policy training with GRPO, an LLM judge scores model outputs against these rubrics.
+
+This approach enhances reward signal quality and interpretability and allows smaller, cheaper judge models to align more closely with human preferences.
+
+Defining reliable reward signals for language model alignment is a persistent challenge, particularly in domains lacking unambiguous ground truth. Current paradigms present a trade-off:
+
+  * **Reinforcement Learning with Verifiable Rewards (RLVR):** Highly effective for tasks with deterministic verifiers (e.g., unit tests in code, correct answers in math). However, its applicability is limited in subjective domains like creative writing or medical reasoning.
+
+  * **Preference-Based RL (RLHF/DPO):** Uses human preferences to train a reward model, offering broad applicability. The resulting reward function is often an opaque neural network, prone to overfitting on superficial heuristics (e.g., length, verbosity, formatting) and susceptible to reward hacking.
+
+The paper "Rubrics as Rewards" from Scale AI proposes a framework to bridge this gap, offering a more structured, interpretable, and robust reward mechanism for on-policy optimization.
+
+Love all the research going on in the space!!
+
+Thank you so much for being a paid sub!! <3
+
+Now back to the article!!
+
+The core idea is to decompose the notion of a "high-quality" response into a set of explicit, verifiable criteria tailored to each prompt.
+
+This is formalized as a structured reward function where the final scalar reward r for a prompt x and response ŷ is a normalized, weighted sum of satisfied criteria:
+
+r(x, ŷ) = (Σ wj * cj(x, ŷ)) / (Σ wj)
+
+Here, cj(x, ŷ) is a binary correctness function—evaluated by a judge LLM—that returns 1 if the response ŷ satisfies criterion j, and wj is the criterion's assigned weight.
+
+### **Reward Aggregation Strategies**
+
+The authors investigate two primary methods for aggregating rubric evaluations into a scalar reward:
+
+  1. **Explicit Aggregation:** Each rubric criterion cj is evaluated independently by an LLM judge. The resulting boolean scores are then aggregated externally via a weighted summation using predefined weights (e.g., Essential=1.0, Important=0.7, Pitfall=0.8). This approach offers maximum transparency and control over the reward calculation.
+
+  2. **Implicit Aggregation:** The prompt, model response, and the _entire set of rubric criteria_ are passed as context to a single LLM judge. The judge is then prompted to output a holistic scalar reward (e.g., a 1-10 Likert score), effectively learning to perform the weighting and trade-off analysis internally.
+
+Empirically, **implicit aggregation consistently outperformed the explicit method.** This suggests that allowing a capable judge model to dynamically weigh criteria based on the specific nuances of a response is more effective than relying on a fixed, universal weighting scheme.
+
+### **Implementation Pipeline for On-Policy Optimization**
+
+The RaR framework is integrated into an on-policy RL loop using the GRPO algorithm:
+
+  1. **Rubric Generation (Offline):** For each prompt in the training dataset, a strong LLM (e.g., GPT-4o) synthesizes a detailed, self-contained rubric. This process is grounded by providing an expert-written reference answer as guidance, ensuring the rubric captures key factual and reasoning components.
+
+  2. **On-Policy Loop:**
+
+     * **Generation:** The policy model samples a batch of k responses for a given prompt.
+
+     * **Reward Computation:** A judge LLM evaluates each sampled response against the prompt-specific rubric using the implicit aggregation method, outputting a scalar reward.
+
+     * **Policy Update:** The policy is updated using GRPO with the computed rewards.
+
+### **Empirical Findings and Implications**
+
+  * **Superior Performance on Subjective Benchmarks:** RaR-Implicit achieved a **28% relative improvement** on HealthBench-1k and a 13% improvement on GPQA over a simple Likert-based baseline. It also matched or exceeded the performance of a Reference-Likert baseline, where the judge compares the output to a high-quality reference answer. This indicates that a structured reward signal can be more effective and targeted than an unstructured, dense reference.
+
+  * **Improved Judge Model Efficiency and Alignment:** A key finding is that rubrics act as a cognitive scaffold for the judge LLM. As shown in Figure 2 of the paper, providing a rubric significantly improves the accuracy of judge models in aligning with human preferences across all model scales. This effect is most pronounced for smaller models, narrowing the performance gap with larger, more expensive judges and making the alignment process more cost-effective.
+
+  * **Enhanced Reward Transparency and Debuggability:** Unlike the black-box nature of RLHF reward models, RaR provides clear, interpretable feedback. If a policy is consistently penalized, developers can directly inspect the rubric criteria it fails to meet, enabling targeted debugging and model improvement. This moves alignment from "art" to a more structured engineering discipline.
+
+### **Main take-ways**
+
+Rubrics as Rewards is a robust and practical framework for LLM alignment in complex domains where simple verifiers are insufficient.
+
+By formalizing subjective quality into a machine-readable, multi-dimensional checklist, RaR creates reward signals that are more transparent, less susceptible to hacking (even though they are still there!!), and more efficient to compute than traditional preference-based methods.
+
+Pretty cool work! And IMHO it’s the next step of RL, now it almost looks too easy with verifiable rewards!!
+
+# References
+
+  1. Rubrics as Rewards: Reinforcement Learning Beyond Verifiable Domains

@@ -2,4 +2,124 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2026-08-26 · topic: career*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/6233a16035114677.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/6233a16035114677.jpg 424w, ../assets/6233a16035114677.jpg 848w, ../assets/6233a16035114677.jpg 1272w, ../assets/6233a16035114677.jpg 1456w" sizes="100vw"><img src="../assets/6233a16035114677.jpg" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/6233a16035114677.jpg" class="sizing-normal" alt="" srcset="../assets/6233a16035114677.jpg 424w, ../assets/6233a16035114677.jpg 848w, ../assets/6233a16035114677.jpg 1272w, ../assets/6233a16035114677.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>When I joined YouTube Shopping, I had almost four years at Google and zero of them on that team.</p><p>The team was established. Rituals already set, pecking order already settled, the obvious scope already owned by people who’d been there since before I knew the org existed.</p><p>Also: None of my track record traveled with me!  What I’d shipped in anti-abuse and Ads meant nothing in a room that had never seen it.</p><p>And the domain itself was new enough that I had to prove basic competence before anyone would let me near anything interesting.</p><p>And it makes a lot of sense!!</p><p>No track record on this team. No rituals to lean on.</p><p>Different domain but still a fast clock to look credible.</p><p>Here’s the part that took me a while to see: that combination isn’t purely a handicap. It’s also the only window you get.</p><p>A few launches later (averaging about one a month, see how i do it here), I have found a piece of scope nobody else had noticed, a new team got hired specifically to own it, and I was the de facto lead on it before anyone gave it a title.</p><p>Not because I out-worked the established team. Because I went looking somewhere everyone stopped looking.</p><p>This post is the actual sequence, not the inspirational version of it.</p><p><strong>Four angles:</strong></p><ul><li><p>Why an established team’s strength is also its blind spot, and why that blind spot is the new person’s only real opening</p></li><li><p>The contrast: two new joiners, same team, same week, different read on what to do with no track record</p></li><li><p>The actual playbook: where the unowned scope is hiding and the phased sequence from quick win to de facto lead</p></li><li><p>The failure modes — what happens when “no track record” tips into “no standing,” and how mining unowned scope turns into being seen as a threat</p></li></ul><p>Let’s go.</p><div><hr></div><h2>1. Established teams have already mapped their territory. That’s exactly the problem.</h2><p>An established team’s whole advantage is that the high-value scope is already claimed, defended, and staffed by people who are good at it. That’s also exactly what makes it a bad place for a new person to compete.</p><p>If you walk in and try to win on the same axis the incumbents win on — the visible, contested, high-status work — you’re competing against people with years of context you don’t have, in a room where you have none of the trust that makes context usable. You will lose that fight for a long time, and “new and trying hard” reads a lot like “not very good yet” until you’ve put in the years.</p><p>But an established team has a structural blind spot, and it’s not subtle once you know to look for it: the longer a team has existed, the more scope it’s accumulated that nobody actively owns anymore. Old systems nobody’s touched since the person who built them moved on. Adjacent surface area that’s technically in-bounds but nobody’s claimed because everyone’s busy on the scope that gets noticed. The team’s maturity is precisely why this exists — a new team has no abandoned corners yet, because nothing’s old enough to be abandoned.</p><p>This is the new person’s entire opening. You don’t have the standing to win the contested scope. You don’t need it. You need the scope nobody’s defending, because nobody has to lose anything for you to take it.</p><p>I didn’t compete for the work the senior people on the team already owned. I went and looked at what nobody had looked at in a while.</p><h2>2. Two new joiners, same team, same week</h2><p>Let’s make it concrete.</p><p>Two engineers join an established team in the same week. Same level, same caliber, same blank slate — no track record here, no rituals, a domain they’re still catching up on.</p><p><strong>Engineer A plays it safe.</strong> Spends the first few months learning the team’s existing systems, asking good questions in meetings, waiting to be staffed onto something meaningful by a lead who’s still forming an opinion of them. Reasonable instinct — you don’t have standing yet, so don’t overreach.</p><p>Six months in, they’re a competent, recently-onboarded member of the team. Liked. Not yet trusted with anything that matters, because nobody’s seen them do anything that matters.</p><p><strong>Engineer B goes looking for what’s unowned.</strong> Finds the systems nobody’s touched in a while — not because they’re glamorous, but because nobody will fight you for them. Ships a quick, contained win there. Then another. Builds a small, real cadence of shipped things with their name on them, on scope that was simply sitting there. Six months in, they’re the person who’s quietly launched something almost every month, on problems the team didn’t realize were problems until someone solved them.</p><p>Same starting position. Same lack of track record. Completely different trust trajectory — because Engineer B never asked the team to extend trust they hadn’t earned. They earned it on scope where there was nothing to extend.</p><p>I was lucky enough to land closer to B, mostly by instinct rather than plan at first. It’s the instinct worth making deliberate.</p><div><hr></div><p><em>Above is the read. Below is the actual sequence — where to find the unowned scope, the phased playbook from first quick win to de facto lead, and the two ways this goes wrong if you push it too far.</em></p><p>🔒 <em>The rest of this post is for paid subscribers.</em></p><div><hr></div><h2>3. The playbook</h2><p><strong>Phase 0: Find the unowned scope, not the unwanted scope.</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>These look similar and aren’t. Unwanted scope is low-value and everyone knows it — taking it confirms you’re junior. Unowned scope is scope nobody’s actively maintaining, but that still touches something that matters once you look closely. The tell: ask “what would break, or what could get meaningfully better, if someone spent real time here” — about the stuff that’s old, quiet, and not on anyone’s roadmap. Established teams are full of this. It accumulates by definition; nobody’s job is to notice it.</p><p>For me it was systems that had shipped, worked, and then been left alone for a year or more while everyone’s attention moved to newer fires. Not broken. Just unattended. That’s the signature to look for.</p><p><strong>Phase 1: Take a quick win first, not the biggest thing you found.</strong></p><p>The instinct is to go straight for the most interesting unowned problem. Don’t. The first move needs to be small enough to land fast and clean — you’re not trying to prove depth yet, you’re trying to establish that you ship, reliably, without anyone having to manage you. That’s the only thing a team with no track record on you can actually evaluate early. Pick the smallest real win in the unowned scope and land it cleanly.</p><p><strong>Phase 2: Turn the win into a cadence.</strong></p><p>One launch doesn’t change how a team sees you. A pattern does. Once the first win lands, go straight to the next piece of unowned scope and do it again — and then again. The specific number matters less than the visible regularity. Roughly a launch a month, for a stretch, is what it took for the team’s read on me to shift from “new person, watch and see” to “this person ships.” Cadence is the actual currency here, more than any single launch’s size.</p><p><strong>Phase 3: Let the cadence surface the real problem.</strong></p><p>This is the part you can’t plan in advance, and it’s also the payoff for doing phases 0 through 2 honestly. Once you’re moving through unowned scope at a steady clip, you start noticing the bigger shape underneath it — the thing none of the individual quick wins were, but that all of them were pointing at. For me, that’s how the new piece of scope surfaced: not as a top-down idea, but as the pattern visible only after enough small launches in the same territory.</p><p><strong>Phase 4: Become the de facto owner before anyone makes it official.</strong></p><p>Once the bigger opportunity is visible, keep shipping into it before there’s a title for what you’re doing. A new team eventually got hired specifically around that scope — and I was already the person with the most context on it, the most launches in it, and the working relationships with whoever needed to weigh in. The formal “lead” framing came after the fact, describing something that had already been true for months. This is the same shape as influence-without-authority from the carve-out situation: the standing comes from being the obvious answer, not from a title granting it.</p><p><strong>Phase 5: Generalize what you built, don’t just keep repeating it.</strong></p><p>The last move, and the one that compounds past this specific team: once you’ve solved the same shape of problem enough times in your corner, look for whether it’s actually a model that applies more broadly. I’d built something narrow for one part of the funnel and only later realized the same approach held up applied across the rest of it. That’s the difference between “I shipped a lot in my corner” and “I built something the org now uses” — same underlying work, very different packet entry.</p><h2>4. Where this goes wrong</h2><p>Two failure modes, and they’re closer together than they look.</p><p><strong>Failure mode 1: Unowned scope quietly becomes someone else’s scope, and you didn’t notice the boundary move.</strong></p><p>The systems nobody’s touched in a while are unowned right up until the moment someone else decides they want them back — and if you’ve been quietly building a position there without ever surfacing it, the first they hear of it can read as encroachment instead of initiative. The fix is boring and effective: say out loud, early and often, what you’re working on and why, even before it’s impressive. “Nobody seemed to be looking at X, so I’m going to clean it up” costs you nothing to say in week one and saves you a very awkward conversation in month four.</p><p><strong>Failure mode 2: You become the de facto lead with none of the formal standing, and it becomes a liability instead of an asset.</strong></p><p>This is the position I ended up in, and it’s genuinely good — until a real TL or manager lands on that scope and has to figure out what to do with someone who’s been running it informally. Same shape as the reorg situation: the move is to make the handoff explicit and generous the moment a formal owner shows up, not to quietly keep holding the reins because you got there first. The evidence of what you built doesn’t go anywhere either way. How you hand it over is what determines whether it reads as “the person who built this” or “the person who wouldn’t let go.”</p><p>The throughline across both: scope you took because nobody else wanted it badly enough to defend stays an asset only as long as you’re transparent about taking it, and gracious about handing pieces of it off once it’s valuable enough that other people want it too.</p><p>— Ludo</p><div><hr></div><p><em>Caveat, same as always: this worked on a specific team, with specific scope that happened to be sitting unattended, and reading whether that’s true on your team is a local judgment call I can’t make for you. The structural point holds more generally — established teams accumulate unowned scope as a side effect of being established — but how much there is, and how contested it’ll become once you’ve made it valuable, depends entirely on where you land.</em></p>
+[](../assets/6233a16035114677.jpg)
+
+When I joined YouTube Shopping, I had almost four years at Google and zero of them on that team.
+
+The team was established. Rituals already set, pecking order already settled, the obvious scope already owned by people who’d been there since before I knew the org existed.
+
+Also: None of my track record traveled with me! What I’d shipped in anti-abuse and Ads meant nothing in a room that had never seen it.
+
+And the domain itself was new enough that I had to prove basic competence before anyone would let me near anything interesting.
+
+And it makes a lot of sense!!
+
+No track record on this team. No rituals to lean on.
+
+Different domain but still a fast clock to look credible.
+
+Here’s the part that took me a while to see: that combination isn’t purely a handicap. It’s also the only window you get.
+
+A few launches later (averaging about one a month, see how i do it here), I have found a piece of scope nobody else had noticed, a new team got hired specifically to own it, and I was the de facto lead on it before anyone gave it a title.
+
+Not because I out-worked the established team. Because I went looking somewhere everyone stopped looking.
+
+This post is the actual sequence, not the inspirational version of it.
+
+**Four angles:**
+
+  * Why an established team’s strength is also its blind spot, and why that blind spot is the new person’s only real opening
+
+  * The contrast: two new joiners, same team, same week, different read on what to do with no track record
+
+  * The actual playbook: where the unowned scope is hiding and the phased sequence from quick win to de facto lead
+
+  * The failure modes — what happens when “no track record” tips into “no standing,” and how mining unowned scope turns into being seen as a threat
+
+Let’s go.
+
+* * *
+
+## 1\. Established teams have already mapped their territory. That’s exactly the problem.
+
+An established team’s whole advantage is that the high-value scope is already claimed, defended, and staffed by people who are good at it. That’s also exactly what makes it a bad place for a new person to compete.
+
+If you walk in and try to win on the same axis the incumbents win on — the visible, contested, high-status work — you’re competing against people with years of context you don’t have, in a room where you have none of the trust that makes context usable. You will lose that fight for a long time, and “new and trying hard” reads a lot like “not very good yet” until you’ve put in the years.
+
+But an established team has a structural blind spot, and it’s not subtle once you know to look for it: the longer a team has existed, the more scope it’s accumulated that nobody actively owns anymore. Old systems nobody’s touched since the person who built them moved on. Adjacent surface area that’s technically in-bounds but nobody’s claimed because everyone’s busy on the scope that gets noticed. The team’s maturity is precisely why this exists — a new team has no abandoned corners yet, because nothing’s old enough to be abandoned.
+
+This is the new person’s entire opening. You don’t have the standing to win the contested scope. You don’t need it. You need the scope nobody’s defending, because nobody has to lose anything for you to take it.
+
+I didn’t compete for the work the senior people on the team already owned. I went and looked at what nobody had looked at in a while.
+
+## 2\. Two new joiners, same team, same week
+
+Let’s make it concrete.
+
+Two engineers join an established team in the same week. Same level, same caliber, same blank slate — no track record here, no rituals, a domain they’re still catching up on.
+
+**Engineer A plays it safe.** Spends the first few months learning the team’s existing systems, asking good questions in meetings, waiting to be staffed onto something meaningful by a lead who’s still forming an opinion of them. Reasonable instinct — you don’t have standing yet, so don’t overreach.
+
+Six months in, they’re a competent, recently-onboarded member of the team. Liked. Not yet trusted with anything that matters, because nobody’s seen them do anything that matters.
+
+**Engineer B goes looking for what’s unowned.** Finds the systems nobody’s touched in a while — not because they’re glamorous, but because nobody will fight you for them. Ships a quick, contained win there. Then another. Builds a small, real cadence of shipped things with their name on them, on scope that was simply sitting there. Six months in, they’re the person who’s quietly launched something almost every month, on problems the team didn’t realize were problems until someone solved them.
+
+Same starting position. Same lack of track record. Completely different trust trajectory — because Engineer B never asked the team to extend trust they hadn’t earned. They earned it on scope where there was nothing to extend.
+
+I was lucky enough to land closer to B, mostly by instinct rather than plan at first. It’s the instinct worth making deliberate.
+
+* * *
+
+_Above is the read. Below is the actual sequence — where to find the unowned scope, the phased playbook from first quick win to de facto lead, and the two ways this goes wrong if you push it too far._
+
+🔒 _The rest of this post is for paid subscribers._
+
+* * *
+
+## 3\. The playbook
+
+**Phase 0: Find the unowned scope, not the unwanted scope.**
+
+These look similar and aren’t. Unwanted scope is low-value and everyone knows it — taking it confirms you’re junior. Unowned scope is scope nobody’s actively maintaining, but that still touches something that matters once you look closely. The tell: ask “what would break, or what could get meaningfully better, if someone spent real time here” — about the stuff that’s old, quiet, and not on anyone’s roadmap. Established teams are full of this. It accumulates by definition; nobody’s job is to notice it.
+
+For me it was systems that had shipped, worked, and then been left alone for a year or more while everyone’s attention moved to newer fires. Not broken. Just unattended. That’s the signature to look for.
+
+**Phase 1: Take a quick win first, not the biggest thing you found.**
+
+The instinct is to go straight for the most interesting unowned problem. Don’t. The first move needs to be small enough to land fast and clean — you’re not trying to prove depth yet, you’re trying to establish that you ship, reliably, without anyone having to manage you. That’s the only thing a team with no track record on you can actually evaluate early. Pick the smallest real win in the unowned scope and land it cleanly.
+
+**Phase 2: Turn the win into a cadence.**
+
+One launch doesn’t change how a team sees you. A pattern does. Once the first win lands, go straight to the next piece of unowned scope and do it again — and then again. The specific number matters less than the visible regularity. Roughly a launch a month, for a stretch, is what it took for the team’s read on me to shift from “new person, watch and see” to “this person ships.” Cadence is the actual currency here, more than any single launch’s size.
+
+**Phase 3: Let the cadence surface the real problem.**
+
+This is the part you can’t plan in advance, and it’s also the payoff for doing phases 0 through 2 honestly. Once you’re moving through unowned scope at a steady clip, you start noticing the bigger shape underneath it — the thing none of the individual quick wins were, but that all of them were pointing at. For me, that’s how the new piece of scope surfaced: not as a top-down idea, but as the pattern visible only after enough small launches in the same territory.
+
+**Phase 4: Become the de facto owner before anyone makes it official.**
+
+Once the bigger opportunity is visible, keep shipping into it before there’s a title for what you’re doing. A new team eventually got hired specifically around that scope — and I was already the person with the most context on it, the most launches in it, and the working relationships with whoever needed to weigh in. The formal “lead” framing came after the fact, describing something that had already been true for months. This is the same shape as influence-without-authority from the carve-out situation: the standing comes from being the obvious answer, not from a title granting it.
+
+**Phase 5: Generalize what you built, don’t just keep repeating it.**
+
+The last move, and the one that compounds past this specific team: once you’ve solved the same shape of problem enough times in your corner, look for whether it’s actually a model that applies more broadly. I’d built something narrow for one part of the funnel and only later realized the same approach held up applied across the rest of it. That’s the difference between “I shipped a lot in my corner” and “I built something the org now uses” — same underlying work, very different packet entry.
+
+## 4\. Where this goes wrong
+
+Two failure modes, and they’re closer together than they look.
+
+**Failure mode 1: Unowned scope quietly becomes someone else’s scope, and you didn’t notice the boundary move.**
+
+The systems nobody’s touched in a while are unowned right up until the moment someone else decides they want them back — and if you’ve been quietly building a position there without ever surfacing it, the first they hear of it can read as encroachment instead of initiative. The fix is boring and effective: say out loud, early and often, what you’re working on and why, even before it’s impressive. “Nobody seemed to be looking at X, so I’m going to clean it up” costs you nothing to say in week one and saves you a very awkward conversation in month four.
+
+**Failure mode 2: You become the de facto lead with none of the formal standing, and it becomes a liability instead of an asset.**
+
+This is the position I ended up in, and it’s genuinely good — until a real TL or manager lands on that scope and has to figure out what to do with someone who’s been running it informally. Same shape as the reorg situation: the move is to make the handoff explicit and generous the moment a formal owner shows up, not to quietly keep holding the reins because you got there first. The evidence of what you built doesn’t go anywhere either way. How you hand it over is what determines whether it reads as “the person who built this” or “the person who wouldn’t let go.”
+
+The throughline across both: scope you took because nobody else wanted it badly enough to defend stays an asset only as long as you’re transparent about taking it, and gracious about handing pieces of it off once it’s valuable enough that other people want it too.
+
+— Ludo
+
+* * *
+
+ _Caveat, same as always: this worked on a specific team, with specific scope that happened to be sitting unattended, and reading whether that’s true on your team is a local judgment call I can’t make for you. The structural point holds more generally — established teams accumulate unowned scope as a side effect of being established — but how much there is, and how contested it’ll become once you’ve made it valuable, depends entirely on where you land._

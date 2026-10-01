@@ -11,4 +11,180 @@ words: 1431
 
 # 11 Percent NDCG Gains That Were Actually Just Target Leakage [Edition #17]
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/9048b42527639f3a.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/9048b42527639f3a.jpg 424w, ../assets/9048b42527639f3a.jpg 848w, ../assets/9048b42527639f3a.jpg 1272w, ../assets/9048b42527639f3a.jpg 1456w" sizes="100vw"><img src="../assets/9048b42527639f3a.jpg" width="1456" height="1807" data-attrs="{&quot;src&quot;:&quot;../assets/9048b42527639f3a.jpg" class="sizing-normal" alt="" srcset="../assets/9048b42527639f3a.jpg 424w, ../assets/9048b42527639f3a.jpg 848w, ../assets/9048b42527639f3a.jpg 1272w, ../assets/9048b42527639f3a.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h1>System Overview</h1><p>MarketPlace Prime is a Series D horizontal marketplace company that recently hit a GMV run rate of 4.2 billion dollars per year. They have established a dominant position in the mid-market goods category, scaling their catalog to over 85 million active listings.</p><p>Their engineering team built a Search Discovery Stack that powers 92 percent of all site conversions. Here is their setup:</p><h1>Architecture Overview</h1><p>When a user enters a search query, the system executes a classic two-stage retrieval and ranking pipeline to surface relevant items.</p><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/cd63b6592eea2573.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/cd63b6592eea2573.png 424w, ../assets/cd63b6592eea2573.png 848w, ../assets/cd63b6592eea2573.png 1272w, ../assets/cd63b6592eea2573.png 1456w" sizes="100vw"><img src="../assets/cd63b6592eea2573.png" width="1286" height="1082" data-attrs="{&quot;src&quot;:&quot;../assets/cd63b6592eea2573.png" class="sizing-normal" alt="" srcset="../assets/cd63b6592eea2573.png 424w, ../assets/cd63b6592eea2573.png 848w, ../assets/cd63b6592eea2573.png 1272w, ../assets/cd63b6592eea2573.png 1456w" sizes="100vw"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h3>Traffic patterns:</h3><p>Search Requests: 140 million per day</p><p>User Actions: 1.2 billion events per day (clicks, adds, purchases)</p><p>Average: 1,620 req/sec</p><p>Peak: 2,850 req/sec</p><p>The ML Pipeline:</p><p>Stage 2 uses a LambdaMART gradient boosted decision tree model with 450 features. It is trained on the last 30 days of search logs. One of the highest-weight features is merchant_quality_score (MQS), a scalar output from a separate regression model. MQS itself is trained every Sunday at 02:00 UTC using labels derived from search outcomes (clicks, cart-adds, and purchases) from the preceding 7 days. The Ranker model is then retrained every Sunday at 06:00 UTC, consuming the updated MQS values from the Feature Store.</p><h3>Current performance:</h3><p>P99 Latency: 145ms</p><p>Availability: 99.98%</p><p>Purchase Conversion Rate: 3.4% (Flat for 9 months)</p><p>Offline NDCG@10: 0.79 (Up from 0.71 over 14 months)</p><p>Costs:</p><p>Model Training (GPU/High-Mem instances): 95,000 dollars per month</p><p>Feature Store and Inference Infrastructure: 110,000 dollars per month</p><p>Total: 205,000 dollars per month</p><h3>Recent incidents:</h3><p>Incident 1: MQS service timeout caused by a 4x spike in merchant registrations. Resulted in ranker falling back to default MQS of 0.5, causing a 12 percent drop in CTR for 4 hours.</p><p>Incident 2: Sunday morning training job for the ranker failed due to OOM. Recovery took 6 hours, resulting in a stale model being served for half a day.</p><h1>The Analysis</h1><p>Now let me show you what is actually happening here.</p><h2>Critical Issue #1: Positive Feedback Loop in Feature Generation</h2><p>The setup shows the MQS model is trained at 02:00 UTC on Sunday using ranking outcomes from the Search surface. The Ranker is then trained at 06:00 UTC using that MQS score. This is a closed-loop system. The Ranker places Merchant A at the top because they have a high MQS. Because Merchant A is at the top, they get more clicks (position bias). The MQS model sees these clicks and assigns Merchant A an even higher score. The Ranker then sees the higher score and becomes more “confident” in the placement. You are not measuring quality; you are measuring the Ranker’s own historical preference.</p><h2>Critical Issue #2: Target Leakage in Offline Evaluation</h2><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>The offline NDCG@10 has climbed from 0.71 to 0.79, which would usually be a career-defining improvement. However, the analysis shows that the offline evaluation set is sampled from the same production logs where the Ranker already influenced the MQS. When the model “predicts” a purchase in the test set, it is using a feature (MQS) that already contains the information that the user was shown this item in a high-ranking position. The model is essentially looking at the answer key. The 11 percent increase in NDCG is purely the model getting better at reconstructing its own past decisions.</p><h3>Critical Issue #3: Temporal Misalignment and Incremental Bias</h3><p>The retraining cadence — MQS at 02:00 and Ranker at 06:00 — ensures that the Ranker is always learning from the “freshest” bias. Every week, the Ranker absorbs the amplified position bias from the MQS model. This explains why the online purchase rate has been flat for 9 months despite offline metrics soaring. You are spending 95,000 dollars a month to train models to agree with each other more efficiently, while the user experience remains static.</p><h3>Critical Issue #4: Organizational Silos Obscuring Data Lineage</h3><p>The MQS model is managed by the Supply Quality team, while the Ranker is managed by the Search team. During the architecture review, it was discovered that neither team had a full DAG of the feature lineage. The Search team treated MQS as an exogenous “ground truth” of merchant goodness, while the Supply team treated the Ranker’s output as “unbiased user feedback.” The 14-month delay in identifying this loop is a direct result of the lack of a unified ML Platform ownership.</p><h3>Critical Issue #5: Massive Compute Waste on Redundant Learning</h3><p>They have 40 high-memory P3 instances running just for the Sunday retraining jobs. Because the features and targets are becoming increasingly correlated through this feedback loop, the gradient steps are essentially refining noise. The system is consuming 1.14 million dollars annually in training costs to produce a model that has zero delta in online conversion compared to the version from a year ago.</p><h1>WHAT I’D DO INSTEAD</h1><p><strong>1. Implement Counterfactual Logging and Propensity Scoring</strong></p><p>Impact:</p><p>Eliminate position bias from MQS training.</p><p>Reduction in offline NDCG to a “real” baseline of ~0.68, providing a truthful metric for future gains.</p><p>Trade-offs:</p><p>Requires logging the probability of each item being shown at a specific position, which increases log volume by 15 percent.</p><p>Requires more complex loss functions in the MQS model to incorporate inverse propensity weighting.</p><p><strong>2. Decouple MQS from Ranking Outcomes</strong></p><p>Current: MQS trained on Search Clicks and Purchases.</p><p>New: MQS trained on non-search signals only: delivery speed, return rates, customer support tickets, and direct-to-shop traffic.</p><p>Impact: Conversion Rate → 0.2 percent lift (estimated) by surfacing truly high-quality merchants who were previously suppressed by the loop.</p><p>Trade-offs:</p><p>MQS will be “colder” for new merchants who don’t have historical shipping data yet.</p><p>When this is the wrong call: If search-specific intent is the only signal that matters (e.g., a merchant who is good at selling shoes but bad at electronics), removing search signals might hurt category-specific relevance.</p><p><strong>3. Unified Feature Lineage and Impact Analysis</strong></p><p>Replace: Siloed model training ($95,000/mo)</p><p>With: A centralized Feature Store (like Feast or Tecton) with automated upstream dependency tracking.</p><p>Total: $82,000/mo</p><p>Impact: Automated detection of circular dependencies would have flagged the MQS/Ranker loop within one training cycle.</p><p>Trade-offs:</p><p>Requires a multi-month migration of all features into a single schema.</p><p>High initial labor cost for the ML platform team.</p><p>The Impact</p><h3>Before redesign:</h3><p>System stuck in a feedback loop with no real conversion growth.</p><p>$2.46M annual total ML ops cost.</p><p>After redesign:</p><p>Ability to actually improve conversion via unbiased features.</p><p>$2.30M annual total ML ops cost (6 percent savings, but significantly higher ROI).</p><p>Time to implement: 4 months, team of 4 MLEs.</p><h1>APPENDIX: Cost Estimation Methodology</h1><p>How I estimated the savings for each decision:</p><p>Solution 1: Implement Counterfactual Logging</p><p>Baseline: $110,000/month infra cost.</p><p>After change: $126,500/month (due to 15% log volume increase in S3/Snowflake).</p><p>Estimated saving: -$16,500/month (Negative saving/Increased cost).</p><p>Key assumption: Storage and ingestion costs scale linearly with log volume.</p><p>Confidence: High — logging overhead is predictable.</p><p>Solution 2: Decouple MQS from Ranking Outcomes</p><p>Baseline: Current MQS training cost $15,000/month.</p><p>After change: $12,000/month (simpler data signals, less frequent retraining needed).</p><p>Estimated saving: $3,000/month.</p><p>Key assumption: Regression on shipping/return data is less computationally intensive than processing 1.2B user events.</p><p>Confidence: Medium — depends on the complexity of the new quality signals.</p><p>Solution 3: Unified Feature Lineage</p><p>Baseline: $95,000/month training + $110,000/month infra = $205,000.</p><p>After change: $192,000/month (Reduced retraining frequency and optimized instance usage).</p><p>Estimated saving: $13,000/month (6.3% reduction).</p><p>Key assumption: Consolidating training schedules and identifying redundant features will reduce total GPU hours.</p><p>Confidence: Medium — actual savings depend on how many features are identified as redundant.</p>
+[![](../assets/9048b42527639f3a.jpg)](../assets/9048b42527639f3a.jpg)
+
+# System Overview
+
+MarketPlace Prime is a Series D horizontal marketplace company that recently hit a GMV run rate of 4.2 billion dollars per year. They have established a dominant position in the mid-market goods category, scaling their catalog to over 85 million active listings.
+
+Their engineering team built a Search Discovery Stack that powers 92 percent of all site conversions. Here is their setup:
+
+# Architecture Overview
+
+When a user enters a search query, the system executes a classic two-stage retrieval and ranking pipeline to surface relevant items.
+
+[![](../assets/cd63b6592eea2573.png)](../assets/cd63b6592eea2573.png)
+
+### Traffic patterns:
+
+Search Requests: 140 million per day
+
+User Actions: 1.2 billion events per day (clicks, adds, purchases)
+
+Average: 1,620 req/sec
+
+Peak: 2,850 req/sec
+
+The ML Pipeline:
+
+Stage 2 uses a LambdaMART gradient boosted decision tree model with 450 features. It is trained on the last 30 days of search logs. One of the highest-weight features is merchant_quality_score (MQS), a scalar output from a separate regression model. MQS itself is trained every Sunday at 02:00 UTC using labels derived from search outcomes (clicks, cart-adds, and purchases) from the preceding 7 days. The Ranker model is then retrained every Sunday at 06:00 UTC, consuming the updated MQS values from the Feature Store.
+
+### Current performance:
+
+P99 Latency: 145ms
+
+Availability: 99.98%
+
+Purchase Conversion Rate: 3.4% (Flat for 9 months)
+
+Offline NDCG@10: 0.79 (Up from 0.71 over 14 months)
+
+Costs:
+
+Model Training (GPU/High-Mem instances): 95,000 dollars per month
+
+Feature Store and Inference Infrastructure: 110,000 dollars per month
+
+Total: 205,000 dollars per month
+
+### Recent incidents:
+
+Incident 1: MQS service timeout caused by a 4x spike in merchant registrations. Resulted in ranker falling back to default MQS of 0.5, causing a 12 percent drop in CTR for 4 hours.
+
+Incident 2: Sunday morning training job for the ranker failed due to OOM. Recovery took 6 hours, resulting in a stale model being served for half a day.
+
+# The Analysis
+
+Now let me show you what is actually happening here.
+
+## Critical Issue #1: Positive Feedback Loop in Feature Generation
+
+The setup shows the MQS model is trained at 02:00 UTC on Sunday using ranking outcomes from the Search surface. The Ranker is then trained at 06:00 UTC using that MQS score. This is a closed-loop system. The Ranker places Merchant A at the top because they have a high MQS. Because Merchant A is at the top, they get more clicks (position bias). The MQS model sees these clicks and assigns Merchant A an even higher score. The Ranker then sees the higher score and becomes more “confident” in the placement. You are not measuring quality; you are measuring the Ranker’s own historical preference.
+
+## Critical Issue #2: Target Leakage in Offline Evaluation
+
+The offline NDCG@10 has climbed from 0.71 to 0.79, which would usually be a career-defining improvement. However, the analysis shows that the offline evaluation set is sampled from the same production logs where the Ranker already influenced the MQS. When the model “predicts” a purchase in the test set, it is using a feature (MQS) that already contains the information that the user was shown this item in a high-ranking position. The model is essentially looking at the answer key. The 11 percent increase in NDCG is purely the model getting better at reconstructing its own past decisions.
+
+### Critical Issue #3: Temporal Misalignment and Incremental Bias
+
+The retraining cadence — MQS at 02:00 and Ranker at 06:00 — ensures that the Ranker is always learning from the “freshest” bias. Every week, the Ranker absorbs the amplified position bias from the MQS model. This explains why the online purchase rate has been flat for 9 months despite offline metrics soaring. You are spending 95,000 dollars a month to train models to agree with each other more efficiently, while the user experience remains static.
+
+### Critical Issue #4: Organizational Silos Obscuring Data Lineage
+
+The MQS model is managed by the Supply Quality team, while the Ranker is managed by the Search team. During the architecture review, it was discovered that neither team had a full DAG of the feature lineage. The Search team treated MQS as an exogenous “ground truth” of merchant goodness, while the Supply team treated the Ranker’s output as “unbiased user feedback.” The 14-month delay in identifying this loop is a direct result of the lack of a unified ML Platform ownership.
+
+### Critical Issue #5: Massive Compute Waste on Redundant Learning
+
+They have 40 high-memory P3 instances running just for the Sunday retraining jobs. Because the features and targets are becoming increasingly correlated through this feedback loop, the gradient steps are essentially refining noise. The system is consuming 1.14 million dollars annually in training costs to produce a model that has zero delta in online conversion compared to the version from a year ago.
+
+# WHAT I’D DO INSTEAD
+
+**1\. Implement Counterfactual Logging and Propensity Scoring**
+
+Impact:
+
+Eliminate position bias from MQS training.
+
+Reduction in offline NDCG to a “real” baseline of ~0.68, providing a truthful metric for future gains.
+
+Trade-offs:
+
+Requires logging the probability of each item being shown at a specific position, which increases log volume by 15 percent.
+
+Requires more complex loss functions in the MQS model to incorporate inverse propensity weighting.
+
+**2\. Decouple MQS from Ranking Outcomes**
+
+Current: MQS trained on Search Clicks and Purchases.
+
+New: MQS trained on non-search signals only: delivery speed, return rates, customer support tickets, and direct-to-shop traffic.
+
+Impact: Conversion Rate → 0.2 percent lift (estimated) by surfacing truly high-quality merchants who were previously suppressed by the loop.
+
+Trade-offs:
+
+MQS will be “colder” for new merchants who don’t have historical shipping data yet.
+
+When this is the wrong call: If search-specific intent is the only signal that matters (e.g., a merchant who is good at selling shoes but bad at electronics), removing search signals might hurt category-specific relevance.
+
+**3\. Unified Feature Lineage and Impact Analysis**
+
+Replace: Siloed model training ($95,000/mo)
+
+With: A centralized Feature Store (like Feast or Tecton) with automated upstream dependency tracking.
+
+Total: $82,000/mo
+
+Impact: Automated detection of circular dependencies would have flagged the MQS/Ranker loop within one training cycle.
+
+Trade-offs:
+
+Requires a multi-month migration of all features into a single schema.
+
+High initial labor cost for the ML platform team.
+
+The Impact
+
+### Before redesign:
+
+System stuck in a feedback loop with no real conversion growth.
+
+$2.46M annual total ML ops cost.
+
+After redesign:
+
+Ability to actually improve conversion via unbiased features.
+
+$2.30M annual total ML ops cost (6 percent savings, but significantly higher ROI).
+
+Time to implement: 4 months, team of 4 MLEs.
+
+# APPENDIX: Cost Estimation Methodology
+
+How I estimated the savings for each decision:
+
+Solution 1: Implement Counterfactual Logging
+
+Baseline: $110,000/month infra cost.
+
+After change: $126,500/month (due to 15% log volume increase in S3/Snowflake).
+
+Estimated saving: -$16,500/month (Negative saving/Increased cost).
+
+Key assumption: Storage and ingestion costs scale linearly with log volume.
+
+Confidence: High — logging overhead is predictable.
+
+Solution 2: Decouple MQS from Ranking Outcomes
+
+Baseline: Current MQS training cost $15,000/month.
+
+After change: $12,000/month (simpler data signals, less frequent retraining needed).
+
+Estimated saving: $3,000/month.
+
+Key assumption: Regression on shipping/return data is less computationally intensive than processing 1.2B user events.
+
+Confidence: Medium — depends on the complexity of the new quality signals.
+
+Solution 3: Unified Feature Lineage
+
+Baseline: $95,000/month training + $110,000/month infra = $205,000.
+
+After change: $192,000/month (Reduced retraining frequency and optimized instance usage).
+
+Estimated saving: $13,000/month (6.3% reduction).
+
+Key assumption: Consolidating training schedules and identifying redundant features will reduce total GPU hours.
+
+Confidence: Medium — actual savings depend on how many features are identified as redundant.

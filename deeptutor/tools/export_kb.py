@@ -175,12 +175,20 @@ def clean(s):
 banks = quiz_bank(src)
 titles = {}
 
+# Modules whose KB document is hand-curated (topic map + reading paths + attribution) and
+# must not be clobbered by the course-page export. Such a module still renders in the
+# page; only its Markdown generation is skipped.
+CURATED = {"m11"}
+
 # ---- per-module files ----
 for sec in tree.xpath("//section[contains(@class,'module')]"):
     mid = sec.get("id", "m?")
     head = sec.xpath(".//div[contains(@class,'module-head')]/h2")
     title = md_inline(head[0]).strip() if head else mid
     titles[mid] = title
+    if mid in CURATED:
+        print(f"skipped {mid} (hand-curated KB document, left as-is)")
+        continue
     lines = []
     for el in sec.iterchildren():
         md_block(el, lines)

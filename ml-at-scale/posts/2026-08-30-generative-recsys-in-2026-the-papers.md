@@ -13,4 +13,144 @@ words: 1649
 
 *Series: Generative Retrieval, follow-up edition*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/2dbe6eb780e3bda8.avif" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/2dbe6eb780e3bda8.avif 424w, ../assets/2dbe6eb780e3bda8.avif 848w, ../assets/2dbe6eb780e3bda8.avif 1272w, ../assets/2dbe6eb780e3bda8.avif 1456w" sizes="100vw"><img src="../assets/2dbe6eb780e3bda8.avif" width="900" height="900" data-attrs="{&quot;src&quot;:&quot;../assets/2dbe6eb780e3bda8.avif" class="sizing-normal" alt="" srcset="../assets/2dbe6eb780e3bda8.avif 424w, ../assets/2dbe6eb780e3bda8.avif 848w, ../assets/2dbe6eb780e3bda8.avif 1272w, ../assets/2dbe6eb780e3bda8.avif 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>The s<a href="">eries ended with a list of measured problems</a>.</p><p>The tokenizer trains on reconstruction while the recommender needs recommendation accuracy.</p><p>Collisions got resolved by an arbitrary dedup token.</p><p>Tail and cold recall bottomed out at exactly zero, and decode-time debiasing could not move them.</p><p>Serving costs a beam search per query. And a catalog that changes forces a choice between stale IDs and full retraining.</p><p>I assumed these were the costs of the architecture.</p><p>Then I read the 2026 literature properly, and it turns out every single one of these problems has at least one paper attacking it by name this year.</p><p>This edition maps each problem we measured to the fix the field shipped. </p><p>f you ran the notebook, you watched each of these problems happen; that makes these papers readable in a way abstracts never are.</p><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/a685dfc8620dcc1a.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/a685dfc8620dcc1a.png 424w, ../assets/a685dfc8620dcc1a.png 848w, ../assets/a685dfc8620dcc1a.png 1272w, ../assets/a685dfc8620dcc1a.png 1456w" sizes="100vw"><img src="../assets/a685dfc8620dcc1a.png" width="1392" height="968" data-attrs="{&quot;src&quot;:&quot;../assets/a685dfc8620dcc1a.png" class="sizing-normal" alt="" srcset="../assets/a685dfc8620dcc1a.png 424w, ../assets/a685dfc8620dcc1a.png 848w, ../assets/a685dfc8620dcc1a.png 1272w, ../assets/a685dfc8620dcc1a.png 1456w" sizes="100vw" loading="lazy"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Let’s do a deep dive on all of them :)</p><h2>1. The tokenizer never sees the recommendation objective</h2><p>Our pipeline, like TIGER’s, is two disconnected optimizations.</p><p>The RQ-VAE learns codes that reconstruct a text embedding.</p><p>The transformer learns to predict those codes. Nothing ever tells the tokenizer what the recommender needs: an ID scheme where the distinctions that matter for prediction are the distinctions the codes encode.</p><p>The tokenizer optimizes fidelity to a text embedding.</p><p>The recommender needs discriminability between the items a user is actually choosing among. Different objectives, and the gap is measurable.</p><p>The obvious fix is joint training: let recommendation gradients flow back into code assignment. The obvious fix fails, and it fails in a way readers of part 2 will recognize immediately: naive differentiable indexing causes codebook collapse. Early deterministic assignments lock in winners before exploration happens, a few codes absorb everything, and you reproduce part 2’s one-live-code collapse inside the joint training loop.</p><p>DIGER (SIGIR 2026) makes it work by engineering the exploration explicitly: Gumbel noise on code assignment early in training forces the model to try codes it would deterministically skip, and an uncertainty decay schedule anneals the noise so training transitions from exploration to exploitation of settled IDs.</p><p>The result is consistent gains from letting the two objectives meet.</p><div><hr></div><h2>2. The sibling limit is structural</h2><p>This is our exact-zero result <a href="">from part 3, with a proof attached</a>.</p><p>Recall the diagnosis from <a href="">part 3</a>. Debiasing steered the beam into rare regions of the code space, and once there, the model had no signal to pick the correct item among the forty-odd behind a rare prefix.</p><p>I framed that as a knowledge limit of a small model. The Latte paper (UCSD and Snap) shows it is worse than that: it is structural.</p><p>Their observation: token-by-token generation traverses a decoding tree whose leaves are items, and the probabilities a generative recommender assigns are strongly correlated with tree distance. Items close in the tree receive similar probabilities for any given user.</p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>Two shampoos sharing a two-code prefix are nearly indistinguishable to the model even when a specific user demonstrably prefers one, and the authors prove the architecture cannot represent preference patterns that plain collaborative filtering captures easily.</p><p>The thing that gives semantic IDs their power, shared prefixes, is the same thing that caps how personalized the predictions over those prefixes can be.</p><p>More training would not have fixed our zero. The tree itself was in the way.</p><p>Their fix is small and clever. Latte prepends a sampled latent token to every ID during training, which turns the single decoding tree into a forest: every item now sits at multiple leaves, reachable through multiple paths, and pairs of items no longer have one fixed tree distance forcing their probabilities together.</p><p>Reported gain is modest on average (about 3.5% NDCG@10) but the point is where it comes from: exactly the sibling-discrimination failure we measured.</p><p>If you extend the notebook once, extend it here.</p><p>Latent tokens are a data-pipeline change, not an architecture change, and watching whether the tail moves off zero would be a genuine experiment.</p><h2>3. Collisions are not all equal</h2><p>Part 2 resolved 356 collisions with a dedup token assigned in arbitrary order, and I flagged it as the step every paper glosses over.</p><p>Kuaishou, who run generative recommendation on a quarter of their main-app traffic, published two papers this year saying the glossing is where quality leaks.</p><p><strong>The first is the framing: stop treating collisions equally.</strong></p><p>Two items on the same code tuple might be genuine near-duplicates, in which case sharing is fine and forcing separation wastes capacity, or they might be distinct items the tokenizer failed to distinguish, in which case the collision is an error that a random dedup token papers over. Qualification-aware learning treats those cases differently instead of uniformly.</p><p><strong>The second operationalizes it</strong>: relax the repulsion between colliding items when they are semantically compatible, preserve admissible sharing, and allocate separation pressure adaptively by local collision load and training progress.</p><p>Congested regions of the code space get more regularization, and the balance shifts toward recommendation alignment as training matures.</p><p>For your own systems the takeaway is a diagnostic, not a technique: look at your collision buckets!!!</p><h2>4. The catalog moves and the IDs do not</h2><p>The trade-off table listed SID drift as an operational cost and moved on. The 2026 literature quantified the cost and shipped two complementary fixes.</p><p>The setup, for anyone who has not run a production model through time: catalogs and behavior are non-stationary.</p><p>Items arrive, popularity shifts, co-occurrence patterns move.</p><p>A frozen tokenizer means the recommender trains on token sequences that no longer match current item semantics; refreshing the tokenizer means new code assignments that are incompatible with everything the recommender’s output head already learned. Practitioners have been choosing between stale IDs and full retrains.</p><p><strong>DACT</strong> attacks the tokenizer side: a drift identification module scores each item’s drift confidence, drifting items get their codes updated toward current collaborative signals, stationary items get anchored so their identifiers do not shift gratuitously. Selective motion instead of freeze-or-rebuild.</p><p><strong>The staleness paper</strong> attacks the deployment side and is the one I would hand an infra engineer: refresh the SIDs from recent logs, then align the new vocabulary to the old one (greedy or Hungarian matching) so the existing recommender checkpoint stays compatible and warm-start fine-tuning works. Reported result: better recall than fine-tuning on stale IDs, at roughly 8 to 9 times less retriever-training compute than a full rebuild.</p><h2>5. Decode latency</h2><p>Our measured cost row said it plainly: a beam search is not a dot product. The field’s answers cluster in three directions. Diffusion-style decoders generate ID tokens in parallel rather than left to right, removing the sequential dependency that makes decode latency scale with ID length.</p><p>Distillation work goes further: train the expensive generative model, then distill it into an MLP for serving, keeping the training-time benefits of the generative formulation while paying dense-retrieval prices at inference.</p><p>And the industrial line, OneRec-v2, redesigns the serving stack around the model, which is how Kuaishou’s system-level cost ended up below the cascade it replaced despite the per-query arithmetic.</p><p>Per-query decode cost is real, actively under attack, and already avoidable at the system level if you are willing to redesign around it.</p><h2>6. Measurement reliability</h2><p>The paper nobody in this list wants to cite asks how reliable SID-tokenizer comparisons are, and the answer is: less than the leaderboards imply, because results are sensitive to evaluation choices that papers rarely hold fixed.</p><p>Alongside it, SIDInspector is a diagnostic resource for inspecting what a tokenizer actually mapped where, which is the tooling version of the advice from part 2: monitor the mapping, not just the metric.</p><p>Our series’ scope statement, behaviors over benchmarks, turns out to be roughly where the measurement literature landed too.</p><h2>The updated read</h2><p>A year ago the open question was whether semantic-ID generative recommendation works at all. The deployments answered that.</p><p>The 2026 question is different: how much of the remaining gap is engineering debt versus architecture.</p><p>Collisions, drift, decode cost: engineering, with shipping fixes.</p><p>The sibling-discrimination limit: architectural, now with a theorem, and the fixes (Latte’s forest, diffusion decoders, hybrid dense-generative stacks) all work by loosening the tree structure that defines the approach.</p><p>Every paper here is on arXiv, and every problem it fixes is reproducible in the companion <a href="https://drive.google.com/file/d/17C3s-M_TVuoNoBqLi7YTA7zCMoxoAKvG/view?usp=sharing">notebook</a>.</p><h1>Papers</h1><p>[1] <a href="https://arxiv.org/pdf/2605.06331">Expressiveness Limits of Autoregressive Semantic ID Generation in Generative Recommendation</a></p><p>[2] <a href="https://arxiv.org/pdf/2601.19711">Differentiable Semantic ID for Generative Recommendation</a></p><p>[3] <a href="https://arxiv.org/abs/2603.00632">Stop Treating Collisions Equally: Qualification-Aware Semantic ID Learning for Recommendation at Industrial Scale</a></p><p>[4] <a href="https://arxiv.org/abs/2603.29705">Drift-Aware Continual Tokenization for Generative Recommendation</a></p><p>[5] <a href="https://arxiv.org/abs/2511.06254">LLaDA-Rec: Discrete Diffusion for Parallel Semantic ID Generation in Generative Recommendation</a></p><p>[6] <a href="https://arxiv.org/abs/2606.10375">SIDInspector: A Mapping-First Diagnostic Resource for Semantic-ID Tokenizers</a></p>
+[![](../assets/2dbe6eb780e3bda8.avif)](../assets/2dbe6eb780e3bda8.avif)
+
+The s[eries ended with a list of measured problems]().
+
+The tokenizer trains on reconstruction while the recommender needs recommendation accuracy.
+
+Collisions got resolved by an arbitrary dedup token.
+
+Tail and cold recall bottomed out at exactly zero, and decode-time debiasing could not move them.
+
+Serving costs a beam search per query. And a catalog that changes forces a choice between stale IDs and full retraining.
+
+I assumed these were the costs of the architecture.
+
+Then I read the 2026 literature properly, and it turns out every single one of these problems has at least one paper attacking it by name this year.
+
+This edition maps each problem we measured to the fix the field shipped.
+
+f you ran the notebook, you watched each of these problems happen; that makes these papers readable in a way abstracts never are.
+
+[![](../assets/a685dfc8620dcc1a.png)](../assets/a685dfc8620dcc1a.png)
+
+Let’s do a deep dive on all of them :)
+
+## 1\. The tokenizer never sees the recommendation objective
+
+Our pipeline, like TIGER’s, is two disconnected optimizations.
+
+The RQ-VAE learns codes that reconstruct a text embedding.
+
+The transformer learns to predict those codes. Nothing ever tells the tokenizer what the recommender needs: an ID scheme where the distinctions that matter for prediction are the distinctions the codes encode.
+
+The tokenizer optimizes fidelity to a text embedding.
+
+The recommender needs discriminability between the items a user is actually choosing among. Different objectives, and the gap is measurable.
+
+The obvious fix is joint training: let recommendation gradients flow back into code assignment. The obvious fix fails, and it fails in a way readers of part 2 will recognize immediately: naive differentiable indexing causes codebook collapse. Early deterministic assignments lock in winners before exploration happens, a few codes absorb everything, and you reproduce part 2’s one-live-code collapse inside the joint training loop.
+
+DIGER (SIGIR 2026) makes it work by engineering the exploration explicitly: Gumbel noise on code assignment early in training forces the model to try codes it would deterministically skip, and an uncertainty decay schedule anneals the noise so training transitions from exploration to exploitation of settled IDs.
+
+The result is consistent gains from letting the two objectives meet.
+
+* * *
+
+## 2\. The sibling limit is structural
+
+This is our exact-zero result [from part 3, with a proof attached]().
+
+Recall the diagnosis from [part 3](). Debiasing steered the beam into rare regions of the code space, and once there, the model had no signal to pick the correct item among the forty-odd behind a rare prefix.
+
+I framed that as a knowledge limit of a small model. The Latte paper (UCSD and Snap) shows it is worse than that: it is structural.
+
+Their observation: token-by-token generation traverses a decoding tree whose leaves are items, and the probabilities a generative recommender assigns are strongly correlated with tree distance. Items close in the tree receive similar probabilities for any given user.
+
+Two shampoos sharing a two-code prefix are nearly indistinguishable to the model even when a specific user demonstrably prefers one, and the authors prove the architecture cannot represent preference patterns that plain collaborative filtering captures easily.
+
+The thing that gives semantic IDs their power, shared prefixes, is the same thing that caps how personalized the predictions over those prefixes can be.
+
+More training would not have fixed our zero. The tree itself was in the way.
+
+Their fix is small and clever. Latte prepends a sampled latent token to every ID during training, which turns the single decoding tree into a forest: every item now sits at multiple leaves, reachable through multiple paths, and pairs of items no longer have one fixed tree distance forcing their probabilities together.
+
+Reported gain is modest on average (about 3.5% NDCG@10) but the point is where it comes from: exactly the sibling-discrimination failure we measured.
+
+If you extend the notebook once, extend it here.
+
+Latent tokens are a data-pipeline change, not an architecture change, and watching whether the tail moves off zero would be a genuine experiment.
+
+## 3\. Collisions are not all equal
+
+Part 2 resolved 356 collisions with a dedup token assigned in arbitrary order, and I flagged it as the step every paper glosses over.
+
+Kuaishou, who run generative recommendation on a quarter of their main-app traffic, published two papers this year saying the glossing is where quality leaks.
+
+**The first is the framing: stop treating collisions equally.**
+
+Two items on the same code tuple might be genuine near-duplicates, in which case sharing is fine and forcing separation wastes capacity, or they might be distinct items the tokenizer failed to distinguish, in which case the collision is an error that a random dedup token papers over. Qualification-aware learning treats those cases differently instead of uniformly.
+
+**The second operationalizes it** : relax the repulsion between colliding items when they are semantically compatible, preserve admissible sharing, and allocate separation pressure adaptively by local collision load and training progress.
+
+Congested regions of the code space get more regularization, and the balance shifts toward recommendation alignment as training matures.
+
+For your own systems the takeaway is a diagnostic, not a technique: look at your collision buckets!!!
+
+## 4\. The catalog moves and the IDs do not
+
+The trade-off table listed SID drift as an operational cost and moved on. The 2026 literature quantified the cost and shipped two complementary fixes.
+
+The setup, for anyone who has not run a production model through time: catalogs and behavior are non-stationary.
+
+Items arrive, popularity shifts, co-occurrence patterns move.
+
+A frozen tokenizer means the recommender trains on token sequences that no longer match current item semantics; refreshing the tokenizer means new code assignments that are incompatible with everything the recommender’s output head already learned. Practitioners have been choosing between stale IDs and full retrains.
+
+**DACT** attacks the tokenizer side: a drift identification module scores each item’s drift confidence, drifting items get their codes updated toward current collaborative signals, stationary items get anchored so their identifiers do not shift gratuitously. Selective motion instead of freeze-or-rebuild.
+
+**The staleness paper** attacks the deployment side and is the one I would hand an infra engineer: refresh the SIDs from recent logs, then align the new vocabulary to the old one (greedy or Hungarian matching) so the existing recommender checkpoint stays compatible and warm-start fine-tuning works. Reported result: better recall than fine-tuning on stale IDs, at roughly 8 to 9 times less retriever-training compute than a full rebuild.
+
+## 5\. Decode latency
+
+Our measured cost row said it plainly: a beam search is not a dot product. The field’s answers cluster in three directions. Diffusion-style decoders generate ID tokens in parallel rather than left to right, removing the sequential dependency that makes decode latency scale with ID length.
+
+Distillation work goes further: train the expensive generative model, then distill it into an MLP for serving, keeping the training-time benefits of the generative formulation while paying dense-retrieval prices at inference.
+
+And the industrial line, OneRec-v2, redesigns the serving stack around the model, which is how Kuaishou’s system-level cost ended up below the cascade it replaced despite the per-query arithmetic.
+
+Per-query decode cost is real, actively under attack, and already avoidable at the system level if you are willing to redesign around it.
+
+## 6\. Measurement reliability
+
+The paper nobody in this list wants to cite asks how reliable SID-tokenizer comparisons are, and the answer is: less than the leaderboards imply, because results are sensitive to evaluation choices that papers rarely hold fixed.
+
+Alongside it, SIDInspector is a diagnostic resource for inspecting what a tokenizer actually mapped where, which is the tooling version of the advice from part 2: monitor the mapping, not just the metric.
+
+Our series’ scope statement, behaviors over benchmarks, turns out to be roughly where the measurement literature landed too.
+
+## The updated read
+
+A year ago the open question was whether semantic-ID generative recommendation works at all. The deployments answered that.
+
+The 2026 question is different: how much of the remaining gap is engineering debt versus architecture.
+
+Collisions, drift, decode cost: engineering, with shipping fixes.
+
+The sibling-discrimination limit: architectural, now with a theorem, and the fixes (Latte’s forest, diffusion decoders, hybrid dense-generative stacks) all work by loosening the tree structure that defines the approach.
+
+Every paper here is on arXiv, and every problem it fixes is reproducible in the companion [notebook](https://drive.google.com/file/d/17C3s-M_TVuoNoBqLi7YTA7zCMoxoAKvG/view?usp=sharing).
+
+# Papers
+
+[1] [Expressiveness Limits of Autoregressive Semantic ID Generation in Generative Recommendation](https://arxiv.org/pdf/2605.06331)
+
+[2] [Differentiable Semantic ID for Generative Recommendation](https://arxiv.org/pdf/2601.19711)
+
+[3] [Stop Treating Collisions Equally: Qualification-Aware Semantic ID Learning for Recommendation at Industrial Scale](https://arxiv.org/abs/2603.00632)
+
+[4] [Drift-Aware Continual Tokenization for Generative Recommendation](https://arxiv.org/abs/2603.29705)
+
+[5] [LLaDA-Rec: Discrete Diffusion for Parallel Semantic ID Generation in Generative Recommendation](https://arxiv.org/abs/2511.06254)
+
+[6] [SIDInspector: A Mapping-First Diagnostic Resource for Semantic-ID Tokenizers](https://arxiv.org/abs/2606.10375)

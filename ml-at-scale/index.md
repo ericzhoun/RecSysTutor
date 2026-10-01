@@ -2,9 +2,10 @@
 
 Local, platform-free copies of the **Machine Learning at Scale** collection by
 **Ludovico Bessi** (collected 2026-09-30) for personal study. One markdown file per post in
-`posts/`, images under `assets/`. Paid posts appear as publicly visible previews only.
+`posts/`, images under `assets/`. All 244 posts are stored in full — the paid posts were
+retrieved under the owner's own subscription for personal study (rights remain with the author).
 
-- **244 posts** · 244 full-text free · 0 paid previews
+- **244 posts** · 244 with full text · 0 truncated previews
 - Date span: 2023-01-01 → 2026-09-30
 
 | Date | Title | Topic | Access | Words |

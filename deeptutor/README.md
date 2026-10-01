@@ -62,12 +62,31 @@ deeptutor run mastery_path "recommender systems, beginner to HSTU" --kb recsys-c
 
 `tools/export_kb.py` reads the course `index.html` plus the ads knowledge graph and writes:
 
-- `content/m0..m8-*.md` — one document per module: lesson prose, formulas, code, exercises (with solutions), and the quiz bank.
+- `content/m0..m11-*.md` — one document per module: lesson prose, formulas, code, exercises (with solutions), and the quiz bank.
 - `content/papers-atlas.md` — all 104 papers grouped by pipeline stage, with venues, themes, notes, PDF links, and the curated lineage chains.
-- `content/m11-*.md` — companion reading-library module (topic map + reading paths)
+- `content/m11-*.md` — companion reading-library module (topic map + reading paths), hand-curated
 - `content/mls-*.md` — text-only corpus of all 244 posts from the
   *Machine Learning at Scale* reading library
 - `content/00-overview.md` — structure + study commands.
+
+### Finishing the reading-library corpus
+
+The 244 posts were captured in two waves. The second wave (80 posts, `mls-0165..0244`) arrived as
+full text wrapped in raw Substack page HTML; `tools/clean_raw_posts.py` converts that HTML to the
+same Markdown the first wave uses, and re-derives each `mls-*.md` document from the cleaned post.
+
+The conversion is not a guess: it reproduces the exact house conventions of the 164 documents that
+were already clean (`  * ` bullets, `* * *` rules, 4-space code, `[](../assets/x.png)` images,
+link-stripped KB text, `*Machine Learning at Scale collection — …*` byline). `tools/verify_clean.py`
+checks the result — no residual HTML, image references resolve, and every document retains its full
+source text (measured against the pre-conversion HTML in git, not against the unreliable `words:`
+frontmatter).
+
+```bash
+python deeptutor/tools/clean_raw_posts.py          # convert (idempotent; skips clean files)
+python deeptutor/tools/clean_raw_posts.py --check  # report only
+python deeptutor/tools/verify_clean.py             # verify the corpus
+```
 
 Re-export after editing the course:
 

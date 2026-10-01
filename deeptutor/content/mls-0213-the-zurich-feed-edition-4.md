@@ -2,4 +2,250 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2026-06-03 · topic: career*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/124ac4a8ba399f6f.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/124ac4a8ba399f6f.jpg 424w, ../assets/124ac4a8ba399f6f.jpg 848w, ../assets/124ac4a8ba399f6f.jpg 1272w, ../assets/124ac4a8ba399f6f.jpg 1456w" sizes="100vw"><img src="../assets/124ac4a8ba399f6f.jpg" width="1456" height="794" data-attrs="{&quot;src&quot;:&quot;../assets/124ac4a8ba399f6f.jpg" class="sizing-normal" alt="" srcset="../assets/124ac4a8ba399f6f.jpg 424w, ../assets/124ac4a8ba399f6f.jpg 848w, ../assets/124ac4a8ba399f6f.jpg 1272w, ../assets/124ac4a8ba399f6f.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Hey!</p><p>Welcome to the fourth edition of The Zürich Feed. 🥂</p><p>Every two weeks I go through <strong>ML roles</strong> in Zürich, filter out the noise, and add the context that job boards won’t give you:</p><ol><li><p>Team signals</p></li><li><p>Whether the role is actually worth your time.</p></li><li><p>What’s brewing in Zurich that’s not official yet (!!!)</p></li></ol><p>This week: 36 hand picked, high leverage roles.</p><p><strong>💥💥 Zürich ML ecosystem is alive! 💥💥</strong></p><div><hr></div><p><strong>📡 MARKET PULSE</strong></p><blockquote><p>Google is still hiring a lot in Zürich for the moment with lots of opening across products. Even if not a growth-site per se (in terms of current openings vs other locations) lots of team are still in need of headcount as the office remains big.<br><br>Meta layoffs hit last week. Zurich office does not seem particularly impacted from what my friends tell me. Still, very few openings!<br><br>Microsoft has expanded rapidly the Superintelligence team in Zürich and paying top $$$ (or should I say CHF) for it. However, the positions look like they are getting filled fast and they dropped in volume this week.</p><p>Lots of roles are rarely for entry level engineers, but rather require 2/3+ YOE.</p><p>Same pattern also for “Junior engineer role” that requires 1 YOE. Such is life!</p></blockquote><div><hr></div><p><strong>👀 ONE (or TWO) THING I’M WATCHING</strong></p><blockquote><p>Zürich is deep tech capital. The amount of highly technical roles is crazy here as you will see in the newsletter.</p><p>Especially for computer vision and robotics! Out of the 36 job openings, 12 of them are for robotics (!!!!!). Time to get around to learning it…?</p><p>Also, looks like the <a href="https://blog.pragmaticengineer.com/the-pulse-forward-deployed-engineering-heats-up-again/">hottest new role in tech</a> is coming to Google with multiple openings. If you are product oriented, like actually implementing things and feel a bit the sales side, then it’s the role for you!</p><p>Make sure you sit on the right side by continuously up-skilling. If you are here at ML@Scale, you are already in the right place. :)</p><p>Comp levels are growing in Zürich for top tier companies. Life is good.</p></blockquote><div><hr></div><p><strong>🗂️ THE LIST of 36 hand picked jobs below :)</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p><strong>FAANG LEVEL compensation is reflected on <a href="https://www.levels.fyi/?tab=levels">levels.fyi</a> without me taking any guesses.</strong></p><p><strong>🏢 Google (❤️)</strong></p><p><em>No explanation needed. One of the biggest tech hub outside of the US. Tons of strong teams hiring. ML-heavy office with lots of different products hiring.</em></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/128105061778629318-software-engineer-iii-machine-learning-search-intelligence">Software Engineer III, Machine Learning, Search Intelligence</a></p><blockquote><p>Familiarity with search ranking systems, information retrieval metrics, and handling long-tail data distributions.</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/96402825835094726-xr-audio-face-tracking-ml-software-engineer">XR Audio Face Tracking ML Software Engineer</a></p><blockquote><p>Experience with deep learning frameworks (e.g., JAX) and edge frameworks (e.g. LiteRT). Experience with polygonal mesh representations and skeletal animation pipelines. Sounds fun and deeply technical!</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/118923738107257542-senior-applied-ml-engineer-graph-neural-network-ml-frontiers">Senior Applied ML Engineer, Graph Neural Network, ML Frontiers</a></p><blockquote><p>ML frontier things if you want to be on the ML deep tech side and not just be calling Gemini :)</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/107265188968702662-software-engineer-iii-aiml-google-cloud-automotive">Software Engineer III, AI/ML, Google Cloud, Automotive</a></p><blockquote><p>Deploy ML on cars! :D</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/117585482132398790-research-scientist-google-research-aiml">Research Scientist, Google Research, AI/ML</a></p><blockquote><p>Proven track record of delivering software engineering systems, with an understanding of existing ML literature. Google wants Research scientists that ship code ;)</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/124457386856325830-research-software-engineer-generative-ai">Research Software Engineer, Generative AI</a></p><blockquote><p>One of the coolest roles of this edition imho. Check it out!</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/80628242033058502-staff-engineering-analyst-gen-ai-trust-and-safety">Staff Engineering Analyst, GenAI Trust and Safety</a></p><blockquote><p>High leverage position for horizontal T&amp;S.</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/124711215128552134-software-engineer-iii-machine-learning-research-and-products">Software Engineer III, Machine Learning, Research and Products</a></p><blockquote><p>Bring Research to products! :)</p></blockquote><p><a href="https://www.google.com/about/careers/applications/jobs/results/116958340671513286-staff-forward-deployed-engineer-genai-google-cloud">Staff Forward Deployed Engineer, GenAI, Google Cloud</a></p><blockquote><p>Forward deployed engineers are coming to Google :), we can’t miss the hottest role in tech! :)</p></blockquote><p><strong>🏢 Meta</strong><br><br><em>Smallish office heavily focusing on VR / AR projects. Recently spinned up a monetization division as well as Superintelligence team. I’d focus on the latter given recent developments.</em></p><p><a href="https://www.metacareers.com/profile/job_details/1058363622156402">Software Engineer (Leadership) - Machine Learning</a></p><blockquote><p>What can i say. Just one opening. Looks like there’s an hiring freeze going on :)</p></blockquote><p><strong>🏢 Apple</strong><br><br><em>Small office (~200 headcount), but with a diverse range of projects.</em></p><p><a href="https://jobs.apple.com/en-us/details/200664795-4170/aiml-research-scientist-health?team=MLAI">AIML - Research Scientist, Health</a></p><blockquote><p>You will design, train, and adapt modern deep learning models on unique health data, and apply your statistical expertise to evaluate them rigorously. Sounds fun!</p></blockquote><p><a href="https://jobs.apple.com/en-us/details/200643040-4170/ai-research-scientist-multimodal-intelligence?team=HRDWR">AI Research Scientist - Multimodal Intelligence</a></p><blockquote><p>Full stack foundation model training for vision. Is that you? If yes, looks fun!</p></blockquote><p><a href="https://jobs.apple.com/en-us/details/200634821-4170/aiml-senior-ml-rl-training-infrastructure-engineer-afm?team=MLAI">AIML - Senior ML/RL Training Infrastructure Engineer, AFM</a></p><blockquote><p>Infra for large-scale ML and RL training runs? Sounds fun.</p></blockquote><p><strong>🏢 NVIDIA</strong><br><br><em>Small office, mainly focused on Autonomous vehicles, LLM evals and Systems engineering.</em></p><p><a href="https://jobs.nvidia.com/careers/job/893395202940?domain=nvidia.com&amp;hl=en">Senior Applied Deep Learning Scientist - Large Vision Language Models</a></p><blockquote><p>LVM are cool in Zurich :)</p></blockquote><p><a href="https://jobs.nvidia.com/careers/job/893395178793?domain=nvidia.com&amp;hl=en">Senior Systems Software Engineer - GPU Performance at Scale</a></p><blockquote><p>Make GPUs go BRRRR</p></blockquote><p><a href="https://jobs.nvidia.com/careers/job/893394980489?domain=nvidia.com&amp;hl=en">Senior Software Engineer, AI Inference Systems</a></p><blockquote><p>Make Inference go BRRRR</p></blockquote><p><strong>🏢 Microsoft</strong><br><em>Office that is expanding thanks to the recent opening of Microsoft AI division. Expect high TC offer and negotiate hard.</em></p><p><a href="https://apply.careers.microsoft.com/careers/job/1970393556648532?domain=microsoft.com&amp;hl=en">Member of Technical Staff, AI Multimodal - MAI Superintelligence Team</a></p><blockquote><p>MAI goes multimodal!</p></blockquote><p><a href="https://apply.careers.microsoft.com/careers/job/1970393556648705?domain=microsoft.com&amp;hl=en">Member of Technical Staff, AI Post-Training - MAI Superintelligence Team Post-Training</a></p><blockquote><p>Post training keep scaling :) </p></blockquote><p><a href="https://apply.careers.microsoft.com/careers/job/1970393556844479?domain=microsoft.com&amp;hl=en">Member of Technical Staff, AI Systems Engineer - Microsoft Superintelligence</a></p><blockquote><p>But you do need infra in place ;)</p></blockquote><p><strong>🏢 Exa</strong><br><br><em>Brand new office in Zürich being lead by non-other than my friend <a href="https://www.linkedin.com/in/maxbuckley/">Max Buckley</a>.</em></p><p><em>They are focused on building the best search engine in the world. Zürich office is focused on both modelling and infra roles.<br><br>The comp can go quite high here. I expect it to reach 0.5M CHF TC (but those stocks are not liquid, so make sure to do your own valuation!).</em></p><p><em>News: they just raised their series C, I expect even more hiring! But this time I don’t see any Zurich openings :(,</em></p><p><strong>🏢 RAI (Robotics and AI Institute)</strong><br><br><em>Small office but lots of high quality researchers.</em></p><ul><li><p><a href="https://jobs.lever.co/rai/45f40b1a-0191-411a-bc6e-67043e676427">Research Scientist (Zurich Location)</a> - Mid level</p></li></ul><blockquote><p>Good grasp of a broad set of techniques related to RL/IL control, state and world estimation, perception, planning/navigation, LLM/VLM</p></blockquote><p><strong>🏢 Mimic</strong><br><br><em>Up and coming series B startup for automating away tedious physical tasks. I expect it to reach 0.35M CHF TC (but those stocks are not liquid, so make sure to do your own valuation!)</em></p><ul><li><p><a href="https://jobs.gem.com/mimicrobotics-com/am9icG9zdDreFN_ZVNrzDEGNC4mrmw4-">Forward Deployed Engineer</a> - Mid level</p></li></ul><blockquote><p>Hottest role in tech came to zurich! and not only at google!</p></blockquote><ul><li><p><a href="https://jobs.gem.com/mimicrobotics-com/am9icG9zdDp4kHJkgcnfMbwa-tUElmqv">AI Research Scientist Robot Learning</a> - Mid level</p></li></ul><blockquote><p>Shaping all aspects of the development of end-to-end AI models for robotics, from large scale multi-task pre-training to specialized fine-tuning and post-training</p></blockquote><ul><li><p><a href="https://jobs.gem.com/mimicrobotics-com/am9icG9zdDpDpu9NY8aD8f3YpENfLoSm">AI Research Engineer Robot Learning</a> - Mid level</p></li></ul><blockquote><p>Research engineer version of the above. Less about research, more about engineering. Still more research than a standard SWE.</p></blockquote><ul><li><p><a href="https://jobs.gem.com/mimicrobotics-com/am9icG9zdDoq3kjdD1xnPYjm7KPKHaKe">Applied AI Engineer</a> - Mid level</p></li></ul><blockquote><p>Interesting role, almost looks like a forwarded deployed engineer. Apply AI recipes to new customer tasks and lead the technical project management.</p></blockquote><p><strong>🏢 Lakera</strong><br><em>Acquired startup by Check Point. LLM x Security.</em></p><p><em>I expect it to reach 0.35M CHF TC (with liquid stocks!)</em></p><ul><li><p><a href="https://www.lakera.ai/careers?ashby_jid=158d9a05-bc1d-49fd-81f1-bf1229e8021f">Senior ML Engineer</a></p></li></ul><blockquote><p>Modelling focused: extend a model to multiple languages, add signals to prompt injection detectors, red team models to understand and fix vulnerabilities.</p></blockquote><ul><li><p><a href="https://www.lakera.ai/careers?ashby_jid=6f04a898-893e-439f-8601-c25a30418c13">Staff ML Engineer</a></p></li></ul><blockquote><p>Higher seniority of the opening above.</p></blockquote><p><strong>🏢 Bloom</strong><br><br><em>A YC backed startup, 3.4M pre-seed.</em></p><ul><li><p><a href="https://www.ycombinator.com/companies/bloom-4/jobs/Tb6dGeS-founding-engineer">Founding engineer</a> - 150k / 250k USD - 0.5 / 2.0 equity</p></li></ul><blockquote><p>Build the foundation for technical infrastructure at Bloom. Looks pretty exciting around Agents for building App.</p></blockquote><p><strong>🏢 Manufact (formerly mcp-use)</strong></p><p><em>YC backed company, hiring in Zurich for founding engineers.</em></p><ul><li><p><strong><a href="https://www.ycombinator.com/companies/manufact/jobs/x7AI7un-software-engineer-founding-team">Software engineer (Founding team)</a></strong><a href="https://www.ycombinator.com/companies/manufact/jobs/x7AI7un-software-engineer-founding-team"> </a>(100-150k USD + equity)</p></li></ul><blockquote><p>Ship open source tools for MCP development.</p></blockquote><p><strong>🏢 Zenline</strong></p><p><em>Build AI agents that find the perfect assortment for every retailer</em></p><ul><li><p><strong><a href="https://zenline.notion.site/founding-engineer-full-stack">Founding engineer Full-stack</a></strong></p></li></ul><blockquote><p>Real full stack! Full stack eng + AI. Fun is guaranteed!</p></blockquote><p><strong>🏢 Flexion Robotics</strong></p><p>Autonomy stack for humanoid robots - from command to control, from manipulation to locomotion, across any hardware and task. Leveraging the power of simulation and reinforcement learning, their software scales to the real world with minimal human involvement. Hiring for:</p><ul><li><p><a href="https://www.linkedin.com/jobs/search/?currentJobId=4404332102&amp;f_C=106062932&amp;geoId=92000000&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4404332102%2C4389720696%2C4404592123%2C4345832499%2C4404575323%2C4387281288%2C4404583478%2C4373823022%2C4378335191&amp;refId=kx5DjEWe8fJFcBrHotjPog%3D%3D&amp;trackingId=I1vxz03tKDruwibtEoHEzw%3D%3D&amp;trk=d_flagship3_company">ML Infra engineer</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search/?currentJobId=4404592123&amp;f_C=106062932&amp;geoId=92000000&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4404332102%2C4389720696%2C4404592123%2C4345832499%2C4404575323%2C4387281288%2C4404583478%2C4373823022%2C4378335191&amp;trk=d_flagship3_company">Software engineer - Simulation</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search/?currentJobId=4345832499&amp;f_C=106062932&amp;geoId=92000000&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4404332102%2C4389720696%2C4404592123%2C4345832499%2C4404575323%2C4387281288%2C4404583478%2C4373823022%2C4378335191&amp;trk=d_flagship3_company">Research engineer - Generative Humanoid Motion Generation</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search/?currentJobId=4404575323&amp;f_C=106062932&amp;geoId=92000000&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4404332102%2C4389720696%2C4404592123%2C4345832499%2C4404575323%2C4387281288%2C4404583478%2C4373823022%2C4378335191&amp;trk=d_flagship3_company">AI Research Engineer - Dexterous Manipulation</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search/?currentJobId=4404583478&amp;f_C=106062932&amp;geoId=92000000&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4404332102%2C4389720696%2C4404592123%2C4345832499%2C4404575323%2C4387281288%2C4404583478%2C4373823022%2C4378335191&amp;trk=d_flagship3_company">AI Research engineer - RL Manipulation</a></p></li></ul><p><strong>🏢 Microagi</strong></p><p>The data layer for physical AI.</p><ul><li><p><a href="https://www.microagi.ai/careers#research-engineer-robotics-embodied-ai">Research Engineer (Robotics)</a></p></li><li><p><a href="https://www.microagi.ai/careers#computer-vision-researcher-hand-body-tracking">Computer vision researcher</a></p></li></ul><p>That’s all for this edition! Let me know what you think! :)</p><p>— Ludo</p>
+[](../assets/124ac4a8ba399f6f.jpg)
+
+Hey!
+
+Welcome to the fourth edition of The Zürich Feed. 🥂
+
+Every two weeks I go through **ML roles** in Zürich, filter out the noise, and add the context that job boards won’t give you:
+
+  1. Team signals
+
+  2. Whether the role is actually worth your time.
+
+  3. What’s brewing in Zurich that’s not official yet (!!!)
+
+This week: 36 hand picked, high leverage roles.
+
+**💥💥 Zürich ML ecosystem is alive! 💥💥**
+
+* * *
+
+**📡 MARKET PULSE**
+
+> Google is still hiring a lot in Zürich for the moment with lots of opening across products. Even if not a growth-site per se (in terms of current openings vs other locations) lots of team are still in need of headcount as the office remains big.
+>
+> Meta layoffs hit last week. Zurich office does not seem particularly impacted from what my friends tell me. Still, very few openings!
+>
+> Microsoft has expanded rapidly the Superintelligence team in Zürich and paying top $$$ (or should I say CHF) for it. However, the positions look like they are getting filled fast and they dropped in volume this week.
+>
+> Lots of roles are rarely for entry level engineers, but rather require 2/3+ YOE.
+>
+> Same pattern also for “Junior engineer role” that requires 1 YOE. Such is life!
+
+* * *
+
+**👀 ONE (or TWO) THING I’M WATCHING**
+
+> Zürich is deep tech capital. The amount of highly technical roles is crazy here as you will see in the newsletter.
+>
+> Especially for computer vision and robotics! Out of the 36 job openings, 12 of them are for robotics (!!!!!). Time to get around to learning it…?
+>
+> Also, looks like the hottest new role in tech is coming to Google with multiple openings. If you are product oriented, like actually implementing things and feel a bit the sales side, then it’s the role for you!
+>
+> Make sure you sit on the right side by continuously up-skilling. If you are here at ML@Scale, you are already in the right place. :)
+>
+> Comp levels are growing in Zürich for top tier companies. Life is good.
+
+* * *
+
+**🗂️ THE LIST of 36 hand picked jobs below :)**
+
+**FAANG LEVEL compensation is reflected onlevels.fyi without me taking any guesses.**
+
+**🏢 Google (❤️)**
+
+_No explanation needed. One of the biggest tech hub outside of the US. Tons of strong teams hiring. ML-heavy office with lots of different products hiring._
+
+Software Engineer III, Machine Learning, Search Intelligence
+
+> Familiarity with search ranking systems, information retrieval metrics, and handling long-tail data distributions.
+
+XR Audio Face Tracking ML Software Engineer
+
+> Experience with deep learning frameworks (e.g., JAX) and edge frameworks (e.g. LiteRT). Experience with polygonal mesh representations and skeletal animation pipelines. Sounds fun and deeply technical!
+
+Senior Applied ML Engineer, Graph Neural Network, ML Frontiers
+
+> ML frontier things if you want to be on the ML deep tech side and not just be calling Gemini :)
+
+Software Engineer III, AI/ML, Google Cloud, Automotive
+
+> Deploy ML on cars! :D
+
+Research Scientist, Google Research, AI/ML
+
+> Proven track record of delivering software engineering systems, with an understanding of existing ML literature. Google wants Research scientists that ship code ;)
+
+Research Software Engineer, Generative AI
+
+> One of the coolest roles of this edition imho. Check it out!
+
+Staff Engineering Analyst, GenAI Trust and Safety
+
+> High leverage position for horizontal T&S.
+
+Software Engineer III, Machine Learning, Research and Products
+
+> Bring Research to products! :)
+
+Staff Forward Deployed Engineer, GenAI, Google Cloud
+
+> Forward deployed engineers are coming to Google :), we can’t miss the hottest role in tech! :)
+
+**🏢 Meta**
+
+ _Smallish office heavily focusing on VR / AR projects. Recently spinned up a monetization division as well as Superintelligence team. I’d focus on the latter given recent developments._
+
+Software Engineer (Leadership) - Machine Learning
+
+> What can i say. Just one opening. Looks like there’s an hiring freeze going on :)
+
+**🏢 Apple**
+
+ _Small office (~200 headcount), but with a diverse range of projects._
+
+AIML - Research Scientist, Health
+
+> You will design, train, and adapt modern deep learning models on unique health data, and apply your statistical expertise to evaluate them rigorously. Sounds fun!
+
+AI Research Scientist - Multimodal Intelligence
+
+> Full stack foundation model training for vision. Is that you? If yes, looks fun!
+
+AIML - Senior ML/RL Training Infrastructure Engineer, AFM
+
+> Infra for large-scale ML and RL training runs? Sounds fun.
+
+**🏢 NVIDIA**
+
+ _Small office, mainly focused on Autonomous vehicles, LLM evals and Systems engineering._
+
+Senior Applied Deep Learning Scientist - Large Vision Language Models
+
+> LVM are cool in Zurich :)
+
+Senior Systems Software Engineer - GPU Performance at Scale
+
+> Make GPUs go BRRRR
+
+Senior Software Engineer, AI Inference Systems
+
+> Make Inference go BRRRR
+
+**🏢 Microsoft**
+ _Office that is expanding thanks to the recent opening of Microsoft AI division. Expect high TC offer and negotiate hard._
+
+Member of Technical Staff, AI Multimodal - MAI Superintelligence Team
+
+> MAI goes multimodal!
+
+Member of Technical Staff, AI Post-Training - MAI Superintelligence Team Post-Training
+
+> Post training keep scaling :)
+
+Member of Technical Staff, AI Systems Engineer - Microsoft Superintelligence
+
+> But you do need infra in place ;)
+
+**🏢 Exa**
+
+ _Brand new office in Zürich being lead by non-other than my friendMax Buckley._
+
+_They are focused on building the best search engine in the world. Zürich office is focused on both modelling and infra roles.
+
+The comp can go quite high here. I expect it to reach 0.5M CHF TC (but those stocks are not liquid, so make sure to do your own valuation!)._
+
+_News: they just raised their series C, I expect even more hiring! But this time I don’t see any Zurich openings :(,_
+
+**🏢 RAI (Robotics and AI Institute)**
+
+_Small office but lots of high quality researchers._
+
+  * Research Scientist (Zurich Location) \- Mid level
+
+> Good grasp of a broad set of techniques related to RL/IL control, state and world estimation, perception, planning/navigation, LLM/VLM
+
+**🏢 Mimic**
+
+ _Up and coming series B startup for automating away tedious physical tasks. I expect it to reach 0.35M CHF TC (but those stocks are not liquid, so make sure to do your own valuation!)_
+
+  * Forward Deployed Engineer \- Mid level
+
+> Hottest role in tech came to zurich! and not only at google!
+
+  * AI Research Scientist Robot Learning \- Mid level
+
+> Shaping all aspects of the development of end-to-end AI models for robotics, from large scale multi-task pre-training to specialized fine-tuning and post-training
+
+  * AI Research Engineer Robot Learning \- Mid level
+
+> Research engineer version of the above. Less about research, more about engineering. Still more research than a standard SWE.
+
+  * Applied AI Engineer \- Mid level
+
+> Interesting role, almost looks like a forwarded deployed engineer. Apply AI recipes to new customer tasks and lead the technical project management.
+
+**🏢 Lakera**
+ _Acquired startup by Check Point. LLM x Security._
+
+_I expect it to reach 0.35M CHF TC (with liquid stocks!)_
+
+  * Senior ML Engineer
+
+> Modelling focused: extend a model to multiple languages, add signals to prompt injection detectors, red team models to understand and fix vulnerabilities.
+
+  * Staff ML Engineer
+
+> Higher seniority of the opening above.
+
+**🏢 Bloom**
+
+ _A YC backed startup, 3.4M pre-seed._
+
+  * Founding engineer \- 150k / 250k USD - 0.5 / 2.0 equity
+
+> Build the foundation for technical infrastructure at Bloom. Looks pretty exciting around Agents for building App.
+
+**🏢 Manufact (formerly mcp-use)**
+
+_YC backed company, hiring in Zurich for founding engineers._
+
+  * **Software engineer (Founding team)** (100-150k USD + equity)
+
+> Ship open source tools for MCP development.
+
+**🏢 Zenline**
+
+ _Build AI agents that find the perfect assortment for every retailer_
+
+  * **Founding engineer Full-stack**
+
+> Real full stack! Full stack eng + AI. Fun is guaranteed!
+
+**🏢 Flexion Robotics**
+
+Autonomy stack for humanoid robots - from command to control, from manipulation to locomotion, across any hardware and task. Leveraging the power of simulation and reinforcement learning, their software scales to the real world with minimal human involvement. Hiring for:
+
+  * ML Infra engineer
+
+  * Software engineer - Simulation
+
+  * Research engineer - Generative Humanoid Motion Generation
+
+  * AI Research Engineer - Dexterous Manipulation
+
+  * AI Research engineer - RL Manipulation
+
+**🏢 Microagi**
+
+The data layer for physical AI.
+
+  * Research Engineer (Robotics)
+
+  * Computer vision researcher
+
+That’s all for this edition! Let me know what you think! :)
+
+— Ludo

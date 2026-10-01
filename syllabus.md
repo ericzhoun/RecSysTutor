@@ -5,7 +5,7 @@ An interactive course for machine-learning engineers, built from the full archiv
 
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
-- **11 modules · 53 lessons · 10 interactive widgets · 9 self-checks · 18 exercises · 104 linked papers · DeepTutor-powered tutor**
+- **12 modules · 58 lessons · 11 interactive widgets · 10 self-checks · 20 exercises · 104 linked papers · 244-post reading library · DeepTutor-powered tutor**
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
 Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
@@ -20,6 +20,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | B — Ranking | M3 | The CTR feature-interaction family (the densest module) |
 | C — Sequence & generative | M4 | Transformer → SASRec → BERT4Rec → HSTU |
 | D — Multi-task | M5 | MMoE, ESMM, and the multi-task optimiser zoo |
+| E — The library | M11 | The 244-post production-ML corpus, read as evidence under M1–M10 |
 
 ---
 
@@ -38,7 +39,7 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 | **M8 Paper atlas** | The collection · Lineage chains · How to use the atlas | Awesome-Deep-Learning-Papers-for-Search-Recommendation-Advertising (`ads_knowledge_graph/`) — 104 ads/recsys papers |
 | **M9 AI tutor** | From static page to personal tutor | DeepTutor (HKUDS) — knowledge base `recsys-course`, RAG chat, quiz generation, mastery paths |
 | **M10 Embedding infrastructure** | The table *is* the model · loading & training it · when it doesn't fit · decision table | DLRM (parallelism) + TwHIN (parameter drift) from earlier modules; production practice |
-| **M11 Reading library** | 244-post companion library: topic map · reading paths · production war stories | *Machine Learning at Scale* (Ludovico Bessi) — see `ml-at-scale/` |
+| **M11 Reading library** | The collection · Browsing it · Reading paths · The war stories | *Machine Learning at Scale* (Ludovico Bessi) — see `ml-at-scale/` |
 
 ---
 
@@ -54,14 +55,17 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 8. **Paper atlas** — filter 104 papers by stage, theme, company, year and free text (M8).
 9. **Lineage explorer** — the 70 curated “builds on” links rendered as clickable chains (M8).
 10. **Embedding table memory planner** — size a table (features × cardinality × dim × precision × optimiser state) against device memory and get the ordered plan (M10).
+11. **Reading-library browser** — filter the 244 posts by topic, year, free text or length, and open the post (M11).
 
 ## Exercises
 
-Every module (M1–M10) ends with **hands-on exercises** (18 total) with a progressive-disclosure **hint** and a
+Every module except M0 (orientation) and M9 (the tutor) ends with **hands-on exercises** (20 total) with a
+progressive-disclosure **hint** and a
 **reference solution** (code where appropriate) — e.g. computing ECS/DI, sizing an A/B test, implementing the streaming
 frequency estimator, logQ correction, a DCN cross layer, DLRM pairwise masking, positional encodings, the SASRec causal
 objective, MMoE gating, the ESMM loss, retrieval routing, SimClusters-style community vectors, downsampling
-recalibration, atlas/lineage research tasks, and sizing/sharding an embedding table. Each module also ends with a graded
+recalibration, atlas/lineage research tasks, sizing/sharding an embedding table, and reading-library research tasks.
+Each of those modules also ends with a graded
 self-check (2–4 questions).
 
 Widgets run entirely in the page: no network, no tracking, nothing stored beyond the session.
@@ -134,8 +138,12 @@ Reproduced with attribution; the linked PDFs are hosted in that repository.
 
 ## Module 11 — companion reading library (`ml-at-scale/`)
 
+The course page carries this module directly: four lessons, an eight-path reading map, a
+war-story digest, two exercises and a self-check, plus a **filterable browser over all 244 posts**
+(topic / year / free text / length) that opens each post from `ml-at-scale/posts/`.
+
 244 production-ML posts from the *Machine Learning at Scale* collection (Ludovico Bessi,
 collected 2026-09-30), stored platform-free with local images. `deeptutor/content/m11-*.md`
 holds the topic map and reading paths cross-referenced to M1–M10; `deeptutor/content/mls-*.md`
-is the text-only corpus of all 244 posts for the knowledge base (the 80 paid posts were
+is the text-only corpus of all 244 posts for the knowledge base (the paid posts were
 retrieved in full via the owner's own subscription).

@@ -10,4 +10,110 @@ words: 1291
 
 # Cheat code for MLEs to stand out in 2026
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/6a4ed2383ecffbd7.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/6a4ed2383ecffbd7.jpg 424w, ../assets/6a4ed2383ecffbd7.jpg 848w, ../assets/6a4ed2383ecffbd7.jpg 1272w, ../assets/6a4ed2383ecffbd7.jpg 1456w" sizes="100vw"><img src="../assets/6a4ed2383ecffbd7.jpg" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/6a4ed2383ecffbd7.jpg" class="sizing-normal" alt="" srcset="../assets/6a4ed2383ecffbd7.jpg 424w, ../assets/6a4ed2383ecffbd7.jpg 848w, ../assets/6a4ed2383ecffbd7.jpg 1272w, ../assets/6a4ed2383ecffbd7.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h1>How to Break Into MLSys Through Open Source in 2026</h1><p><strong>TLDR:</strong> Open source is the cheat code to stand out in a saturated ML market. I’ll walk you through the best repositories to contribute to in LLM inference and RL infrastructure, plus some hard-earned tips on how to actually make meaningful contributions. </p><div><hr></div><h2>Introduction</h2><p>Let’s address the elephant in the room: the ML job market is tough right now.</p><p>Positions are scarce, candidates are plenty, and everyone has “fine-tuned an LLM” on their resume.</p><p>So how do you stand out?</p><p>My answer has been the same for years: <strong>open source contributions</strong>.</p><p>Think about it. When you contribute to vLLM or PyTorch, you’re not just padding your CV. You’re building real skills, working with production-grade code, and — here’s the kicker — creating public proof of your abilities that any hiring manager can verify in 30 seconds.</p><p>I’ve seen folks get fast-tracked through hiring pipelines at top companies because a maintainer vouched for their contributions. That’s not luck, that’s strategy.</p><p>Today I want to give you a curated list of repositories worth your time if you’re interested in MLSys, specifically around LLM inference and RL infrastructure. These are active, impactful, and — importantly — welcoming to new contributors.</p><p>Let’s dive in!</p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><div><hr></div><h2>LLM Inference Repositories</h2><p>This is where the action is right now. Everyone’s racing to make inference faster, cheaper, and more efficient.</p><p><strong>vLLM</strong> — If you only pick one project, pick this one. It’s become the de facto standard for high-throughput LLM serving. The core innovation (PagedAttention) is elegant, but there’s tons of work happening around speculative decoding, multi-GPU inference, and new model integrations. Very active Discord, responsive maintainers, and your contributions will be used by thousands of companies. Seriously, this is the one.</p><p><strong>LMCache</strong> — LMCache is an <strong>LLM</strong> serving engine extension to <strong>reduce TTFT</strong> and <strong>increase throughput</strong>, especially under long-context scenarios. By storing the KV caches of reusable texts across various locations, including (GPU, CPU DRAM, Local Disk), LMCache reuses the KV caches of <em><strong>any</strong></em> reused text (not necessarily prefix) in <em><strong>any</strong></em> serving engine instance. Very active open source project! :) </p><p><strong>SGLang</strong> — From the LMSYS team (the folks behind Vicuna and Chatbot Arena). Focused on structured generation and efficient LLM programming primitives. Newer than vLLM, which means less competition for good issues and more greenfield opportunities. If you want to work on the “programming model” layer rather than raw serving, this is your jam.</p><p><strong><s>JetStream [deprecated]</s></strong><s> — Google’s throughput-optimized inference engine for TPUs and GPUs. If you want exposure to the JAX/TPU ecosystem, this is a solid choice. Pairs nicely with MaxText for training. Less community-driven than vLLM but the code quality is excellent and you’ll learn a lot about production inference at scale.</s></p><p>A good substitution for jetstream is https://github.com/vllm-project/tpu-inference </p><p><strong>llama.cpp</strong> — The efficiency frontier. If you care about quantization, running models on consumer hardware, or just want to see how far you can push inference on a MacBook, this is the place. Massive community, constant activity.</p><p><strong>TensorRT-LLM</strong> — NVIDIA’s inference optimization library. More corporate-driven, but if you want to go deep on GPU optimization and CUDA kernels, there’s no better place. Contributions here signal serious low-level chops.</p><div><hr></div><h2>RL Infrastructure Repositories</h2><p>RL infra is having a moment thanks to RLHF and all the alignment work happening. These projects are earlier stage, which means higher impact per contribution.</p><p><strong>OpenRLHF</strong> — Specifically focused on RLHF training infrastructure. Clean codebase, active development, and solves a real problem that every company doing alignment cares about. Smaller project means your contributions actually get noticed.</p><p><strong>veRL</strong> — From ByteDance’s research team. Newer RL training framework designed for LLM alignment. Early stage means lots of opportunities for meaningful contributions. The architecture is interesting and worth studying even if you don’t contribute.</p><p><strong>TRL (Hugging Face)</strong> — Transformer Reinforcement Learning library. Part of the HF ecosystem, which means excellent documentation and broad visibility for your contributions. If you want to combine RL work with the network effects of Hugging Face, this is your best bet.</p><p><strong>Ray/RLlib</strong> — The OG distributed RL framework. Massive codebase, but well-documented and Anyscale is responsive to external contributors. If you want to work on distributed systems + RL, this is the mature choice.</p><p><strong><s>OpenDiLoCo (Prime Intellect)</s></strong><s> — This one’s spicy. Distributed training across decentralized compute. Prime Intellect is doing genuinely novel work on geo-distributed training, and being a small team means you’ll interact directly with their core engineers. If you want to work on something that feels like frontier research rather than incremental improvements, check this out.</s></p><p>EDITED: No longer maintained!</p><p><strong>prime-rl (Prime Intellect)</strong> — Their RL infrastructure for distributed RLHF and alignment training. Early stage, high impact potential, and aligned with their mission of democratizing AI training.</p><div><hr></div><h2>General Tips for Open Source Contributions</h2><p>Alright, you’ve picked a repo. Now what?</p><p><strong>Start with the docs.</strong> Seriously. Find a typo, clarify a confusing section, add an example. It’s not glamorous, but it gets you familiar with the contribution process and builds goodwill with maintainers. I’ve seen people get commit access just from consistent doc improvements.</p><p><strong>Run the tests locally before anything else.</strong> You’d be surprised how many projects have flaky setups. Getting the test suite running teaches you more about the codebase than reading code for hours.</p><p><strong>Look for “good first issue” labels, but don’t stop there.</strong> These are great for your first PR, but the real signal comes from tackling meatier problems. After one or two starter issues, graduate to something harder.</p><p><strong>Read recent merged PRs.</strong> This teaches you the code style, what kind of changes get accepted, and how maintainers communicate. It’s like having access to the answer key.</p><p><strong>Don’t ghost.</strong> If you claim an issue, work on it. If life gets in the way, just comment and let people know. Maintainers remember who’s reliable.</p><p><strong>Engage in discussions.</strong> GitHub issues, Discord channels, community calls — show up and be helpful. Sometimes the best contributions aren’t code at all, but helping someone else debug their problem.</p><p><strong>Think in campaigns, not one-offs.</strong> One PR is nice. Ten PRs over three months in a focused area? That makes you a known contributor. Pick a corner of the codebase and own it.</p><div><hr></div><h2>Closing Notes</h2><p>Look, the market is what it is. You can’t control hiring freezes or headcount decisions made in boardrooms.</p><p>But you can control what you build and what you learn.</p><p>Open source is one of the few true meritocracies left in tech. Your contributions speak for themselves, publicly, verifiably, permanently.</p><p>And beyond the career benefits — which are real — there’s something deeply satisfying about seeing your code running in production at companies you’ve never even heard of.</p><p>So pick a repo from the lists above, clone it tonight, and start reading.</p><p>Your future self will thank you.</p><p>Ludo</p><div><hr></div><p><em>Machine learning at scale is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber.</em></p><div class="subscription-widget-wrap-editor" data-attrs="{&quot;url&quot;:&quot;" data-component-name="SubscribeWidgetToDOM"><div class="subscription-widget show-subscribe"><div class="preamble"><p class="cta-caption">Machine learning at scale is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber.</p></div><form class="subscription-widget-subscribe"><input type="email" class="email-input" name="email" placeholder="Type your email…" tabindex="-1"><input type="submit" class="button primary" value="Subscribe"><div class="fake-input-wrapper"><div class="fake-input"></div><div class="fake-button"></div></div></form></div></div>
+[![](../assets/6a4ed2383ecffbd7.jpg)](../assets/6a4ed2383ecffbd7.jpg)
+
+# How to Break Into MLSys Through Open Source in 2026
+
+**TLDR:** Open source is the cheat code to stand out in a saturated ML market. I’ll walk you through the best repositories to contribute to in LLM inference and RL infrastructure, plus some hard-earned tips on how to actually make meaningful contributions.
+
+* * *
+
+## Introduction
+
+Let’s address the elephant in the room: the ML job market is tough right now.
+
+Positions are scarce, candidates are plenty, and everyone has “fine-tuned an LLM” on their resume.
+
+So how do you stand out?
+
+My answer has been the same for years: **open source contributions**.
+
+Think about it. When you contribute to vLLM or PyTorch, you’re not just padding your CV. You’re building real skills, working with production-grade code, and — here’s the kicker — creating public proof of your abilities that any hiring manager can verify in 30 seconds.
+
+I’ve seen folks get fast-tracked through hiring pipelines at top companies because a maintainer vouched for their contributions. That’s not luck, that’s strategy.
+
+Today I want to give you a curated list of repositories worth your time if you’re interested in MLSys, specifically around LLM inference and RL infrastructure. These are active, impactful, and — importantly — welcoming to new contributors.
+
+Let’s dive in!
+
+* * *
+
+## LLM Inference Repositories
+
+This is where the action is right now. Everyone’s racing to make inference faster, cheaper, and more efficient.
+
+**vLLM** — If you only pick one project, pick this one. It’s become the de facto standard for high-throughput LLM serving. The core innovation (PagedAttention) is elegant, but there’s tons of work happening around speculative decoding, multi-GPU inference, and new model integrations. Very active Discord, responsive maintainers, and your contributions will be used by thousands of companies. Seriously, this is the one.
+
+**LMCache** — LMCache is an **LLM** serving engine extension to **reduce TTFT** and **increase throughput** , especially under long-context scenarios. By storing the KV caches of reusable texts across various locations, including (GPU, CPU DRAM, Local Disk), LMCache reuses the KV caches of _**any**_ reused text (not necessarily prefix) in _**any**_ serving engine instance. Very active open source project! :)
+
+**SGLang** — From the LMSYS team (the folks behind Vicuna and Chatbot Arena). Focused on structured generation and efficient LLM programming primitives. Newer than vLLM, which means less competition for good issues and more greenfield opportunities. If you want to work on the “programming model” layer rather than raw serving, this is your jam.
+
+**~~JetStream [deprecated]~~**~~— Google’s throughput-optimized inference engine for TPUs and GPUs. If you want exposure to the JAX/TPU ecosystem, this is a solid choice. Pairs nicely with MaxText for training. Less community-driven than vLLM but the code quality is excellent and you’ll learn a lot about production inference at scale.~~
+
+A good substitution for jetstream is https://github.com/vllm-project/tpu-inference
+
+**llama.cpp** — The efficiency frontier. If you care about quantization, running models on consumer hardware, or just want to see how far you can push inference on a MacBook, this is the place. Massive community, constant activity.
+
+**TensorRT-LLM** — NVIDIA’s inference optimization library. More corporate-driven, but if you want to go deep on GPU optimization and CUDA kernels, there’s no better place. Contributions here signal serious low-level chops.
+
+* * *
+
+## RL Infrastructure Repositories
+
+RL infra is having a moment thanks to RLHF and all the alignment work happening. These projects are earlier stage, which means higher impact per contribution.
+
+**OpenRLHF** — Specifically focused on RLHF training infrastructure. Clean codebase, active development, and solves a real problem that every company doing alignment cares about. Smaller project means your contributions actually get noticed.
+
+**veRL** — From ByteDance’s research team. Newer RL training framework designed for LLM alignment. Early stage means lots of opportunities for meaningful contributions. The architecture is interesting and worth studying even if you don’t contribute.
+
+**TRL (Hugging Face)** — Transformer Reinforcement Learning library. Part of the HF ecosystem, which means excellent documentation and broad visibility for your contributions. If you want to combine RL work with the network effects of Hugging Face, this is your best bet.
+
+**Ray/RLlib** — The OG distributed RL framework. Massive codebase, but well-documented and Anyscale is responsive to external contributors. If you want to work on distributed systems + RL, this is the mature choice.
+
+**~~OpenDiLoCo (Prime Intellect)~~**~~— This one’s spicy. Distributed training across decentralized compute. Prime Intellect is doing genuinely novel work on geo-distributed training, and being a small team means you’ll interact directly with their core engineers. If you want to work on something that feels like frontier research rather than incremental improvements, check this out.~~
+
+EDITED: No longer maintained!
+
+**prime-rl (Prime Intellect)** — Their RL infrastructure for distributed RLHF and alignment training. Early stage, high impact potential, and aligned with their mission of democratizing AI training.
+
+* * *
+
+## General Tips for Open Source Contributions
+
+Alright, you’ve picked a repo. Now what?
+
+**Start with the docs.** Seriously. Find a typo, clarify a confusing section, add an example. It’s not glamorous, but it gets you familiar with the contribution process and builds goodwill with maintainers. I’ve seen people get commit access just from consistent doc improvements.
+
+**Run the tests locally before anything else.** You’d be surprised how many projects have flaky setups. Getting the test suite running teaches you more about the codebase than reading code for hours.
+
+**Look for “good first issue” labels, but don’t stop there.** These are great for your first PR, but the real signal comes from tackling meatier problems. After one or two starter issues, graduate to something harder.
+
+**Read recent merged PRs.** This teaches you the code style, what kind of changes get accepted, and how maintainers communicate. It’s like having access to the answer key.
+
+**Don’t ghost.** If you claim an issue, work on it. If life gets in the way, just comment and let people know. Maintainers remember who’s reliable.
+
+**Engage in discussions.** GitHub issues, Discord channels, community calls — show up and be helpful. Sometimes the best contributions aren’t code at all, but helping someone else debug their problem.
+
+**Think in campaigns, not one-offs.** One PR is nice. Ten PRs over three months in a focused area? That makes you a known contributor. Pick a corner of the codebase and own it.
+
+* * *
+
+## Closing Notes
+
+Look, the market is what it is. You can’t control hiring freezes or headcount decisions made in boardrooms.
+
+But you can control what you build and what you learn.
+
+Open source is one of the few true meritocracies left in tech. Your contributions speak for themselves, publicly, verifiably, permanently.
+
+And beyond the career benefits — which are real — there’s something deeply satisfying about seeing your code running in production at companies you’ve never even heard of.
+
+So pick a repo from the lists above, clone it tonight, and start reading.
+
+Your future self will thank you.
+
+Ludo
+
+* * *
+
+ _Machine learning at scale is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber._

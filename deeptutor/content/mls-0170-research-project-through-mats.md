@@ -2,4 +2,132 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2025-09-24 · topic: career*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/af6aed83de60f453.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/af6aed83de60f453.jpg 424w, ../assets/af6aed83de60f453.jpg 848w, ../assets/af6aed83de60f453.jpg 1272w, ../assets/af6aed83de60f453.jpg 1456w" sizes="100vw"><img src="../assets/af6aed83de60f453.jpg" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/af6aed83de60f453.jpg" class="sizing-normal" alt="" srcset="../assets/af6aed83de60f453.jpg 424w, ../assets/af6aed83de60f453.jpg 848w, ../assets/af6aed83de60f453.jpg 1272w, ../assets/af6aed83de60f453.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h1>Introduction - what is MATS?</h1><p>MATS stands for “ML Alignment &amp; Theory Scholars” and it’s independent research programme that connects people with top mentors in the field AI alignment.</p><p>The final step of the programme is a 12 week paid research project at Berkeley, CA! :)</p><p>The idea is that you apply with some “research MVP” and if you get selected you get time and guidance to fully explore it and possibly publish a paper.</p><p>That sounded pretty cool to me so I figured: why let’s not try it for fun? </p><p>I decided to apply for the track of “Mechanistic Interpretability” because:</p><ul><li><p>Neel shares a super detailed guide on how to apply, what he looks for, state of the art in Mechanistic Interpretability, here’s the <a href="https://docs.google.com/document/d/1p-ggQV3vVWIQuCccXEl1fD0thJOgXimlbBpGk6FI32I/edit?tab=t.0#heading=h.o23i8r7p8bbv">link</a>.</p></li><li><p>Dissecting LLMs sounds pretty cool!</p></li><li><p>Lots of open research is around reasoning models, I find them super interesting (next month focus hint…), so I figured I’d catch two birds with one stone.</p></li><li><p>It’s quite GPU-friendly: you most likely don’t need any GPU cluster to try things out. My pocket says thank you!</p></li></ul><p>Alright! Let’s see what I cooked up :)</p><h1>My project: Real-time correction of reasoning failures via targeted activation steering</h1><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>If you read this, it means you are a paid sub! Thank you so much for your support! :) I will never take it for granted!</p><p>Now, onto my project!</p><p>I explored the possibility of correcting reasoning errors “on the fly” at inference time. Sounds pretty cool, huh? I know!</p><p>It was essentially based on this very interesting paper: <strong>“Thought Anchors: Which LLM Reasoning Steps Matter?” [4]</strong></p><p>The idea there is that they were able to find reasoning tokens that are super influential for the next reasoning steps.</p><p>Then, based on <strong>“Open problems in Mechanistic Interpretability”</strong> [5], I figured it’d be good to find a way to extend things and improve reasoning models at inference time by: catching them misbehaving → fixing the decoding process on the fly by subbing out the “wrong bad thinking token”.</p><p>Let’s see how I split the problem in easy steps!</p><h4>Choosing model and gathering data</h4><p>I went with deepseek-ai/DeepSeek-R1-Distill-Llama-8B.</p><p>As a model explicitly fine-tuned for reasoning, it produces structured CoT traces. Its 8B parameter size makes it capable of solving complex problems while remaining manageable for deep analysis with the nnsight library, which allows for the surgical activation interventions the experiment requires.</p><p>I used the GSM8K benchmark, which is a collection of grade-school math word problems. Its structured nature is ideal, as errors are typically unambiguous and fall into a few clean categories.</p><p>The data pipeline was then:</p><ol><li><p><strong>Generate Diverse Traces:</strong> For a subset of 200 GSM8K problems, I generated 20 CoT rollouts each using our DeepSeek model with a non-zero temperature (T=0.7) to produce a variety of reasoning paths.</p></li><li><p><strong>Filter for the "Sweet Spot":</strong> I isolated problems where the model exhibited both correct and incorrect final answers, ensuring we had paired examples of success and failure on the same problem.</p></li><li><p><strong>Automated Error Diagnosis:</strong> For each failed trace, I used a powerful external LLM (GPT-4o) as a "diagnostics engine." I prompted it to identify the <em>first sentence</em> containing an error and classify it. The primary error categories were:</p><ul><li><p><strong>Calculation Error</strong>: Correct setup, incorrect arithmetic.</p></li><li><p><strong>Setup Error</strong>: The model misunderstands the problem and formulates the wrong plan or equation.</p></li><li><p><strong>Missing Step Error</strong>: An intermediate calculation is correct, but the model prematurely concludes without finishing the sequence.</p></li></ul></li></ol><p>The final output is a structured dataset where each entry contains the problem, a good_trace, a bad_trace, and a precise label_of_error with the corresponding sentence. Pretty good! </p><h4>Hypothesis and experimental setup</h4><p><strong>Core Hypothesis:</strong> A specific reasoning failure corresponds to a stereotyped, measurable trajectory in the model's activation space. I believe that it’s possible to compute a "correction vector" that represents the geometric direction from a "failure state" towards a "correct reasoning state" within the residual stream. Adding this vector at a critical moment should act as a causal steering mechanism.</p><p><strong>Calculating the correction vector:</strong></p><p>For each error type (e.g., Calculation Error), I isolate the critical moment: the end of the sentence <em>immediately preceding</em> the error. Then:</p><ul><li><p>I extracted the residual stream activation (resid_post) from a target layer L at this pre-error state for all good traces (h_good_pre_error).</p></li><li><p>I do the same for all corresponding bad traces (h_bad_pre_error).</p></li><li><p>The <strong>Correction Vector</strong> is the difference of the means:<br>v_corr = mean(h_good_pre_error) - mean(h_bad_pre_error)</p></li></ul><p><strong>Real time intervention loop:</strong></p><p>On an held-out set of GSM8K problems, then I can run the following loop:</p><ol><li><p><strong>Start Generation:</strong> The model begins generating a CoT trace within an nnsight generate context.</p></li><li><p><strong>Monitor Output:</strong> After each newline token (an heuristic for a completed reasoning step), I use nnsight's .remote_value to stream the generated text back to our local client.</p></li><li><p><strong>Detect Failure:</strong> The sentence is immediately passed to the diagnostic LLM.</p></li><li><p><strong>Intervene if Necessary:</strong> If the diagnostic LLM detects a known error type (e.g., "Calculation Error"):</p><ul><li><p>In the <em>very next</em> forward pass, I add a hook.</p></li><li><p>The hook adds the corresponding v_corr to the residual stream activation at the last token position:<br>model.transformer.h[L].output[0][:, -1] += alpha * v_corr</p></li><li><p>L (the intervention layer) and alpha (the steering strength) are the key hyperparameters.</p></li></ul></li><li><p><strong>Resume Generation:</strong> The model continues generating, now with the steered activation state.</p></li></ol><h4>Results</h4><p>They were not incredible, ahah. I could not essentially prove anything about the method. A bit anti-climatic i know!</p><p>The main issue is that the model has a lot of different failure modes and it’s not super easy to identify when an error begings.</p><p>The excuse is that I could spend max 20 hours on the project and that includes literature review, writing code, doing a writeup, etc. I did not know much about the topic, so I had to spend a quite a fair bit of time on non-project related tasks.</p><p>I believe this idea has its own merit and by iterating a bit over it with different hparams / models / datasets it’s possible to make it work.</p><h1>How did it go?</h1><p>Well, I did not apply in the end.</p><p>The final goal of the programme is to have a 12 week in person program in the USA for the top 8 candidates. For me, that was a bit too much and I did not want to get into a situation where I passed the first few steps and then I gave up on it, because then maybe there was someone else that was more fitting!</p><p>Still, it was a super nice opportunity to experience research in “light mode” and get to play around with reasoning models. Would recommend!</p><h1>References</h1><ol><li><p><a href="https://docs.google.com/document/d/1p-ggQV3vVWIQuCccXEl1fD0thJOgXimlbBpGk6FI32I/edit?tab=t.0#heading=h.o23i8r7p8bbv">Neel Nanda MATS</a></p></li><li><p><a href="https://www.matsprogram.org/">MATS programme</a></p></li><li><p><a href="https://arxiv.org/pdf/2501.16496">Open Problems in Mechanistic interpretability</a></p></li><li><p><a href="https://arxiv.org/abs/2506.19143">Thought Anchors: Which LLM Reasoning Steps Matter?</a></p></li><li><p><a href="https://arxiv.org/pdf/2501.16496">Open Problems in Mechanistic Interpretability</a></p></li></ol>
+[](../assets/af6aed83de60f453.jpg)
+
+# Introduction - what is MATS?
+
+MATS stands for “ML Alignment & Theory Scholars” and it’s independent research programme that connects people with top mentors in the field AI alignment.
+
+The final step of the programme is a 12 week paid research project at Berkeley, CA! :)
+
+The idea is that you apply with some “research MVP” and if you get selected you get time and guidance to fully explore it and possibly publish a paper.
+
+That sounded pretty cool to me so I figured: why let’s not try it for fun?
+
+I decided to apply for the track of “Mechanistic Interpretability” because:
+
+  * Neel shares a super detailed guide on how to apply, what he looks for, state of the art in Mechanistic Interpretability, here’s the link.
+
+  * Dissecting LLMs sounds pretty cool!
+
+  * Lots of open research is around reasoning models, I find them super interesting (next month focus hint…), so I figured I’d catch two birds with one stone.
+
+  * It’s quite GPU-friendly: you most likely don’t need any GPU cluster to try things out. My pocket says thank you!
+
+Alright! Let’s see what I cooked up :)
+
+# My project: Real-time correction of reasoning failures via targeted activation steering
+
+If you read this, it means you are a paid sub! Thank you so much for your support! :) I will never take it for granted!
+
+Now, onto my project!
+
+I explored the possibility of correcting reasoning errors “on the fly” at inference time. Sounds pretty cool, huh? I know!
+
+It was essentially based on this very interesting paper: **“Thought Anchors: Which LLM Reasoning Steps Matter?” [4]**
+
+The idea there is that they were able to find reasoning tokens that are super influential for the next reasoning steps.
+
+Then, based on **“Open problems in Mechanistic Interpretability”** [5], I figured it’d be good to find a way to extend things and improve reasoning models at inference time by: catching them misbehaving → fixing the decoding process on the fly by subbing out the “wrong bad thinking token”.
+
+Let’s see how I split the problem in easy steps!
+
+#### Choosing model and gathering data
+
+I went with deepseek-ai/DeepSeek-R1-Distill-Llama-8B.
+
+As a model explicitly fine-tuned for reasoning, it produces structured CoT traces. Its 8B parameter size makes it capable of solving complex problems while remaining manageable for deep analysis with the nnsight library, which allows for the surgical activation interventions the experiment requires.
+
+I used the GSM8K benchmark, which is a collection of grade-school math word problems. Its structured nature is ideal, as errors are typically unambiguous and fall into a few clean categories.
+
+The data pipeline was then:
+
+  1. **Generate Diverse Traces:** For a subset of 200 GSM8K problems, I generated 20 CoT rollouts each using our DeepSeek model with a non-zero temperature (T=0.7) to produce a variety of reasoning paths.
+
+  2. **Filter for the "Sweet Spot":** I isolated problems where the model exhibited both correct and incorrect final answers, ensuring we had paired examples of success and failure on the same problem.
+
+  3. **Automated Error Diagnosis:** For each failed trace, I used a powerful external LLM (GPT-4o) as a "diagnostics engine." I prompted it to identify the _first sentence_ containing an error and classify it. The primary error categories were:
+
+     * **Calculation Error** : Correct setup, incorrect arithmetic.
+
+     * **Setup Error** : The model misunderstands the problem and formulates the wrong plan or equation.
+
+     * **Missing Step Error** : An intermediate calculation is correct, but the model prematurely concludes without finishing the sequence.
+
+The final output is a structured dataset where each entry contains the problem, a good_trace, a bad_trace, and a precise label_of_error with the corresponding sentence. Pretty good!
+
+#### Hypothesis and experimental setup
+
+**Core Hypothesis:** A specific reasoning failure corresponds to a stereotyped, measurable trajectory in the model's activation space. I believe that it’s possible to compute a "correction vector" that represents the geometric direction from a "failure state" towards a "correct reasoning state" within the residual stream. Adding this vector at a critical moment should act as a causal steering mechanism.
+
+**Calculating the correction vector:**
+
+For each error type (e.g., Calculation Error), I isolate the critical moment: the end of the sentence _immediately preceding_ the error. Then:
+
+  * I extracted the residual stream activation (resid_post) from a target layer L at this pre-error state for all good traces (h_good_pre_error).
+
+  * I do the same for all corresponding bad traces (h_bad_pre_error).
+
+  * The **Correction Vector** is the difference of the means:
+v_corr = mean(h_good_pre_error) - mean(h_bad_pre_error)
+
+**Real time intervention loop:**
+
+On an held-out set of GSM8K problems, then I can run the following loop:
+
+  1. **Start Generation:** The model begins generating a CoT trace within an nnsight generate context.
+
+  2. **Monitor Output:** After each newline token (an heuristic for a completed reasoning step), I use nnsight's .remote_value to stream the generated text back to our local client.
+
+  3. **Detect Failure:** The sentence is immediately passed to the diagnostic LLM.
+
+  4. **Intervene if Necessary:** If the diagnostic LLM detects a known error type (e.g., "Calculation Error"):
+
+     * In the _very next_ forward pass, I add a hook.
+
+     * The hook adds the corresponding v_corr to the residual stream activation at the last token position:
+model.transformer.h[L].output[0][:, -1] += alpha * v_corr
+
+     * L (the intervention layer) and alpha (the steering strength) are the key hyperparameters.
+
+  5. **Resume Generation:** The model continues generating, now with the steered activation state.
+
+#### Results
+
+They were not incredible, ahah. I could not essentially prove anything about the method. A bit anti-climatic i know!
+
+The main issue is that the model has a lot of different failure modes and it’s not super easy to identify when an error begings.
+
+The excuse is that I could spend max 20 hours on the project and that includes literature review, writing code, doing a writeup, etc. I did not know much about the topic, so I had to spend a quite a fair bit of time on non-project related tasks.
+
+I believe this idea has its own merit and by iterating a bit over it with different hparams / models / datasets it’s possible to make it work.
+
+# How did it go?
+
+Well, I did not apply in the end.
+
+The final goal of the programme is to have a 12 week in person program in the USA for the top 8 candidates. For me, that was a bit too much and I did not want to get into a situation where I passed the first few steps and then I gave up on it, because then maybe there was someone else that was more fitting!
+
+Still, it was a super nice opportunity to experience research in “light mode” and get to play around with reasoning models. Would recommend!
+
+# References
+
+  1. Neel Nanda MATS
+
+  2. MATS programme
+
+  3. Open Problems in Mechanistic interpretability
+
+  4. Thought Anchors: Which LLM Reasoning Steps Matter?
+
+  5. Open Problems in Mechanistic Interpretability

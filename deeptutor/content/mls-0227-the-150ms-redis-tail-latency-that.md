@@ -2,4 +2,174 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2026-07-18 · topic: mlops*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/ac0e3a025235fe44.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/ac0e3a025235fe44.jpg 424w, ../assets/ac0e3a025235fe44.jpg 848w, ../assets/ac0e3a025235fe44.jpg 1272w, ../assets/ac0e3a025235fe44.jpg 1456w" sizes="100vw"><img src="../assets/ac0e3a025235fe44.jpg" width="1456" height="1807" data-attrs="{&quot;src&quot;:&quot;../assets/ac0e3a025235fe44.jpg" class="sizing-normal" alt="" srcset="../assets/ac0e3a025235fe44.jpg 424w, ../assets/ac0e3a025235fe44.jpg 848w, ../assets/ac0e3a025235fe44.jpg 1272w, ../assets/ac0e3a025235fe44.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h1>System Overview</h1><p>BidLogic is a late-stage AdTech company that recently hit the milestone of processing 12 billion auctions per day. They have scaled their real-time bidding platform to support a massive influx of header bidding traffic from Tier-1 global publishers, currently generating 280 million dollars in annual recurring revenue.</p><p>Their engineering team built a high-throughput bidder architecture that handles model inference and feature retrieval within the tight constraints of global ad exchanges. Here is their setup:</p><h3>Architecture Overview</h3><p>When a bid request arrives from an exchange, the system must return a bid price and creative ID within a strict window.</p><p></p><p>The exchange enforces a 50ms hard timeout. If the Bidder Service does not respond within 50ms, the exchange closes the connection and records a non-bid. The Bidder Service treats any internal dependency failure or timeout as a decision not to bid, logging a zero-cent bid value for the auction.</p><h3>Traffic patterns:</h3><p>Daily Auction Volume: 12 billion</p><p>Peak Throughput: 240,000 requests per second</p><p>Average Throughput: 138,000 requests per second</p><p>The ML Pipeline:</p><p>The model is a hybrid architecture using a Gradient Boosted Tree for initial feature interaction and a Deep CTR head for final calibration. It utilizes 280 features, including real-time user state and historical publisher performance. The model is trained daily on the previous 24 hours of win/loss logs.</p><h3>Current performance:</h3><p>p50 Latency: 18ms</p><p>Reliability: 99.9% (Internal Service Availability)</p><p>Business Impact: 3% Month-over-Month win rate decline</p><p><strong>Costs:</strong></p><p>Cloud Infrastructure (Compute/Memory): 1.1 million dollars per month</p><p>Total: 1.1 million dollars per month</p><p>Recent incidents:</p><p>Incident 1: A 2% drop in win rate followed a feature store deployment, but was attributed to seasonal advertiser spend shifts.</p><p>Incident 2: Recovery of a failed Redis shard took 40 minutes, but p50 latency remained stable throughout the event due to client-side circuit breaking.</p><h3>The Analysis</h3><p>Now let me show you what is actually happening here.</p><p><strong>Critical Issue #1: The 50ms Hard Wall and Invisible Drops</strong></p><p>The architecture overview notes a 50ms hard timeout from the exchange. Look at the dependency latencies. The Feature Store p99 is 150ms and the Model Inference p99 is 45ms. These are not additive in a way that matters for the median, but for the tail, they are catastrophic. Any request where the feature store takes longer than 35ms is almost guaranteed to exceed the 50ms exchange limit once you add model inference and network overhead. Because the system logs a timeout as a decision not to bid, the team sees a successful service response in their own SLO dashboards, while the exchange sees a dropped request. The revenue is not just low; it is zero for every request in that tail.</p><p><strong>Critical Issue #2: Revenue-Blind Metric Aggregation</strong></p><p>The team is reporting p50 and p95 latency across all auctions. This is a classic mistake in AdTech. In this system, 2% of requests are timing out at the feature store level. While 2% sounds small, the architecture overview shows that the feature store is sharded by publisher ID. High-volume, high-CPM publishers represent a disproportionate amount of the revenue but a small percentage of total unique publishers. When these specific shards hit hot-key limits, the p50 of the entire system barely moves, but the win rate on the most valuable inventory collapses. They are optimizing for the median auction while bleeding the tail that actually pays the bills.</p><p><strong>Critical Issue #3: Hot-Key Correlation with High-Value Inventory</strong></p><p>The setup uses a Redis-based feature store sharded by publisher. In real-time bidding, inventory value is highly concentrated. A few premium publishers drive the majority of the 280 million dollar revenue. These publishers also generate the highest request volume. This creates a direct correlation between auction value and shard load. The hot-key problem is not a random distribution; it is specifically targeting the highest-CPM auctions. The system is essentially designed to fail exactly when the stakes are highest.</p><p><strong>Critical Issue #4: The Log Gap (Non-Bid vs. Timeout)</strong></p><p>The architecture treats a timeout as a chosen non-bid. In the ML pipeline description, it mentions the model is trained on win/loss logs. If the system fails to bid because of a 50ms timeout, but logs it as a non-bid (zero price), the training data is being poisoned. The model learns that it chose not to bid on high-value inventory, rather than learning that the system was too slow to respond. This creates a feedback loop where the model calibrations drift because the training set is missing the most competitive auction contexts.</p><p><strong>Critical Issue #5: Linear Dependency Bottleneck</strong></p><p>The flow shows the Bidder Service calling the Feature Store, then Model Inference. With a 50ms budget, this linear chain is too brittle. They have 280 features being fetched before inference even starts. The 150ms p99 at the feature store level is a smoking gun that the team ignored because the p50 looked healthy at 4ms. They are running a complex Deep CTR head behind a dependency that occasionally takes 3x the total allowed budget.</p><h1>WHAT I WOULD DO INSTEAD</h1><p><strong>1. Revenue-Weighted Latency Monitoring</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>The team needs to stop looking at request-weighted p99s. I would implement a monitoring layer that joins bid request value (estimated CPM) with latency buckets.</p><p>Impact:</p><p>Immediate visibility into the 7% revenue leak by showing that 80% of timeouts are occurring on inventory with a floor price above 5.00 dollars.</p><p>Reduction in time-to-detection for hot-key issues from months to minutes.</p><p>Trade-offs:</p><p>Increased cardinality in metrics storage, which will raise observability costs by roughly 15,000 dollars per month.</p><p><strong>2. Adaptive Sharding and Local Caching for Hot Keys</strong></p><p>The current Redis sharding by publisher ID is too naive. I would implement a two-tiered approach: consistent hashing with virtual nodes to spread load, and a local LRU cache on the Bidder Service specifically for the top 1,000 highest-volume publisher metadata.</p><p>Current: Linear fetch from Redis shard based on publisher ID.</p><p>New: Local cache hit for high-volume publisher features + Distributed sharding for user-specific features.</p><p>Impact: Feature store p99: 150ms → 22ms.</p><p>Trade-offs:</p><p>Cache consistency becomes an issue. Feature updates for publishers might take 60 seconds to propagate to all bidders.</p><p><strong>3. Early-Exit and Fallback Model</strong></p><p>I would replace the current “timeout equals zero bid” logic with an early-exit pattern. If the feature store fetch exceeds 20ms, the system should trigger a lightweight heuristic-based model that uses only request-header features (no feature store required).</p><p>Replace: Total failure on 50ms timeout (0 revenue).</p><p>With: Lightweight fallback bid (estimated 40% win rate compared to full model).</p><p>Total: Recovery of approximately 11 million dollars in annual revenue.</p><p>Trade-offs:</p><p>Maintaining two models increases the engineering overhead for the ML platform team.</p><p>When this is the wrong call: If the cost of a bad bid (mispricing) is higher than the margin on the inventory, a fallback model could lead to negative ROI auctions.</p><h3>The Impact</h3><h3>Before redesign:</h3><p>System silently times out on high-value auctions due to tail latency.</p><p>1.1 million dollars monthly infrastructure cost with a 1.6 million dollar monthly revenue leak.</p><h3>After redesign:</h3><p>99.9% of high-value auctions receive a valid bid response within the 50ms window.</p><p>1.12 million dollars monthly cost (1% increase) with a 1.6 million dollar monthly revenue recovery.</p><p>Time to implement: 4 weeks, 3 engineers.</p><h1>APPENDIX: Cost Estimation Methodology</h1><p>How I estimated the savings for each decision:</p><p>Solution 1: Revenue-Weighted Latency Monitoring</p><p>Baseline: 280,000,000 dollars ARR / 12 months = 23,333,333 dollars per month.</p><p>After change: 7% revenue recovery from identifying and fixing the tail latency.</p><p>Estimated saving: 1,633,333 dollars per month.</p><p>Key assumption: The 7% revenue drop reported is entirely due to the invisible timeouts on high-CPM inventory.</p><p>Confidence: High — The correlation between publisher volume and revenue in AdTech is a well-documented power law.</p><p>Solution 2: Adaptive Sharding and Local Caching for Hot Keys</p><p>Baseline: Current Redis cluster cost 45,000 dollars per month.</p><p>After change: Reduced shard count due to better load distribution, but added memory on bidder nodes.</p><p>Estimated saving: 5,000 dollars per month.</p><p>Key assumption: Local cache hit rate for the top 1,000 publishers exceeds 90%.</p><p>Confidence: Medium — Actual savings depend on the specific distribution of traffic across the publisher tail.</p><p>Solution 3: Early-Exit and Fallback Model</p><p>Baseline: 0 dollars revenue from timed-out auctions (2% of 12B auctions/day).</p><p>After change: 40% win rate on 2% of auctions with an average CPM of 2.00 dollars.</p><p>Estimated saving: 960,000 dollars per month.</p><p>Key assumption: A heuristic model can successfully price inventory without stateful features at a 40% efficacy rate.</p><p>Confidence: High — Even a naive bid is better than a 0-cent bid in a second-price or first-price auction environment where you have historical floor data.</p>
+[](../assets/ac0e3a025235fe44.jpg)
+
+# System Overview
+
+BidLogic is a late-stage AdTech company that recently hit the milestone of processing 12 billion auctions per day. They have scaled their real-time bidding platform to support a massive influx of header bidding traffic from Tier-1 global publishers, currently generating 280 million dollars in annual recurring revenue.
+
+Their engineering team built a high-throughput bidder architecture that handles model inference and feature retrieval within the tight constraints of global ad exchanges. Here is their setup:
+
+### Architecture Overview
+
+When a bid request arrives from an exchange, the system must return a bid price and creative ID within a strict window.
+
+The exchange enforces a 50ms hard timeout. If the Bidder Service does not respond within 50ms, the exchange closes the connection and records a non-bid. The Bidder Service treats any internal dependency failure or timeout as a decision not to bid, logging a zero-cent bid value for the auction.
+
+### Traffic patterns:
+
+Daily Auction Volume: 12 billion
+
+Peak Throughput: 240,000 requests per second
+
+Average Throughput: 138,000 requests per second
+
+The ML Pipeline:
+
+The model is a hybrid architecture using a Gradient Boosted Tree for initial feature interaction and a Deep CTR head for final calibration. It utilizes 280 features, including real-time user state and historical publisher performance. The model is trained daily on the previous 24 hours of win/loss logs.
+
+### Current performance:
+
+p50 Latency: 18ms
+
+Reliability: 99.9% (Internal Service Availability)
+
+Business Impact: 3% Month-over-Month win rate decline
+
+**Costs:**
+
+Cloud Infrastructure (Compute/Memory): 1.1 million dollars per month
+
+Total: 1.1 million dollars per month
+
+Recent incidents:
+
+Incident 1: A 2% drop in win rate followed a feature store deployment, but was attributed to seasonal advertiser spend shifts.
+
+Incident 2: Recovery of a failed Redis shard took 40 minutes, but p50 latency remained stable throughout the event due to client-side circuit breaking.
+
+### The Analysis
+
+Now let me show you what is actually happening here.
+
+**Critical Issue #1: The 50ms Hard Wall and Invisible Drops**
+
+The architecture overview notes a 50ms hard timeout from the exchange. Look at the dependency latencies. The Feature Store p99 is 150ms and the Model Inference p99 is 45ms. These are not additive in a way that matters for the median, but for the tail, they are catastrophic. Any request where the feature store takes longer than 35ms is almost guaranteed to exceed the 50ms exchange limit once you add model inference and network overhead. Because the system logs a timeout as a decision not to bid, the team sees a successful service response in their own SLO dashboards, while the exchange sees a dropped request. The revenue is not just low; it is zero for every request in that tail.
+
+**Critical Issue #2: Revenue-Blind Metric Aggregation**
+
+The team is reporting p50 and p95 latency across all auctions. This is a classic mistake in AdTech. In this system, 2% of requests are timing out at the feature store level. While 2% sounds small, the architecture overview shows that the feature store is sharded by publisher ID. High-volume, high-CPM publishers represent a disproportionate amount of the revenue but a small percentage of total unique publishers. When these specific shards hit hot-key limits, the p50 of the entire system barely moves, but the win rate on the most valuable inventory collapses. They are optimizing for the median auction while bleeding the tail that actually pays the bills.
+
+**Critical Issue #3: Hot-Key Correlation with High-Value Inventory**
+
+The setup uses a Redis-based feature store sharded by publisher. In real-time bidding, inventory value is highly concentrated. A few premium publishers drive the majority of the 280 million dollar revenue. These publishers also generate the highest request volume. This creates a direct correlation between auction value and shard load. The hot-key problem is not a random distribution; it is specifically targeting the highest-CPM auctions. The system is essentially designed to fail exactly when the stakes are highest.
+
+**Critical Issue #4: The Log Gap (Non-Bid vs. Timeout)**
+
+The architecture treats a timeout as a chosen non-bid. In the ML pipeline description, it mentions the model is trained on win/loss logs. If the system fails to bid because of a 50ms timeout, but logs it as a non-bid (zero price), the training data is being poisoned. The model learns that it chose not to bid on high-value inventory, rather than learning that the system was too slow to respond. This creates a feedback loop where the model calibrations drift because the training set is missing the most competitive auction contexts.
+
+**Critical Issue #5: Linear Dependency Bottleneck**
+
+The flow shows the Bidder Service calling the Feature Store, then Model Inference. With a 50ms budget, this linear chain is too brittle. They have 280 features being fetched before inference even starts. The 150ms p99 at the feature store level is a smoking gun that the team ignored because the p50 looked healthy at 4ms. They are running a complex Deep CTR head behind a dependency that occasionally takes 3x the total allowed budget.
+
+# WHAT I WOULD DO INSTEAD
+
+**1\. Revenue-Weighted Latency Monitoring**
+
+The team needs to stop looking at request-weighted p99s. I would implement a monitoring layer that joins bid request value (estimated CPM) with latency buckets.
+
+Impact:
+
+Immediate visibility into the 7% revenue leak by showing that 80% of timeouts are occurring on inventory with a floor price above 5.00 dollars.
+
+Reduction in time-to-detection for hot-key issues from months to minutes.
+
+Trade-offs:
+
+Increased cardinality in metrics storage, which will raise observability costs by roughly 15,000 dollars per month.
+
+**2\. Adaptive Sharding and Local Caching for Hot Keys**
+
+The current Redis sharding by publisher ID is too naive. I would implement a two-tiered approach: consistent hashing with virtual nodes to spread load, and a local LRU cache on the Bidder Service specifically for the top 1,000 highest-volume publisher metadata.
+
+Current: Linear fetch from Redis shard based on publisher ID.
+
+New: Local cache hit for high-volume publisher features + Distributed sharding for user-specific features.
+
+Impact: Feature store p99: 150ms → 22ms.
+
+Trade-offs:
+
+Cache consistency becomes an issue. Feature updates for publishers might take 60 seconds to propagate to all bidders.
+
+**3\. Early-Exit and Fallback Model**
+
+I would replace the current “timeout equals zero bid” logic with an early-exit pattern. If the feature store fetch exceeds 20ms, the system should trigger a lightweight heuristic-based model that uses only request-header features (no feature store required).
+
+Replace: Total failure on 50ms timeout (0 revenue).
+
+With: Lightweight fallback bid (estimated 40% win rate compared to full model).
+
+Total: Recovery of approximately 11 million dollars in annual revenue.
+
+Trade-offs:
+
+Maintaining two models increases the engineering overhead for the ML platform team.
+
+When this is the wrong call: If the cost of a bad bid (mispricing) is higher than the margin on the inventory, a fallback model could lead to negative ROI auctions.
+
+### The Impact
+
+### Before redesign:
+
+System silently times out on high-value auctions due to tail latency.
+
+1.1 million dollars monthly infrastructure cost with a 1.6 million dollar monthly revenue leak.
+
+### After redesign:
+
+99.9% of high-value auctions receive a valid bid response within the 50ms window.
+
+1.12 million dollars monthly cost (1% increase) with a 1.6 million dollar monthly revenue recovery.
+
+Time to implement: 4 weeks, 3 engineers.
+
+# APPENDIX: Cost Estimation Methodology
+
+How I estimated the savings for each decision:
+
+Solution 1: Revenue-Weighted Latency Monitoring
+
+Baseline: 280,000,000 dollars ARR / 12 months = 23,333,333 dollars per month.
+
+After change: 7% revenue recovery from identifying and fixing the tail latency.
+
+Estimated saving: 1,633,333 dollars per month.
+
+Key assumption: The 7% revenue drop reported is entirely due to the invisible timeouts on high-CPM inventory.
+
+Confidence: High — The correlation between publisher volume and revenue in AdTech is a well-documented power law.
+
+Solution 2: Adaptive Sharding and Local Caching for Hot Keys
+
+Baseline: Current Redis cluster cost 45,000 dollars per month.
+
+After change: Reduced shard count due to better load distribution, but added memory on bidder nodes.
+
+Estimated saving: 5,000 dollars per month.
+
+Key assumption: Local cache hit rate for the top 1,000 publishers exceeds 90%.
+
+Confidence: Medium — Actual savings depend on the specific distribution of traffic across the publisher tail.
+
+Solution 3: Early-Exit and Fallback Model
+
+Baseline: 0 dollars revenue from timed-out auctions (2% of 12B auctions/day).
+
+After change: 40% win rate on 2% of auctions with an average CPM of 2.00 dollars.
+
+Estimated saving: 960,000 dollars per month.
+
+Key assumption: A heuristic model can successfully price inventory without stateful features at a 40% efficacy rate.
+
+Confidence: High — Even a naive bid is better than a 0-cent bid in a second-price or first-price auction environment where you have historical floor data.

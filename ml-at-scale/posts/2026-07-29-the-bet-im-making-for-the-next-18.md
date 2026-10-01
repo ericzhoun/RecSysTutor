@@ -13,4 +13,128 @@ words: 2020
 
 *I've spent two months arguing the MLE market is a barbell. This is what I'm actually doing about it.*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/b91cc90a06246da3.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/b91cc90a06246da3.jpg 424w, ../assets/b91cc90a06246da3.jpg 848w, ../assets/b91cc90a06246da3.jpg 1272w, ../assets/b91cc90a06246da3.jpg 1456w" sizes="100vw"><img src="../assets/b91cc90a06246da3.jpg" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/b91cc90a06246da3.jpg" class="sizing-normal" alt="" srcset="../assets/b91cc90a06246da3.jpg 424w, ../assets/b91cc90a06246da3.jpg 848w, ../assets/b91cc90a06246da3.jpg 1272w, ../assets/b91cc90a06246da3.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Two months ago I wrote that the <a href="">MLE job market is a barbell</a>.</p><p>AI-fullstack on one end, internal infra on the other, and the middle, the generalist applied MLE who tunes models on someone else’s pipeline, is getting squeezed out from both directions.</p><p>That post got a lot of replies. Most of them were some version of the same question: <em>okay, I bought the argument. I’m on the internal side. What do I actually invest in over the next year?</em></p><p>This is my answer. I’m going to make it specific, because the generic version (”learn fundamentals, stay sharp”) is useless and you can get it for free from anyone with a LinkedIn account.</p><p>The barbell post was about positioning. This one is about depth.</p><p>And my take on depth is going to cut against most of the career advice you’ve read.</p><h3><strong>Stop trying to pick a lane within the internal track. Go E2E.</strong></h3><p>The MLEs with outsized impact in 2026 and 2027 are not the ones who specialize harder into “modeling” or “systems.” They’re the ones who can reason fluently across the entire stack, from the loss function down to the kernel, from the eval harness up to the data pipeline. The lane-pickers are losing ground to the E2E people, and most of the career advice in our field is two years behind on this.</p><p>Let me make the case.</p><p><strong>The easy wins are gone at every individual layer</strong></p><p>For most of the last decade, you could build a career by going deep in one layer and ignoring the rest. The model person didn’t need to think about kernels. The infra person didn’t need to think about training dynamics.</p><p>There was enough room at each layer for specialization to pay off, because each layer had abundant room for improvement and the interactions between layers were loose enough that you could optimize one without thinking too hard about the others.</p><p>That world is over. The bottleneck has moved.</p><p>The easy wins at the model layer have been picked. Architectures have converged. Training recipes have converged. The delta between “I tried a new attention variant” and the SOTA baseline is tiny and getting tinier.</p><p>The wins that remain at the model layer are subtle, expensive, and increasingly entangled with the systems below them.</p><p>The easy wins at the systems layer have also been picked, in a different sense.</p><p>Most teams now use a serving stack that someone smart already optimized. torch.compile and XLA exist. Flash Attention is a library call.</p><p>The remaining wins at the systems layer are the ones that require knowing what the model is doing, because generic optimizations have already been applied and the next 30% comes from co-designing the model and the kernel.</p><p>This is why E2E wins. The interesting problems left in 2026 sit <em>between</em> layers, not inside them. The kernel optimization that only makes sense if you understand what the model is doing during a specific phase of training.</p><p>The architectural choice that only makes sense if you understand what the hardware can serve cheaply at your batch size. The eval that only makes sense if you understand what the data pipeline is actually producing.</p><p>These problems are invisible to specialists in one layer. They’re obvious to people who can move across layers.</p><p><strong>What this looks like in practice</strong></p><p>The bad version of “going E2E” is what most people do when they hear this advice. They read a paper on training dynamics one weekend, watch a CUDA tutorial the next, fine-tune a small model the weekend after, and call it E2E.</p><p>This produces vocabulary, not skill.</p><p>You end up with a thin layer of buzzwords across the stack and no actual competence anywhere. Recruiters can smell this on a resume in about six seconds.</p><p>The good version is harder, slower, and more legible.</p><p>Pick a real system you can reason about, ideally one you actually work on. Trace it end to end. Figure out where it’s weak. Fix the weakness. Then move to the next layer and do it again. Within twelve months you have receipts: a serving optimization that shipped, an eval that found a real model regression, a training change that recovered convergence on a hard problem. The receipts are the legible artifact. The skill is being able to <em>find</em> the weakness in the first place, which is what specialists can’t do.</p><p>The two skill axes you’re investing in:</p><p><strong>Skill axis 1: down the stack, into the compiler</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>Most applied MLEs have a fuzzy mental model of what happens between their Python code and the silicon. They know torch. They know XLA exists.</p><p>They could not, if you put a gun to their head, explain what fusion actually does, or read an HLO dump, or tell you why a kernel is memory-bound versus compute-bound without running a profiler first.</p><p>This used to be fine. From roughly 2020 to 2024, the visible glory in ML was at the model layer. The compiler stack was something the infra team handled, somewhere downstream, and most MLEs never had to look at it.</p><p>That world is over. Inference cost is the new training cost. Every team I talk to, inside hyperscalers and outside, is suddenly, urgently cost-aware in a way they weren’t 18 months ago. The teams that can squeeze 30% out of a serving stack are quietly the most valuable ICs in the room, and the supply of people who can actually reason about why a kernel is slow, not run a profiler and stare at it but <em>reason</em> about it, is genuinely thin.</p><p>If you’ve never looked below your framework, this is the side of the E2E investment that probably has the largest gap for you. The good news is the gap is closeable. JAX and XLA expose the compiler in a way that’s pedagogically friendly. Triton lets you write kernels without dropping all the way to CUDA. The path is real, and most of your peers won’t take it.</p><p><strong>Skill axis 2: up the stack, into the model</strong></p><p>The other half of E2E is going deeper into the model itself. Pretraining dynamics, post-training, evals, the alignment-adjacent work that’s actually shipping inside frontier labs and the handful of applied teams that have caught up.</p><p>Most MLEs assume this side is closed unless they have a PhD and three NeurIPS papers. So they don’t try, and they self-select out before the bet begins. This is mostly wrong. The door is narrower than it was, but it’s not closed, and the path in has changed in ways most people haven’t internalized.</p><p>The accessible entry points are evals and post-training, in that order.</p><p>Evals is the most underrated entry point right now, because evals are where the actual bottleneck of the field sits and where the talent gap is largest.</p><p>If you can design, run, and analyze evals at a level that survives contact with a real model org, you are immediately employable somewhere serious.</p><p>Post-training, specifically the data-curation and RL-fine-tuning side, is the second underrated entry point. Pretraining itself is the hardest to break into without being inside, but evals and post-training are within reach for a strong applied MLE willing to spend twelve months getting good.</p><p>If you’ve spent your career at the systems layer and have always handed model decisions off to “the model team,” this is your gap. Close it.</p><p><strong>Which axis you start with is just a function of where your gap is</strong></p><p>Here’s where I diverge from most career advice you’ll read on this. The two axes are not a choice between mutually exclusive bets. They’re two sides of the same E2E investment, and which one you start with is just a function of which gap is bigger for you right now.</p><p>If you’ve spent the last few years close to model behavior, training, and the parts of the work that look more like research than engineering, your gap is the systems side. Start there. The compiler stack will feel alien for the first three months, then it will start to click, and within a year you’ll be able to reason about your own models in a way you couldn’t before.</p><p>If you’ve spent the last few years close to production systems, infrastructure, latency, and the ugly parts of making ML actually work, your gap is the modeling side. Start there. Evals will feel slippery for the first three months, then the patterns will emerge, and within a year you’ll be making model decisions that your systems-only peers can’t.</p><p>The worst move, the one I see most often, is alternating without committing. Reading a paper one week, profiling a kernel the next, fine-tuning a model the week after.</p><p>This is how people convince themselves they’re going E2E while actually going nowhere. Pick the side that’s your gap, commit for twelve months, then turn to the other side.</p><p><strong>What I’m actually doing about it</strong></p><p>I’m taking my own advice. My career has been at the systems-and-scale end of ML: four years inside Google on YouTube Ads, Shopping, Recommendations, anti-abuse. I’ve shipped recsys at scale, debugged production failures at scale, and watched what actually breaks when models meet reality. The modeling side is where I have the most production-grade depth.</p><p>The compiler side is where my gap is widest. I can ship a recommender that serves billions of requests, and I cannot, today, write you a Triton kernel that beats the default. So that’s what I’m closing.</p><p>Starting this summer, I’m spending the next several months learning JAX and XLA. The plan is a series of posts that walk through what I’m learning, what I’m getting wrong, and what the mental models actually look like once you’ve spent enough hours staring at HLO to make sense of it. Six posts, roughly, with a synthesis at the end as a standalone reference for people who want the map without redoing the journey.</p><p>Most JAX content is either toy tutorials or compiler-engineer deep dives that assume you already know LLVM. The middle, what an applied MLE who’s never thought about the compiler stack actually needs to learn first, is mostly missing.</p><p>If your gap is the same as mine, the series will be useful. If your gap is on the modeling side, the series won’t be your starting point, but the framing will be: pick your gap, commit, twelve months, receipts.</p><p><strong>Caveats</strong></p><p>A few things this post is not saying.</p><p>It’s not saying every MLE needs to start this investment right now. If you’re early-career, ship features, build the basics, and don’t get distracted by long-horizon positioning. E2E is for people who already have a foundation and are deciding what to compound on next.</p><p>It’s not saying the AI-fullstack side of the barbell is wrong. That’s a real bet too, covered in the original barbell post. If you’re on that side, your investment looks different and neither axis here is your bet.</p><p>It’s not saying E2E means equal depth in everything. It means enough depth in each layer to reason across them, with a primary specialization that’s still recognizable. The goal is fluent E2E reasoning, not flat mediocrity across the stack.</p><p>And it’s not saying twelve months is enough to be world-class. It’s enough to close a gap to the point where you can reason across it. World-class takes longer, and most people never get there. Closing the gap is what makes you E2E. Going further is optional.</p><p>The barbell post was about where to position. This one is about how to compound once you’ve positioned. The MLEs with outsized impact in 2026 and 2027 are E2E. Pick your gap. Commit. Receipts in twelve months.</p><p>— Ludo</p>
+[![](../assets/b91cc90a06246da3.jpg)](../assets/b91cc90a06246da3.jpg)
+
+Two months ago I wrote that the [MLE job market is a barbell]().
+
+AI-fullstack on one end, internal infra on the other, and the middle, the generalist applied MLE who tunes models on someone else’s pipeline, is getting squeezed out from both directions.
+
+That post got a lot of replies. Most of them were some version of the same question: _okay, I bought the argument. I’m on the internal side. What do I actually invest in over the next year?_
+
+This is my answer. I’m going to make it specific, because the generic version (”learn fundamentals, stay sharp”) is useless and you can get it for free from anyone with a LinkedIn account.
+
+The barbell post was about positioning. This one is about depth.
+
+And my take on depth is going to cut against most of the career advice you’ve read.
+
+### **Stop trying to pick a lane within the internal track. Go E2E.**
+
+The MLEs with outsized impact in 2026 and 2027 are not the ones who specialize harder into “modeling” or “systems.” They’re the ones who can reason fluently across the entire stack, from the loss function down to the kernel, from the eval harness up to the data pipeline. The lane-pickers are losing ground to the E2E people, and most of the career advice in our field is two years behind on this.
+
+Let me make the case.
+
+**The easy wins are gone at every individual layer**
+
+For most of the last decade, you could build a career by going deep in one layer and ignoring the rest. The model person didn’t need to think about kernels. The infra person didn’t need to think about training dynamics.
+
+There was enough room at each layer for specialization to pay off, because each layer had abundant room for improvement and the interactions between layers were loose enough that you could optimize one without thinking too hard about the others.
+
+That world is over. The bottleneck has moved.
+
+The easy wins at the model layer have been picked. Architectures have converged. Training recipes have converged. The delta between “I tried a new attention variant” and the SOTA baseline is tiny and getting tinier.
+
+The wins that remain at the model layer are subtle, expensive, and increasingly entangled with the systems below them.
+
+The easy wins at the systems layer have also been picked, in a different sense.
+
+Most teams now use a serving stack that someone smart already optimized. torch.compile and XLA exist. Flash Attention is a library call.
+
+The remaining wins at the systems layer are the ones that require knowing what the model is doing, because generic optimizations have already been applied and the next 30% comes from co-designing the model and the kernel.
+
+This is why E2E wins. The interesting problems left in 2026 sit _between_ layers, not inside them. The kernel optimization that only makes sense if you understand what the model is doing during a specific phase of training.
+
+The architectural choice that only makes sense if you understand what the hardware can serve cheaply at your batch size. The eval that only makes sense if you understand what the data pipeline is actually producing.
+
+These problems are invisible to specialists in one layer. They’re obvious to people who can move across layers.
+
+**What this looks like in practice**
+
+The bad version of “going E2E” is what most people do when they hear this advice. They read a paper on training dynamics one weekend, watch a CUDA tutorial the next, fine-tune a small model the weekend after, and call it E2E.
+
+This produces vocabulary, not skill.
+
+You end up with a thin layer of buzzwords across the stack and no actual competence anywhere. Recruiters can smell this on a resume in about six seconds.
+
+The good version is harder, slower, and more legible.
+
+Pick a real system you can reason about, ideally one you actually work on. Trace it end to end. Figure out where it’s weak. Fix the weakness. Then move to the next layer and do it again. Within twelve months you have receipts: a serving optimization that shipped, an eval that found a real model regression, a training change that recovered convergence on a hard problem. The receipts are the legible artifact. The skill is being able to _find_ the weakness in the first place, which is what specialists can’t do.
+
+The two skill axes you’re investing in:
+
+**Skill axis 1: down the stack, into the compiler**
+
+Most applied MLEs have a fuzzy mental model of what happens between their Python code and the silicon. They know torch. They know XLA exists.
+
+They could not, if you put a gun to their head, explain what fusion actually does, or read an HLO dump, or tell you why a kernel is memory-bound versus compute-bound without running a profiler first.
+
+This used to be fine. From roughly 2020 to 2024, the visible glory in ML was at the model layer. The compiler stack was something the infra team handled, somewhere downstream, and most MLEs never had to look at it.
+
+That world is over. Inference cost is the new training cost. Every team I talk to, inside hyperscalers and outside, is suddenly, urgently cost-aware in a way they weren’t 18 months ago. The teams that can squeeze 30% out of a serving stack are quietly the most valuable ICs in the room, and the supply of people who can actually reason about why a kernel is slow, not run a profiler and stare at it but _reason_ about it, is genuinely thin.
+
+If you’ve never looked below your framework, this is the side of the E2E investment that probably has the largest gap for you. The good news is the gap is closeable. JAX and XLA expose the compiler in a way that’s pedagogically friendly. Triton lets you write kernels without dropping all the way to CUDA. The path is real, and most of your peers won’t take it.
+
+**Skill axis 2: up the stack, into the model**
+
+The other half of E2E is going deeper into the model itself. Pretraining dynamics, post-training, evals, the alignment-adjacent work that’s actually shipping inside frontier labs and the handful of applied teams that have caught up.
+
+Most MLEs assume this side is closed unless they have a PhD and three NeurIPS papers. So they don’t try, and they self-select out before the bet begins. This is mostly wrong. The door is narrower than it was, but it’s not closed, and the path in has changed in ways most people haven’t internalized.
+
+The accessible entry points are evals and post-training, in that order.
+
+Evals is the most underrated entry point right now, because evals are where the actual bottleneck of the field sits and where the talent gap is largest.
+
+If you can design, run, and analyze evals at a level that survives contact with a real model org, you are immediately employable somewhere serious.
+
+Post-training, specifically the data-curation and RL-fine-tuning side, is the second underrated entry point. Pretraining itself is the hardest to break into without being inside, but evals and post-training are within reach for a strong applied MLE willing to spend twelve months getting good.
+
+If you’ve spent your career at the systems layer and have always handed model decisions off to “the model team,” this is your gap. Close it.
+
+**Which axis you start with is just a function of where your gap is**
+
+Here’s where I diverge from most career advice you’ll read on this. The two axes are not a choice between mutually exclusive bets. They’re two sides of the same E2E investment, and which one you start with is just a function of which gap is bigger for you right now.
+
+If you’ve spent the last few years close to model behavior, training, and the parts of the work that look more like research than engineering, your gap is the systems side. Start there. The compiler stack will feel alien for the first three months, then it will start to click, and within a year you’ll be able to reason about your own models in a way you couldn’t before.
+
+If you’ve spent the last few years close to production systems, infrastructure, latency, and the ugly parts of making ML actually work, your gap is the modeling side. Start there. Evals will feel slippery for the first three months, then the patterns will emerge, and within a year you’ll be making model decisions that your systems-only peers can’t.
+
+The worst move, the one I see most often, is alternating without committing. Reading a paper one week, profiling a kernel the next, fine-tuning a model the week after.
+
+This is how people convince themselves they’re going E2E while actually going nowhere. Pick the side that’s your gap, commit for twelve months, then turn to the other side.
+
+**What I’m actually doing about it**
+
+I’m taking my own advice. My career has been at the systems-and-scale end of ML: four years inside Google on YouTube Ads, Shopping, Recommendations, anti-abuse. I’ve shipped recsys at scale, debugged production failures at scale, and watched what actually breaks when models meet reality. The modeling side is where I have the most production-grade depth.
+
+The compiler side is where my gap is widest. I can ship a recommender that serves billions of requests, and I cannot, today, write you a Triton kernel that beats the default. So that’s what I’m closing.
+
+Starting this summer, I’m spending the next several months learning JAX and XLA. The plan is a series of posts that walk through what I’m learning, what I’m getting wrong, and what the mental models actually look like once you’ve spent enough hours staring at HLO to make sense of it. Six posts, roughly, with a synthesis at the end as a standalone reference for people who want the map without redoing the journey.
+
+Most JAX content is either toy tutorials or compiler-engineer deep dives that assume you already know LLVM. The middle, what an applied MLE who’s never thought about the compiler stack actually needs to learn first, is mostly missing.
+
+If your gap is the same as mine, the series will be useful. If your gap is on the modeling side, the series won’t be your starting point, but the framing will be: pick your gap, commit, twelve months, receipts.
+
+**Caveats**
+
+A few things this post is not saying.
+
+It’s not saying every MLE needs to start this investment right now. If you’re early-career, ship features, build the basics, and don’t get distracted by long-horizon positioning. E2E is for people who already have a foundation and are deciding what to compound on next.
+
+It’s not saying the AI-fullstack side of the barbell is wrong. That’s a real bet too, covered in the original barbell post. If you’re on that side, your investment looks different and neither axis here is your bet.
+
+It’s not saying E2E means equal depth in everything. It means enough depth in each layer to reason across them, with a primary specialization that’s still recognizable. The goal is fluent E2E reasoning, not flat mediocrity across the stack.
+
+And it’s not saying twelve months is enough to be world-class. It’s enough to close a gap to the point where you can reason across it. World-class takes longer, and most people never get there. Closing the gap is what makes you E2E. Going further is optional.
+
+The barbell post was about where to position. This one is about how to compound once you’ve positioned. The MLEs with outsized impact in 2026 and 2027 are E2E. Pick your gap. Commit. Receipts in twelve months.
+
+— Ludo

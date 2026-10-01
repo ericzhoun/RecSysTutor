@@ -14,4 +14,178 @@ words: 1374
 
 *Discover how in-batch negatives created an anisotropic echo for 2 million documents and the monitoring blind spot you must avoid.*
 
-<p>LexiSearch is a Series A legal-tech and B2B SaaS search company that recently crossed the milestone of 50,000 enterprise seats. They have seen 300 percent year-over-year growth in document ingestion, primarily serving law firms and corporate compliance departments.</p><p>Their engineering team built a semantic retrieval engine that powers the primary search bar for internal document management systems. Here is their setup.</p><h1>Architecture Overview</h1><p>When a user enters a query, the system triggers a retrieval-augmented flow to find relevant clauses or documents.</p><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/39a7fe50fa65035b.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/39a7fe50fa65035b.png 424w, ../assets/39a7fe50fa65035b.png 848w, ../assets/39a7fe50fa65035b.png 1272w, ../assets/39a7fe50fa65035b.png 1456w" sizes="100vw"><img src="../assets/39a7fe50fa65035b.png" width="1046" height="1062" data-attrs="{&quot;src&quot;:&quot;../assets/39a7fe50fa65035b.png" class="sizing-normal" alt="" srcset="../assets/39a7fe50fa65035b.png 424w, ../assets/39a7fe50fa65035b.png 848w, ../assets/39a7fe50fa65035b.png 1272w, ../assets/39a7fe50fa65035b.png 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h3>Traffic patterns:</h3><p>Total documents indexed: 25 million</p><p>Queries per second: 120 req/sec average</p><p>Peak: 350 req/sec during morning hours (EST)</p><p>The ML Pipeline:</p><p>The model is a dual-tower bi-encoder based on an MPNET backbone. It was trained using a standard contrastive loss with in-batch negatives. The training data consists of 1 million query-document pairs, including a mix of MS MARCO and 50,000 domain-specific legal pairs. The embedding dimension is 768. The vector store uses FAISS with an HNSW index (M=32, efConstruction=200) hosted on r6g.4xlarge instances.</p><h3>Current performance:</h3><p>P99 Latency: 185ms</p><p>Reliability: 99.95 percent uptime</p><p>Recall@10 (Global): 0.81</p><p>Costs:</p><p>Inference Nodes (G4dn.2xlarge): $6,500 per month</p><p>Vector Database (Memory-optimized nodes): $9,000 per month</p><p>Total: $15,500 per month</p><p>Recent incidents:</p><p>Recall collapse for Global Capital Partners: After onboarding 2 million financial filings for a new high-value client, the Recall@10 for that specific account dropped from 0.81 to 0.44. The system stayed up, but users reported that search was basically broken for their documents.</p><h1>The Analysis</h1><p>Now let me show you what is actually happening here.</p><h3>Critical Issue #1: The Anisotropic Echo</h3><p><em>I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical details I can’t fit in free posts.</em></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>The training strategy used by this team is their biggest silent killer. By relying exclusively on in-batch negatives, the bi-encoder only learns to distinguish a query from random documents present in the same GPU batch. In a diverse dataset, this is easy. But when the new customer, Global Capital Partners, uploaded 2 million documents that all shared the same structure, vocabulary, and headers (Standard Financial Reports), the model failed. It never learned the fine-grained features necessary to separate similar documents. This caused the embedding space to collapse into a narrow cone (anisotropy), where every document for this customer has a cosine similarity of 0.98 or higher to every other document.</p><h3>Critical Issue #2: HNSW Graph Connectivity in Dense Clusters</h3><p>Look at the HNSW configuration: M=32. This is standard for general data, but it is a disaster for the clustered distribution they just ingested. Because the embeddings for these financial reports are so tightly packed in the vector space, the HNSW graph construction created a massive amount of local edges within these dense clusters but very few long-range bridges. When a query enters one of these clusters, the search gets trapped in a local neighborhood. With an efSearch value of 100 used at query time, the search terminates before it can explore enough of the cluster to find the actual ground-truth documents. This is why recall dropped specifically for the new account while remaining stable globally.</p><h3>Critical Issue #3: Semantic Saturation and Loss of Precision</h3><p>The architecture uses a 768-dimensional space, but the effective dimensionality for the new customer is likely less than 10. If you look at the architecture description, there is no mention of a late-interaction step or a cross-encoder. They are relying entirely on the initial vector search to get it right. In a homogeneous corpus, the bi-encoder cannot capture the nuanced differences between “Q1 2022 Revenue” and “Q1 2023 Revenue” because the embedding vectors are effectively identical. They are trying to solve a precision problem with a tool designed for coarse recall.</p><h3>Critical Issue #4: The Monitoring Blind Spot</h3><p>The team reported a Global Recall@10 of 0.81. This number is a lie. It is an average across all customers. By not tracking per-tenant retrieval quality, they allowed a 50 percent performance degradation for their largest new customer to go unnoticed for weeks. Their metric suite ignores the variance between accounts, which is the most important signal in a B2B SaaS context.</p><h3>Critical Issue #5: Over-provisioned Memory vs. Compute</h3><p>They are spending $9,000 per month on memory-optimized r6g.4xlarge nodes to keep the entire index in RAM. Given they only have 25 million documents and 768-dim embeddings, the raw vector data is about 72GB. They are paying for massive amounts of RAM that they are not utilizing efficiently because the HNSW index structure is bloated. They have 4 nodes for a 25M document set, which is a surprising amount of infrastructure for a relatively modest index size.</p><h1>WHAT I WOULD DO INSTEAD</h1><p><strong>1. Implement Hard Negative Mining and Cross-Encoder Distillation</strong></p><p>Instead of just in-batch negatives, the training pipeline needs to identify documents that are semantically similar but irrelevant (hard negatives). </p><p>Impact:</p><p>Recall@10 for homogeneous clusters: 0.44 → 0.72</p><p>Overall model discriminative power: 3x increase in cluster separation</p><p>Trade-offs:</p><p>Increased training time: Training will take 4x longer because of the need to run an initial retrieval pass to find negatives.</p><p>When this is the wrong call:</p><p>If your data distribution is extremely diverse and you never have overlapping document types, the extra training complexity might not yield a measurable ROI.</p><p><strong>2. Transition to a Two-Stage Retrieval (Bi-Encoder + Cross-Encoder)</strong></p><p>Current: Query → Bi-Encoder → Top 100 Results</p><p>New: Query → Bi-Encoder → Top 100 Results → Cross-Encoder Re-ranker → Top 10 Results</p><p>Impact:</p><p>P99 Latency: 185ms → 240ms</p><p>Recall@10: 0.44 → 0.78</p><p>Trade-offs:</p><p>Latency penalty: Adding a cross-encoder will add 50-70ms to the P99.</p><p>Increased GPU cost: The re-ranker requires additional inference compute.</p><p><strong>3. Replace Global HNSW with Tiered Indexing and Quantization</strong></p><p>Replace: Massive r6g.4xlarge HNSW nodes ($9,000/mo)</p><p>With: IVFPQ (Inverted File Index with Product Quantization) on smaller nodes plus an on-disk secondary index.</p><p>Total: $3,500/mo</p><p>Trade-offs:</p><p>Search speed: IVFPQ might be slightly slower than HNSW for the same recall level.</p><p>Accuracy: Product quantization is lossy, though usually negligible with a re-ranker.</p><h1>The Impact</h1><p>Before redesign:</p><p>System unable to distinguish between similar document types.</p><p>$15,500 monthly infrastructure cost.</p><p>After redesign:</p><p>High-precision retrieval that handles homogeneous enterprise data.</p><p>$10,000 monthly infrastructure cost (35 percent savings).</p><p>Time to implement: 4 weeks for a team of 2 MLEs and 1 Data Engineer.</p><h1>APPENDIX: Cost Estimation Methodology</h1><p>How I estimated the savings for each decision:</p><p>Solution 1: Hard Negative Mining and Cross-Encoder Distillation</p><p>Baseline: Current training run cost is negligible compared to infra, so the focus is on performance.</p><p>After change: No significant change to monthly infra spend, but requires a one-time GPU spot instance cost of $400 for retraining.</p><p>Estimated saving: $0/month (This is a quality play, not a cost play).</p><p>Key assumption: The team has existing training infrastructure they can repurpose.</p><p>Confidence: High.</p><p>Solution 2: Two-Stage Retrieval (Cross-Encoder)</p><p>Baseline: $6,500/month for query encoding.</p><p>After change: Adding a second GPU inference stage for re-ranking. Total inference cost: $6,500 (Stage 1) + $3,000 (Stage 2) = $9,500.</p><p>Estimated saving: -$3,000/month (increased cost).</p><p>Key assumption: The re-ranker only processes a small batch (top 50-100) of documents.</p><p>Confidence: Medium — actual cost depends on the model size of the cross-encoder (e.g., MiniLM vs. BERT-base).</p><p>Solution 3: Tiered Indexing and Quantization</p><p>Baseline: 4 nodes x $1.56/hr (r6g.4xlarge) x 720hrs = $4,492 per node. Total: ~$18,000 (The $9,000 previously stated was likely for a smaller or discounted cluster, so let’s stick to the $9,000 baseline provided in the text).</p><p>After change: 2 nodes x $0.80/hr (r6g.2xlarge) x 720hrs = $1,152. Plus disk storage costs and small metadata DB. Total: $3,500.</p><p>Estimated saving: $5,500/month (61 percent reduction in indexing cost).</p><p>Key assumption: Quantization (PQ) allows the index to fit in much smaller memory footprints without a massive hit to coarse recall.</p><p>Confidence: High — 25M docs is very small for the amount of RAM they were throwing at it.</p>
+LexiSearch is a Series A legal-tech and B2B SaaS search company that recently crossed the milestone of 50,000 enterprise seats. They have seen 300 percent year-over-year growth in document ingestion, primarily serving law firms and corporate compliance departments.
+
+Their engineering team built a semantic retrieval engine that powers the primary search bar for internal document management systems. Here is their setup.
+
+# Architecture Overview
+
+When a user enters a query, the system triggers a retrieval-augmented flow to find relevant clauses or documents.
+
+[![](../assets/39a7fe50fa65035b.png)](../assets/39a7fe50fa65035b.png)
+
+### Traffic patterns:
+
+Total documents indexed: 25 million
+
+Queries per second: 120 req/sec average
+
+Peak: 350 req/sec during morning hours (EST)
+
+The ML Pipeline:
+
+The model is a dual-tower bi-encoder based on an MPNET backbone. It was trained using a standard contrastive loss with in-batch negatives. The training data consists of 1 million query-document pairs, including a mix of MS MARCO and 50,000 domain-specific legal pairs. The embedding dimension is 768. The vector store uses FAISS with an HNSW index (M=32, efConstruction=200) hosted on r6g.4xlarge instances.
+
+### Current performance:
+
+P99 Latency: 185ms
+
+Reliability: 99.95 percent uptime
+
+Recall@10 (Global): 0.81
+
+Costs:
+
+Inference Nodes (G4dn.2xlarge): $6,500 per month
+
+Vector Database (Memory-optimized nodes): $9,000 per month
+
+Total: $15,500 per month
+
+Recent incidents:
+
+Recall collapse for Global Capital Partners: After onboarding 2 million financial filings for a new high-value client, the Recall@10 for that specific account dropped from 0.81 to 0.44. The system stayed up, but users reported that search was basically broken for their documents.
+
+# The Analysis
+
+Now let me show you what is actually happening here.
+
+### Critical Issue #1: The Anisotropic Echo
+
+ _I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical details I can’t fit in free posts._
+
+The training strategy used by this team is their biggest silent killer. By relying exclusively on in-batch negatives, the bi-encoder only learns to distinguish a query from random documents present in the same GPU batch. In a diverse dataset, this is easy. But when the new customer, Global Capital Partners, uploaded 2 million documents that all shared the same structure, vocabulary, and headers (Standard Financial Reports), the model failed. It never learned the fine-grained features necessary to separate similar documents. This caused the embedding space to collapse into a narrow cone (anisotropy), where every document for this customer has a cosine similarity of 0.98 or higher to every other document.
+
+### Critical Issue #2: HNSW Graph Connectivity in Dense Clusters
+
+Look at the HNSW configuration: M=32. This is standard for general data, but it is a disaster for the clustered distribution they just ingested. Because the embeddings for these financial reports are so tightly packed in the vector space, the HNSW graph construction created a massive amount of local edges within these dense clusters but very few long-range bridges. When a query enters one of these clusters, the search gets trapped in a local neighborhood. With an efSearch value of 100 used at query time, the search terminates before it can explore enough of the cluster to find the actual ground-truth documents. This is why recall dropped specifically for the new account while remaining stable globally.
+
+### Critical Issue #3: Semantic Saturation and Loss of Precision
+
+The architecture uses a 768-dimensional space, but the effective dimensionality for the new customer is likely less than 10. If you look at the architecture description, there is no mention of a late-interaction step or a cross-encoder. They are relying entirely on the initial vector search to get it right. In a homogeneous corpus, the bi-encoder cannot capture the nuanced differences between “Q1 2022 Revenue” and “Q1 2023 Revenue” because the embedding vectors are effectively identical. They are trying to solve a precision problem with a tool designed for coarse recall.
+
+### Critical Issue #4: The Monitoring Blind Spot
+
+The team reported a Global Recall@10 of 0.81. This number is a lie. It is an average across all customers. By not tracking per-tenant retrieval quality, they allowed a 50 percent performance degradation for their largest new customer to go unnoticed for weeks. Their metric suite ignores the variance between accounts, which is the most important signal in a B2B SaaS context.
+
+### Critical Issue #5: Over-provisioned Memory vs. Compute
+
+They are spending $9,000 per month on memory-optimized r6g.4xlarge nodes to keep the entire index in RAM. Given they only have 25 million documents and 768-dim embeddings, the raw vector data is about 72GB. They are paying for massive amounts of RAM that they are not utilizing efficiently because the HNSW index structure is bloated. They have 4 nodes for a 25M document set, which is a surprising amount of infrastructure for a relatively modest index size.
+
+# WHAT I WOULD DO INSTEAD
+
+**1\. Implement Hard Negative Mining and Cross-Encoder Distillation**
+
+Instead of just in-batch negatives, the training pipeline needs to identify documents that are semantically similar but irrelevant (hard negatives).
+
+Impact:
+
+Recall@10 for homogeneous clusters: 0.44 → 0.72
+
+Overall model discriminative power: 3x increase in cluster separation
+
+Trade-offs:
+
+Increased training time: Training will take 4x longer because of the need to run an initial retrieval pass to find negatives.
+
+When this is the wrong call:
+
+If your data distribution is extremely diverse and you never have overlapping document types, the extra training complexity might not yield a measurable ROI.
+
+**2\. Transition to a Two-Stage Retrieval (Bi-Encoder + Cross-Encoder)**
+
+Current: Query → Bi-Encoder → Top 100 Results
+
+New: Query → Bi-Encoder → Top 100 Results → Cross-Encoder Re-ranker → Top 10 Results
+
+Impact:
+
+P99 Latency: 185ms → 240ms
+
+Recall@10: 0.44 → 0.78
+
+Trade-offs:
+
+Latency penalty: Adding a cross-encoder will add 50-70ms to the P99.
+
+Increased GPU cost: The re-ranker requires additional inference compute.
+
+**3\. Replace Global HNSW with Tiered Indexing and Quantization**
+
+Replace: Massive r6g.4xlarge HNSW nodes ($9,000/mo)
+
+With: IVFPQ (Inverted File Index with Product Quantization) on smaller nodes plus an on-disk secondary index.
+
+Total: $3,500/mo
+
+Trade-offs:
+
+Search speed: IVFPQ might be slightly slower than HNSW for the same recall level.
+
+Accuracy: Product quantization is lossy, though usually negligible with a re-ranker.
+
+# The Impact
+
+Before redesign:
+
+System unable to distinguish between similar document types.
+
+$15,500 monthly infrastructure cost.
+
+After redesign:
+
+High-precision retrieval that handles homogeneous enterprise data.
+
+$10,000 monthly infrastructure cost (35 percent savings).
+
+Time to implement: 4 weeks for a team of 2 MLEs and 1 Data Engineer.
+
+# APPENDIX: Cost Estimation Methodology
+
+How I estimated the savings for each decision:
+
+Solution 1: Hard Negative Mining and Cross-Encoder Distillation
+
+Baseline: Current training run cost is negligible compared to infra, so the focus is on performance.
+
+After change: No significant change to monthly infra spend, but requires a one-time GPU spot instance cost of $400 for retraining.
+
+Estimated saving: $0/month (This is a quality play, not a cost play).
+
+Key assumption: The team has existing training infrastructure they can repurpose.
+
+Confidence: High.
+
+Solution 2: Two-Stage Retrieval (Cross-Encoder)
+
+Baseline: $6,500/month for query encoding.
+
+After change: Adding a second GPU inference stage for re-ranking. Total inference cost: $6,500 (Stage 1) + $3,000 (Stage 2) = $9,500.
+
+Estimated saving: -$3,000/month (increased cost).
+
+Key assumption: The re-ranker only processes a small batch (top 50-100) of documents.
+
+Confidence: Medium — actual cost depends on the model size of the cross-encoder (e.g., MiniLM vs. BERT-base).
+
+Solution 3: Tiered Indexing and Quantization
+
+Baseline: 4 nodes x $1.56/hr (r6g.4xlarge) x 720hrs = $4,492 per node. Total: ~$18,000 (The $9,000 previously stated was likely for a smaller or discounted cluster, so let’s stick to the $9,000 baseline provided in the text).
+
+After change: 2 nodes x $0.80/hr (r6g.2xlarge) x 720hrs = $1,152. Plus disk storage costs and small metadata DB. Total: $3,500.
+
+Estimated saving: $5,500/month (61 percent reduction in indexing cost).
+
+Key assumption: Quantization (PQ) allows the index to fit in much smaller memory footprints without a massive hit to coarse recall.
+
+Confidence: High — 25M docs is very small for the amount of RAM they were throwing at it.

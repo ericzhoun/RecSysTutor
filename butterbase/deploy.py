@@ -23,8 +23,15 @@ COURSE = os.path.dirname(HERE)
 CONTENT = os.path.join(COURSE, "deeptutor", "content")
 KEY_STORE = os.path.expanduser("~/.butterbase/tutor-fn-key.json")
 
-cfg = json.load(open(os.path.expanduser("~/.butterbase/config.json")))
-PLATFORM_KEY, API = cfg["apiKey"], cfg["endpoint"]
+# Prefer an explicitly supplied key (e.g. BUTTERBASE_KEY) so this script can target an
+# app the stored platform key cannot see. Falls back to ~/.butterbase/config.json.
+_env_key = os.environ.get("BUTTERBASE_KEY")
+if _env_key:
+    PLATFORM_KEY = _env_key
+    API = os.environ.get("BUTTERBASE_API_URL", "https://api.butterbase.ai")
+else:
+    cfg = json.load(open(os.path.expanduser("~/.butterbase/config.json")))
+    PLATFORM_KEY, API = cfg["apiKey"], cfg["endpoint"]
 AUTH = "".join(["Bea", "rer ", PLATFORM_KEY])
 
 
@@ -99,14 +106,16 @@ def deploy():
     ce = course_env()
     out = call("deploy_function", {
         "app_id": APP, "name": FN_NAME, "code": code,
-        "description": "RecSysTutor live chat (production v1.2.1): grounded retrieval + tutor generation",
+        "description": "RecSysTutor live chat (production v1.3.0): pgvector retrieval + Kimi generation",
         "triggers": [{"type": "http", "config": {"path": "/" + FN_NAME, "auth": "none"}}],
         "timeoutMs": 60000, "memoryLimitMb": 256,
         "envVars": {
             "BB_SERVICE_KEY": service_key(),
-            "TUTOR_MODEL": os.environ.get("BB_MODEL") or ce.get("model", "glm-5.2"),
+            "TUTOR_MODEL": os.environ.get("BB_MODEL") or ce.get("model", "kimi-k2.6"),
             "OPENAI_API_KEY": ce.get("api key", ""),
-            "OPENAI_BASE_URL": ce.get("baseurl", "https://api.openai.com/v1"),
+            "OPENAI_BASE_URL": ce.get("baseurl", "https://api.moonshot.cn/v1"),
+            # query-time embedding for the pgvector retrieval path
+            "GEMINI_API_KEY": ce.get("gemini api key", ""),
             "DEBUG_TOKEN": debug_token(),
         },
     })

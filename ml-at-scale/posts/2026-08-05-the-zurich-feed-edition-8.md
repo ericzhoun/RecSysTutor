@@ -13,4 +13,267 @@ words: 967
 
 *Curated ML roles in Zürich. With context no job board gives you.*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/7be24b2bfc90693a.webp" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/7be24b2bfc90693a.webp 424w, ../assets/7be24b2bfc90693a.webp 848w, ../assets/7be24b2bfc90693a.webp 1272w, ../assets/7be24b2bfc90693a.webp 1456w" sizes="100vw"><img src="../assets/7be24b2bfc90693a.webp" width="1456" height="794" data-attrs="{&quot;src&quot;:&quot;../assets/7be24b2bfc90693a.webp" class="sizing-normal" alt="" srcset="../assets/7be24b2bfc90693a.webp 424w, ../assets/7be24b2bfc90693a.webp 848w, ../assets/7be24b2bfc90693a.webp 1272w, ../assets/7be24b2bfc90693a.webp 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Hey!</p><p>Welcome to the 8th edition of The Zürich Feed. 🥂</p><p><span>Every week I go through </span><strong>ML roles</strong><span> in Zürich, filter out the noise, and add the context that job boards won’t give you:</span></p><ol><li><p>Team signals</p></li><li><p>Whether the role is actually worth your time.</p></li><li><p>What’s brewing in Zurich that’s not official yet (!!!)</p></li></ol><p><mark data-color="rgb(182, 215, 168)" style="background-color: rgb(182, 215, 168); color: rgb(0, 0, 0);">This week: </mark><strong><mark data-color="rgb(182, 215, 168)" style="background-color: rgb(182, 215, 168); color: rgb(0, 0, 0);">66</mark></strong><mark data-color="rgb(182, 215, 168)" style="background-color: rgb(182, 215, 168); color: rgb(0, 0, 0);"> hand picked roles + some companies that just opened up shop and will start hiring soon</mark></p><p><strong>💥💥 Zürich is booming! 💥💥</strong></p><p><strong>📡 MARKET PULSE</strong></p><blockquote><p>OpenAI started hiring again in Zürich :)</p><p>Mimic x Forest lab partnership is pretty cool :)</p></blockquote><p><strong>👀 ONE THING I’M WATCHING</strong></p><blockquote><p><strong>Want to come to Zürich? Get good at Robotics or deep tech ML :)</strong></p></blockquote><p>🗂️ THE LIST (preview)</p><p><strong>🏢 <a href="https://www.seldon.global/">Seldon</a></strong></p><p><em>Multimodal data for LLMs. </em></p><p>Seldon is hiring Member of technical staff. Cool team of early stage people. Consider joining them! :)</p><p><strong>🏢 OpenAI</strong></p><p><strong><a href="https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222">Forward Deployed Engineer</a></strong></p><p><strong><a href="https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222">Security Engineer - Detection and Response</a></strong></p><p><strong><a href="https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222">Technical Deployment Lead, FDE</a></strong></p><p><strong>🏢 Anthropic</strong></p><p><strong><a href="https://www.anthropic.com/careers/jobs?office=4029282008">Research Engineer, Pre-training</a></strong></p><p><strong><a href="https://www.anthropic.com/careers/jobs?office=4029282008">Research Engineer, Production Model Post-training</a></strong></p><p><strong><a href="https://www.anthropic.com/careers/jobs?office=4029282008">Senior/Staff Security Engineer, Threat Intelligence</a></strong></p><p><strong>🏢 Hexagon Robotics</strong></p><ul><li><p><a href="https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&amp;keywords=jobs&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&amp;geoId=106693272&amp;f_C=111601900">Senior Software Engineer - ML Systems</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&amp;keywords=jobs&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&amp;geoId=106693272&amp;f_C=111601900">Robotics MLOps &amp; Data engineer</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&amp;keywords=jobs&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&amp;geoId=106693272&amp;f_C=111601900">Manager - Data Generation Team</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&amp;keywords=jobs&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&amp;geoId=106693272&amp;f_C=111601900">Staff Robotics Engineer</a></p></li><li><p><a href="https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&amp;keywords=jobs&amp;origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&amp;originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&amp;geoId=106693272&amp;f_C=111601900">Staff ML Engineer</a></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div></li></ul><p><strong>🏢 Microagi</strong></p><p><em>The data layer for physical AI.</em></p><ul><li><p><a href="https://www.microagi.ai/careers/research-engineer-robotics-embodied-ai">Research Engineer (Robotics)</a></p></li><li><p><a href="https://www.microagi.ai/careers/research-engineer-robotics-embodied-ai">Research Scientist (Robotics)</a></p></li><li><p><a href="https://www.microagi.ai/careers/computer-vision-researcher-hand-body-tracking">Computer vision researcher</a></p></li></ul><p><strong>🏢 Aionic labs</strong><br><br><em>New frontier AI company focusing on TSLMs</em></p><ul><li><p><a href="https://aioniclabs.notion.site/team-careers">Infra engineer</a></p></li><li><p><a href="https://aioniclabs.notion.site/team-careers">Research scientist</a></p></li></ul><p><strong>🏢 Synthesia</strong><br><br><em>New frontier AI company focusing on TSLMs. Roles:</em></p><ul><li><p><a href="https://jobs.ashbyhq.com/synthesia/8a09fe17-c01c-4e35-9394-abd339bbfdf3?locationId=d03ccedc-e6b2-47fa-90f0-aa8a42eec50c">Senior research engineer</a></p></li></ul><p><strong>🏢 Google (❤️)</strong></p><p><em>No explanation needed. One of the biggest tech hub outside of the US. Tons of strong teams hiring. ML-heavy office with lots of different products hiring.</em></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Staff Software Engineer, Performance and Kernel, DeepMind</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer, Cloud AI Research, Co-Scientist</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer II, GenAI Safety, Google Core</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer II, YouTube Trust and Safety, Responsiveness</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Research Scientist, Gemini for Android XR Devices</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Staff Software Engineer, Google Cloud, Applied AI, Automotive AI Agent</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Staff Software Engineer, Beyond Live, DeepMind</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Senior Data Scientist, GeminiApp, DeepMind</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer III, Search Ads, Quality and AI</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer III, Web Ranking Foundations</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Software Engineer III, AI/ML, Google Cloud, Automotive</a></p><p><a href="https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&amp;sort_by=date&amp;page=1">Senior Security Engineer, Agentic Red Team, DeepMind</a></p><p><strong>🏢 Odyssey</strong><br><br><em>World models</em></p><ul><li><p><a href="https://odyssey.ml/careers#open-roles">MTS - Research</a></p></li><li><p><a href="https://odyssey.ml/careers#open-roles">MTS, TLM: Research Scientist</a></p></li><li><p><a href="https://odyssey.ml/careers#open-roles">MTS, Core Model Engineering</a></p></li><li><p><a href="https://odyssey.ml/careers#open-roles">MTS, Diffusion World Models &amp; Robotics</a></p></li><li><p><a href="https://odyssey.ml/careers#open-roles">MTS - ML Performance</a></p></li><li><p><a href="https://odyssey.ml/careers#open-roles">MTS - Infra Engineer</a></p></li></ul><p><strong>🏢 Meta</strong><br><br><em>Smallish office heavily focusing on VR / AR projects. Recently spinned up a monetization division as well as Superintelligence team. I’d focus on the latter given recent developments.</em></p><p><em><mark data-color="rgb(255, 0, 0)" style="background-color: rgb(255, 0, 0); color: rgb(255, 255, 255);">NO FULL TIME OPENINGS AT THIS TIME</mark></em></p><p><strong>🏢 Apple</strong><br><br><em>Small office (~200 headcount), but with a diverse range of projects.</em></p><p><a href="https://jobs.apple.com/en-us/details/200672941-4170/research-scientist-engineer-special-projects?team=MLAI">Research Scientist/ Engineer - Special Projects</a></p><p><a href="https://jobs.apple.com/en-us/details/200672455-4170/research-scientist-llm-efficiency?team=MLAI">Research Scientist - LLM Efficiency</a></p><p><a href="https://jobs.apple.com/en-us/details/200668407-4170/senior-machine-learning-engineer-in-human-centric-computer-vision?team=HRDWR">Senior Machine Learning Engineer in Human-Centric Computer Vision</a></p><p><a href="https://jobs.apple.com/en-us/details/200664795-4170/aiml-research-scientist-health?team=MLAI">AIML - Research Scientist, Health</a></p><p><strong>🏢 NVIDIA</strong><br><br><em>Small office, mainly focused on Autonomous vehicles, LLM evals and Systems engineering.</em></p><p><a href="https://jobs.nvidia.com/careers/job/893396064200?domain=nvidia.com&amp;hl=en">Senior Software Engineer, RL Post-Training Frameworks</a></p><p><a href="https://jobs.nvidia.com/careers?domain=nvidia.com&amp;hl=en&amp;start=0&amp;location=zurich&amp;pid=893391009867&amp;sort_by=distance&amp;filter_distance=8&amp;filter_include_remote=1">Senior Deep Learning Compiler Engineer - PyTorch</a></p><p><a href="https://jobs.nvidia.com/careers?domain=nvidia.com&amp;hl=en&amp;start=0&amp;location=zurich&amp;pid=893394034331&amp;sort_by=timestamp&amp;filter_distance=8&amp;filter_include_remote=1&amp;filter_include_relocation=0">Senior Software Engineer, CUDA Core Libraries</a></p><p><strong>🏢 Microsoft</strong><br><em>Office that is expanding thanks to the recent opening of Microsoft AI division. Expect high TC offer and negotiate hard.</em></p><p><a href="https://apply.careers.microsoft.com/careers?start=0&amp;location=Zurich&amp;pid=1970393556626992&amp;sort_by=timestamp&amp;filter_distance=160&amp;filter_include_remote=1&amp;filter_include_relocation=0">Member of Technical Staff, Software Engineer</a></p><p><a href="https://apply.careers.microsoft.com/careers?start=0&amp;location=Zurich&amp;pid=1970393556626992&amp;sort_by=timestamp&amp;filter_distance=160&amp;filter_include_remote=1&amp;filter_include_relocation=0">Member of Technical Staff, Data Research Engineer - MAI Superintelligence Team</a></p><p><strong>🏢 Exa</strong></p><p>Just laid off some people in Zürich. As far as I can tell the office itself is not closed as some people are still working there / starting soon.</p><p><em><mark data-color="rgb(255, 0, 0)" style="background-color: rgb(255, 0, 0); color: rgb(255, 255, 255);">NO FULL TIME OPENINGS AT THIS TIMETIME</mark></em></p><p><strong>🏢 RAI (Robotics and AI Institute)</strong><br><br><em>Small office but lots of high quality researchers.</em></p><p><a href="https://jobs.lever.co/rai/45f40b1a-0191-411a-bc6e-67043e676427">Research Scientist (Zurich Location)</a></p><p>🏢 Mimic</p><p><a href="https://jobs.gem.com/mimicrobotics-com">AI Research Engineer</a></p><p><a href="https://jobs.gem.com/mimicrobotics-com">AI Research Scientist</a></p><p><a href="https://jobs.gem.com/mimicrobotics-com">Forward Deployed Engineer</a></p><p><a href="https://jobs.gem.com/mimicrobotics-com">Software Engineer - AI Infrastructure</a></p><p><strong>🏢 Lakera</strong><br><em>Acquired startup by Check Point. LLM x Security.</em></p><p><em>TC can be as high as 400k for the most senior roles imho.</em></p><ul><li><p><a href="https://www.lakera.ai/careers?ashby_jid=25b1cf59-fee8-4009-a36f-2b0b83b3cc56">Software Engineer, Agentic team</a></p></li><li><p><a href="https://www.lakera.ai/careers?ashby_jid=158d9a05-bc1d-49fd-81f1-bf1229e8021f">Senior ML Engineer</a></p></li><li><p><a href="https://www.lakera.ai/careers?ashby_jid=6f04a898-893e-439f-8601-c25a30418c13">Staff ML Engineer</a></p></li><li><p><a href="https://www.lakera.ai/careers?ashby_jid=96b74068-6e27-4e68-875c-14c9b2f0dd5f">Engineering Manager, Detectors (Zürich)</a></p></li></ul><p><strong>🏢 Bloom</strong><br><em>A YC backed startup, 3.4M pre-seed.</em></p><ul><li><p><a href="https://www.ycombinator.com/companies/bloom-4/jobs/Tb6dGeS-founding-engineer">Founding engineer</a><span> - 150k / 250k USD - 0.5 / 2.0 equity</span></p></li></ul><p><strong>🏢 Manufact (formerly mcp-use)</strong></p><p><em>YC backed company, no ZRH roles.</em></p><p><strong>🏢 Zenline</strong></p><p><em>Build AI agents that find the perfect assortment for every retailer</em></p><ul><li><p><strong><a href="https://zenline.notion.site/founding-engineer-full-stack">Founding engineer Full-stack</a></strong></p></li></ul><p><strong>🏢 Mirendil</strong></p><p><em>Democratizing frontier AI R&amp;D to accelerate science and technology</em></p><p>No yet open roles in Zürich but I am told they are coming :D</p><p><strong>🏢 Perceptic</strong></p><p><em>The AI operating system for drug development</em></p><p>No yet open roles in Zürich but I am told they are coming :D</p><p><strong>🏢 Flexion</strong></p><p><em>Autonomy stack for humanoid robots - from command to control, from manipulation to locomotion, across any hardware and task. Leveraging the power of simulation and reinforcement learning, their software scales to the real world with minimal human involvement. Hiring for:</em></p><p><a href="https://flexion.ai/careers">Research Engineer - Generative Humanoid Motion Generation</a></p><p><a href="https://flexion.ai/careers">Forward Deployed Engineer - Robotics</a></p><p><a href="https://flexion.ai/careers">Machine Learning Engineer</a></p><p><a href="https://flexion.ai/careers">AI Research Engineer</a></p><p><a href="https://flexion.ai/careers">Software Engineer - Simulation</a></p><p><strong>🏢 Loki Robotics</strong></p><p><em>Building robots that free up people’s time.</em></p><p><a href="https://jobs.ashbyhq.com/loki">Senior AI Infrastructure Engineer</a></p><p><a href="https://jobs.ashbyhq.com/loki">Senior Robotics Software Engineer</a></p><p><a href="https://jobs.ashbyhq.com/loki">Senior Robot Platform Software Engineer</a></p><p><strong>🏢 Laelaps AI</strong></p><p><em>The brain behind security</em></p><p><a href="https://laelaps.ai/">Foundational Models Engineer</a></p><p><a href="https://laelaps.ai/">Autonomy Engineer</a></p><p><a href="https://laelaps.ai/">Infrastructure Engineer</a></p><p><a href="https://laelaps.ai/">Perception Engineer</a></p>
+[![](../assets/7be24b2bfc90693a.webp)](../assets/7be24b2bfc90693a.webp)
+
+Hey!
+
+Welcome to the 8th edition of The Zürich Feed. 🥂
+
+Every week I go through **ML roles** in Zürich, filter out the noise, and add the context that job boards won’t give you:
+
+  1. Team signals
+
+  2. Whether the role is actually worth your time.
+
+  3. What’s brewing in Zurich that’s not official yet (!!!)
+
+This week: **66** hand picked roles + some companies that just opened up shop and will start hiring soon
+
+**💥💥 Zürich is booming! 💥💥**
+
+**📡 MARKET PULSE**
+
+> OpenAI started hiring again in Zürich :)
+>
+> Mimic x Forest lab partnership is pretty cool :)
+
+**👀 ONE THING I’M WATCHING**
+
+> **Want to come to Zürich? Get good at Robotics or deep tech ML :)**
+
+🗂️ THE LIST (preview)
+
+**🏢[Seldon](https://www.seldon.global/)**
+
+ _Multimodal data for LLMs._
+
+Seldon is hiring Member of technical staff. Cool team of early stage people. Consider joining them! :)
+
+**🏢 OpenAI**
+
+**[Forward Deployed Engineer](https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222)**
+
+**[Security Engineer - Detection and Response](https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222)**
+
+**[Technical Deployment Lead, FDE](https://openai.com/careers/search/?l=2accdeab-a029-418f-b635-f185078fe222)**
+
+**🏢 Anthropic**
+
+**[Research Engineer, Pre-training](https://www.anthropic.com/careers/jobs?office=4029282008)**
+
+**[Research Engineer, Production Model Post-training](https://www.anthropic.com/careers/jobs?office=4029282008)**
+
+**[Senior/Staff Security Engineer, Threat Intelligence](https://www.anthropic.com/careers/jobs?office=4029282008)**
+
+**🏢 Hexagon Robotics**
+
+  * [Senior Software Engineer - ML Systems](https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&geoId=106693272&f_C=111601900)
+
+  * [Robotics MLOps & Data engineer](https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&geoId=106693272&f_C=111601900)
+
+  * [Manager - Data Generation Team](https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&geoId=106693272&f_C=111601900)
+
+  * [Staff Robotics Engineer](https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&geoId=106693272&f_C=111601900)
+
+  * [Staff ML Engineer](https://www.linkedin.com/jobs/search-results/?currentJobId=4442849909&keywords=jobs&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4442849909%2C4442369084%2C4441509221%2C4431225500%2C4430604533%2C4430634211%2C4441046954%2C4441054763%2C4443159141%2C4442968663&geoId=106693272&f_C=111601900)
+
+**🏢 Microagi**
+
+ _The data layer for physical AI._
+
+  * [Research Engineer (Robotics)](https://www.microagi.ai/careers/research-engineer-robotics-embodied-ai)
+
+  * [Research Scientist (Robotics)](https://www.microagi.ai/careers/research-engineer-robotics-embodied-ai)
+
+  * [Computer vision researcher](https://www.microagi.ai/careers/computer-vision-researcher-hand-body-tracking)
+
+**🏢 Aionic labs**
+
+ _New frontier AI company focusing on TSLMs_
+
+  * [Infra engineer](https://aioniclabs.notion.site/team-careers)
+
+  * [Research scientist](https://aioniclabs.notion.site/team-careers)
+
+**🏢 Synthesia**
+
+ _New frontier AI company focusing on TSLMs. Roles:_
+
+  * [Senior research engineer](https://jobs.ashbyhq.com/synthesia/8a09fe17-c01c-4e35-9394-abd339bbfdf3?locationId=d03ccedc-e6b2-47fa-90f0-aa8a42eec50c)
+
+**🏢 Google (❤️)**
+
+_No explanation needed. One of the biggest tech hub outside of the US. Tons of strong teams hiring. ML-heavy office with lots of different products hiring._
+
+[Staff Software Engineer, Performance and Kernel, DeepMind](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer, Cloud AI Research, Co-Scientist](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer II, GenAI Safety, Google Core](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer II, YouTube Trust and Safety, Responsiveness](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Research Scientist, Gemini for Android XR Devices](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Staff Software Engineer, Google Cloud, Applied AI, Automotive AI Agent](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Staff Software Engineer, Beyond Live, DeepMind](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Senior Data Scientist, GeminiApp, DeepMind](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer III, Search Ads, Quality and AI](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer III, Web Ranking Foundations](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Software Engineer III, AI/ML, Google Cloud, Automotive](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+[Senior Security Engineer, Agentic Red Team, DeepMind](https://www.google.com/about/careers/applications/jobs/results/?location=Zurich%2C%20Switzerland&sort_by=date&page=1)
+
+**🏢 Odyssey**
+
+ _World models_
+
+  * [MTS - Research](https://odyssey.ml/careers#open-roles)
+
+  * [MTS, TLM: Research Scientist](https://odyssey.ml/careers#open-roles)
+
+  * [MTS, Core Model Engineering](https://odyssey.ml/careers#open-roles)
+
+  * [MTS, Diffusion World Models & Robotics](https://odyssey.ml/careers#open-roles)
+
+  * [MTS - ML Performance](https://odyssey.ml/careers#open-roles)
+
+  * [MTS - Infra Engineer](https://odyssey.ml/careers#open-roles)
+
+**🏢 Meta**
+
+ _Smallish office heavily focusing on VR / AR projects. Recently spinned up a monetization division as well as Superintelligence team. I’d focus on the latter given recent developments._
+
+_NO FULL TIME OPENINGS AT THIS TIME_
+
+**🏢 Apple**
+
+ _Small office (~200 headcount), but with a diverse range of projects._
+
+[Research Scientist/ Engineer - Special Projects](https://jobs.apple.com/en-us/details/200672941-4170/research-scientist-engineer-special-projects?team=MLAI)
+
+[Research Scientist - LLM Efficiency](https://jobs.apple.com/en-us/details/200672455-4170/research-scientist-llm-efficiency?team=MLAI)
+
+[Senior Machine Learning Engineer in Human-Centric Computer Vision](https://jobs.apple.com/en-us/details/200668407-4170/senior-machine-learning-engineer-in-human-centric-computer-vision?team=HRDWR)
+
+[AIML - Research Scientist, Health](https://jobs.apple.com/en-us/details/200664795-4170/aiml-research-scientist-health?team=MLAI)
+
+**🏢 NVIDIA**
+
+ _Small office, mainly focused on Autonomous vehicles, LLM evals and Systems engineering._
+
+[Senior Software Engineer, RL Post-Training Frameworks](https://jobs.nvidia.com/careers/job/893396064200?domain=nvidia.com&hl=en)
+
+[Senior Deep Learning Compiler Engineer - PyTorch](https://jobs.nvidia.com/careers?domain=nvidia.com&hl=en&start=0&location=zurich&pid=893391009867&sort_by=distance&filter_distance=8&filter_include_remote=1)
+
+[Senior Software Engineer, CUDA Core Libraries](https://jobs.nvidia.com/careers?domain=nvidia.com&hl=en&start=0&location=zurich&pid=893394034331&sort_by=timestamp&filter_distance=8&filter_include_remote=1&filter_include_relocation=0)
+
+**🏢 Microsoft**
+ _Office that is expanding thanks to the recent opening of Microsoft AI division. Expect high TC offer and negotiate hard._
+
+[Member of Technical Staff, Software Engineer](https://apply.careers.microsoft.com/careers?start=0&location=Zurich&pid=1970393556626992&sort_by=timestamp&filter_distance=160&filter_include_remote=1&filter_include_relocation=0)
+
+[Member of Technical Staff, Data Research Engineer - MAI Superintelligence Team](https://apply.careers.microsoft.com/careers?start=0&location=Zurich&pid=1970393556626992&sort_by=timestamp&filter_distance=160&filter_include_remote=1&filter_include_relocation=0)
+
+**🏢 Exa**
+
+Just laid off some people in Zürich. As far as I can tell the office itself is not closed as some people are still working there / starting soon.
+
+_NO FULL TIME OPENINGS AT THIS TIMETIME_
+
+**🏢 RAI (Robotics and AI Institute)**
+
+_Small office but lots of high quality researchers._
+
+[Research Scientist (Zurich Location)](https://jobs.lever.co/rai/45f40b1a-0191-411a-bc6e-67043e676427)
+
+🏢 Mimic
+
+[AI Research Engineer](https://jobs.gem.com/mimicrobotics-com)
+
+[AI Research Scientist](https://jobs.gem.com/mimicrobotics-com)
+
+[Forward Deployed Engineer](https://jobs.gem.com/mimicrobotics-com)
+
+[Software Engineer - AI Infrastructure](https://jobs.gem.com/mimicrobotics-com)
+
+**🏢 Lakera**
+ _Acquired startup by Check Point. LLM x Security._
+
+_TC can be as high as 400k for the most senior roles imho._
+
+  * [Software Engineer, Agentic team](https://www.lakera.ai/careers?ashby_jid=25b1cf59-fee8-4009-a36f-2b0b83b3cc56)
+
+  * [Senior ML Engineer](https://www.lakera.ai/careers?ashby_jid=158d9a05-bc1d-49fd-81f1-bf1229e8021f)
+
+  * [Staff ML Engineer](https://www.lakera.ai/careers?ashby_jid=6f04a898-893e-439f-8601-c25a30418c13)
+
+  * [Engineering Manager, Detectors (Zürich)](https://www.lakera.ai/careers?ashby_jid=96b74068-6e27-4e68-875c-14c9b2f0dd5f)
+
+**🏢 Bloom**
+ _A YC backed startup, 3.4M pre-seed._
+
+  * [Founding engineer](https://www.ycombinator.com/companies/bloom-4/jobs/Tb6dGeS-founding-engineer) \- 150k / 250k USD - 0.5 / 2.0 equity
+
+**🏢 Manufact (formerly mcp-use)**
+
+_YC backed company, no ZRH roles._
+
+**🏢 Zenline**
+
+ _Build AI agents that find the perfect assortment for every retailer_
+
+  * **[Founding engineer Full-stack](https://zenline.notion.site/founding-engineer-full-stack)**
+
+**🏢 Mirendil**
+
+ _Democratizing frontier AI R &D to accelerate science and technology_
+
+No yet open roles in Zürich but I am told they are coming :D
+
+**🏢 Perceptic**
+
+ _The AI operating system for drug development_
+
+No yet open roles in Zürich but I am told they are coming :D
+
+**🏢 Flexion**
+
+ _Autonomy stack for humanoid robots - from command to control, from manipulation to locomotion, across any hardware and task. Leveraging the power of simulation and reinforcement learning, their software scales to the real world with minimal human involvement. Hiring for:_
+
+[Research Engineer - Generative Humanoid Motion Generation](https://flexion.ai/careers)
+
+[Forward Deployed Engineer - Robotics](https://flexion.ai/careers)
+
+[Machine Learning Engineer](https://flexion.ai/careers)
+
+[AI Research Engineer](https://flexion.ai/careers)
+
+[Software Engineer - Simulation](https://flexion.ai/careers)
+
+**🏢 Loki Robotics**
+
+ _Building robots that free up people’s time._
+
+[Senior AI Infrastructure Engineer](https://jobs.ashbyhq.com/loki)
+
+[Senior Robotics Software Engineer](https://jobs.ashbyhq.com/loki)
+
+[Senior Robot Platform Software Engineer](https://jobs.ashbyhq.com/loki)
+
+**🏢 Laelaps AI**
+
+ _The brain behind security_
+
+[Foundational Models Engineer](https://laelaps.ai/)
+
+[Autonomy Engineer](https://laelaps.ai/)
+
+[Infrastructure Engineer](https://laelaps.ai/)
+
+[Perception Engineer](https://laelaps.ai/)

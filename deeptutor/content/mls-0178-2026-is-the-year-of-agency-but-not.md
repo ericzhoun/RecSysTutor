@@ -2,4 +2,169 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2026-01-14 · topic: career*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/400821836780bead.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/400821836780bead.jpg 424w, ../assets/400821836780bead.jpg 848w, ../assets/400821836780bead.jpg 1272w, ../assets/400821836780bead.jpg 1456w" sizes="100vw"><img src="../assets/400821836780bead.jpg" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/400821836780bead.jpg" class="sizing-normal" alt="" srcset="../assets/400821836780bead.jpg 424w, ../assets/400821836780bead.jpg 848w, ../assets/400821836780bead.jpg 1272w, ../assets/400821836780bead.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h2>Introduction</h2><p>When people talk about “agency” in ML right now, they usually mean AI agents.</p><p>LLMs that plan, call tools, run workflows, do things end to end.</p><p>That’s fine.</p><p>But that’s not the agency I’m thinking about.</p><p>What I think will matter much more in 2026 is <strong>personal agency</strong> — the very human ability to decide “I’m going to do this” without waiting for permission, consensus, or perfect clarity.</p><p>Most people underestimate how much of that they already have and they don’t exercise that muscle.</p><div><hr></div><h2>Agency is not dramatic</h2><p>Here’s a boring example from work.</p><p>I was on vacation.<br>A training run needed to be started. If I waited until I was back, I’d lose a few days of data.</p><p>Data points of the real world inform every subsequent decision and the faster I have them the better it is.</p><p>So I logged in, submitted the code to start the run, and logged out.</p><p>No heroics. No grind culture. Just a small intervention that meant I came back to results instead of nothing.</p><p>I can get off early the next working day to get back some time.</p><p>no big deal!</p><p>This happens all the time at work.</p><p>The gap between “this will take three extra days” and “this is already running” is often just one person deciding to act instead of waiting.</p><div><hr></div><h2>Trust your gut</h2><p>Another work-related pattern I’ve seen repeatedly:</p><p>Some of the highest-leverage wins come from things that <strong>nobody is doing</strong>, not because they’re useless, but because they don’t fit cleanly into existing OKRs.</p><p>If something feels valuable to you, but:</p><ul><li><p>it’s not explicitly on the roadmap</p></li><li><p>nobody has time to own it</p></li><li><p>it’s slightly outside your scope</p></li></ul><p>that’s often a signal, not a warning.</p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>Exploring it usually costs you very little: some time and/or some focus.</p><p>And the upside can be disproportionate.</p><p>You don’t need permission for that.<br>You don’t need alignment decks.</p><p>The worst case is that it doesn’t work.<br>The best case is that you quietly claim a big win by operating just outside the default path.</p><p>That’s agency. <br>Just go and set up that experiment, your future self will thank you!</p><div><hr></div><h2>The same thing applies to content (maybe even more)</h2><p>I’ve noticed the exact same dynamic with content and personal projects.</p><p>Over the past year, I’ve been deliberately giving myself room to experiment:</p><ul><li><p>Writing more personal things, not just polished ML system design</p></li><li><p>Testing paid offerings instead of assuming “I’m not there yet”</p></li><li><p>Creating lead magnets, small products</p></li><li><p>Playing with a Zurich-themed personal brand (which is actually me in real life, very important!) instead of being another generic “ML person”</p></li></ul><p>None of this was obvious in advance.</p><p>But one thing <em>was</em> obvious: there are a lot of ML people online, and “being good at ML” is not enough.</p><p>If you don’t give yourself the chance to explore different formats, tones, and topics, you’ll never find what actually resonates.</p><p>Personal brand beats everything else. But only if you let more of yourself show up.</p><div><hr></div><h2>Most people are waiting for a signal that never comes</h2><p>As engineers, we’re trained to be cautious:</p><ul><li><p>Gather more data</p></li><li><p>Reduce uncertainty</p></li><li><p>Avoid unnecessary risk</p></li></ul><p>That mindset is great for production systems.</p><p>It’s terrible for personal direction.</p><p>A lot of people are waiting for:</p><ul><li><p>confidence</p></li><li><p>validation</p></li><li><p>a sign that something is “worth it”</p></li></ul><p>But those things usually show up <em>after</em> you act.</p><p>Agency isn’t confidence.<br>Agency is acting before confidence arrives.</p><div><hr></div><h2>The world pushes back WAY less than you think</h2><p>One thing I’ve internalised over time is that the world is far more malleable than it appears.</p><p>You can:</p><ul><li><p>explore something that isn’t on the roadmap</p></li><li><p>ship content that isn’t perfect</p></li><li><p>charge before you feel fully ready</p></li><li><p>change direction without a grand plan</p></li></ul><p>Most constraints are social, procedural, or self-imposed. NOT real walls.</p><p>AI agents won’t change that.</p><p>They’ll just amplify the people who already decide and move.</p><div><hr></div><h2>2026 belongs to…</h2><p>the people who:</p><ul><li><p>trust their instincts</p></li><li><p>act earlier than feels comfortable</p></li><li><p>look a bit unfinished in public</p></li><li><p>treat their work and life as systems they’re allowed to modify</p></li></ul><p>AI agents are tools.</p><p>Agency is choosing what to do: with or without them.</p><p>And that version of agency is already available.</p><p>Ludo</p>
+[](../assets/400821836780bead.jpg)
+
+## Introduction
+
+When people talk about “agency” in ML right now, they usually mean AI agents.
+
+LLMs that plan, call tools, run workflows, do things end to end.
+
+That’s fine.
+
+But that’s not the agency I’m thinking about.
+
+What I think will matter much more in 2026 is **personal agency** — the very human ability to decide “I’m going to do this” without waiting for permission, consensus, or perfect clarity.
+
+Most people underestimate how much of that they already have and they don’t exercise that muscle.
+
+* * *
+
+## Agency is not dramatic
+
+Here’s a boring example from work.
+
+I was on vacation.
+A training run needed to be started. If I waited until I was back, I’d lose a few days of data.
+
+Data points of the real world inform every subsequent decision and the faster I have them the better it is.
+
+So I logged in, submitted the code to start the run, and logged out.
+
+No heroics. No grind culture. Just a small intervention that meant I came back to results instead of nothing.
+
+I can get off early the next working day to get back some time.
+
+no big deal!
+
+This happens all the time at work.
+
+The gap between “this will take three extra days” and “this is already running” is often just one person deciding to act instead of waiting.
+
+* * *
+
+## Trust your gut
+
+Another work-related pattern I’ve seen repeatedly:
+
+Some of the highest-leverage wins come from things that **nobody is doing** , not because they’re useless, but because they don’t fit cleanly into existing OKRs.
+
+If something feels valuable to you, but:
+
+  * it’s not explicitly on the roadmap
+
+  * nobody has time to own it
+
+  * it’s slightly outside your scope
+
+that’s often a signal, not a warning.
+
+Exploring it usually costs you very little: some time and/or some focus.
+
+And the upside can be disproportionate.
+
+You don’t need permission for that.
+You don’t need alignment decks.
+
+The worst case is that it doesn’t work.
+The best case is that you quietly claim a big win by operating just outside the default path.
+
+That’s agency.
+Just go and set up that experiment, your future self will thank you!
+
+* * *
+
+## The same thing applies to content (maybe even more)
+
+I’ve noticed the exact same dynamic with content and personal projects.
+
+Over the past year, I’ve been deliberately giving myself room to experiment:
+
+  * Writing more personal things, not just polished ML system design
+
+  * Testing paid offerings instead of assuming “I’m not there yet”
+
+  * Creating lead magnets, small products
+
+  * Playing with a Zurich-themed personal brand (which is actually me in real life, very important!) instead of being another generic “ML person”
+
+None of this was obvious in advance.
+
+But one thing _was_ obvious: there are a lot of ML people online, and “being good at ML” is not enough.
+
+If you don’t give yourself the chance to explore different formats, tones, and topics, you’ll never find what actually resonates.
+
+Personal brand beats everything else. But only if you let more of yourself show up.
+
+* * *
+
+## Most people are waiting for a signal that never comes
+
+As engineers, we’re trained to be cautious:
+
+  * Gather more data
+
+  * Reduce uncertainty
+
+  * Avoid unnecessary risk
+
+That mindset is great for production systems.
+
+It’s terrible for personal direction.
+
+A lot of people are waiting for:
+
+  * confidence
+
+  * validation
+
+  * a sign that something is “worth it”
+
+But those things usually show up _after_ you act.
+
+Agency isn’t confidence.
+Agency is acting before confidence arrives.
+
+* * *
+
+## The world pushes back WAY less than you think
+
+One thing I’ve internalised over time is that the world is far more malleable than it appears.
+
+You can:
+
+  * explore something that isn’t on the roadmap
+
+  * ship content that isn’t perfect
+
+  * charge before you feel fully ready
+
+  * change direction without a grand plan
+
+Most constraints are social, procedural, or self-imposed. NOT real walls.
+
+AI agents won’t change that.
+
+They’ll just amplify the people who already decide and move.
+
+* * *
+
+## 2026 belongs to…
+
+the people who:
+
+  * trust their instincts
+
+  * act earlier than feels comfortable
+
+  * look a bit unfinished in public
+
+  * treat their work and life as systems they’re allowed to modify
+
+AI agents are tools.
+
+Agency is choosing what to do: with or without them.
+
+And that version of agency is already available.
+
+Ludo

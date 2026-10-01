@@ -9,7 +9,8 @@ rewritten to local files.
   (title, date, author, topic, paywalled flag) and cleaned body.
 - `assets/` — deduplicated local images referenced by the posts.
 - `index.md` — chronological table of all posts with topic and access flag.
-- 80 of 244 posts are paid; those files contain the publicly visible preview only.
+- 244 posts (2023-01-01 → 2026-09-30), all stored in full — the paid posts were
+  retrieved under the owner's own subscription for personal study.
 
 ## Topic map
 

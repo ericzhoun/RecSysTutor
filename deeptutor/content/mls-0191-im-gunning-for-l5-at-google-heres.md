@@ -2,4 +2,142 @@
 
 *Machine Learning at Scale collection — Ludovico Bessi, 2026-03-25 · topic: career*
 
-<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/390ce0252728624d.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/390ce0252728624d.png 424w, ../assets/390ce0252728624d.png 848w, ../assets/390ce0252728624d.png 1272w, ../assets/390ce0252728624d.png 1456w" sizes="100vw"><img src="../assets/390ce0252728624d.png" width="1024" height="1024" data-attrs="{&quot;src&quot;:&quot;../assets/390ce0252728624d.png" class="sizing-normal" alt="" srcset="../assets/390ce0252728624d.png 424w, ../assets/390ce0252728624d.png 848w, ../assets/390ce0252728624d.png 1272w, ../assets/390ce0252728624d.png 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>They tell you to “show impact”, “be more senior”, “align with your manager”.</p><p>Thanks. Very helpful.</p><p>I want to tell you what’s happening in my case right now.</p><p>The moves I’ve made, the bets I’ve taken, and the mistakes I needed to correct along the way.</p><p>I haven’t gotten the promotion yet.</p><p>But I’m deep in the process, and I think the story is more useful told from inside it than after the fact.</p><div><hr></div><h2>The Starting Point: L3, Anti-Abuse, Getting Bored Fast</h2><p>I joined Google as an L3. Within 1.5 years I made L4, working on anti-abuse ML systems: detection models, signal engineering, the unglamorous but technically interesting work of catching bad actors at scale.</p><p>And then I got bored.</p><p>That’s not something people admit in promotion posts.</p><p>But it matters. Because what you do when you’re bored determines whether you grow or stagnate.</p><p>In May 2024 I made a deliberate move: I transferred to YouTube Ads.</p><div><hr></div><h2>The YouTube Ads Chapter: Grinding Toward L5</h2><p><em>I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical (AND personal! like this one) details I can’t fit in free posts.</em></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>YouTube Ads was a completely different beast.</p><p>Higher stakes, more complex systems, larger scale. I had to prove myself from scratch in a new domain.</p><p>I put my head down and grinded.</p><p>Got top performance ratings (top 2% SWE at the company for that year. WOAH!)</p><p>Started owning real problems rather than executing on someone else’s roadmap.</p><p>Then I finished what I’d consider an L5 project: a <strong>new ad inventory format on YouTube Home</strong>, rolling out to ALL YouTube users.</p><p>If you’ve seen a new ad format pop up on your YouTube home feed from 2024… there’s a decent chance that was mine.</p><p>That’s not me being arrogant.</p><p>That’s just the reality of working at scale: your decisions, your models, your launches reach numbers that are almost impossible to reason about intuitively.</p><div><hr></div><h2>The Honest Pivot: Knowing When to Quit</h2><p>Here’s where most people would write “and then I got promoted.”</p><p>That’s not what happened.</p><p>Despite the impact, I made a decision to leave YouTube Ads in mid-2025.</p><p>The reason? I was doing too much full-stack engineering and not enough ML.</p><p>I was debugging frontend issues when I should have been building models.</p><p>At the L5 threshold, you have to be brutally honest about what you’re optimizing for. Staying in a role where you’re grinding on the wrong skills, even if you’re performing well, is a trap.</p><p>You get promoted into a job you don’t want.</p><p>So I moved again.</p><div><hr></div><h2>YouTube Shopping: Going Deep on What Actually Matters</h2><p>I joined YouTube Shopping and took ownership of a more interesting problem (to me at least, which is all that matters): <strong>improving ML recommendations for long-form Shopping videos across Home and Watch Next surfaces</strong>.</p><p>This is where I started operating like a senior engineer (at least I believe so).</p><p>Not executing tasks. Owning outcomes.</p><p>In the past year I’ve:</p><ul><li><p>Shipped multiple modelling improvements across different stages of the recommendation funnel</p></li><li><p>Taken on <strong>Semantic IDs</strong>: a generative approach to recommendations using learned discrete representations, which is genuinely frontier work in RecSys</p></li><li><p>Led <strong>shopping feed personalization</strong> work that touches all YouTube users (research I’m planning to submit to <strong>RecSys 2026 - industry track)</strong></p></li><li><p>Started <strong>onboarding new team members</strong> and designing their starter projects: scoping work that’s meaningful enough to ramp them up fast, but contained enough that they can own it end-to-end</p></li></ul><p>That last point matters more than it sounds.</p><p>Designing good starter projects requires you to understand the codebase, the team’s priorities, and the new hire’s background all at once.</p><p>It’s one of those things that looks like “helping out” but is actually a signal of operating at a higher level of scope.</p><p>The line across all of this: <strong>independent ideas, end-to-end ownership, and measurable impact on metrics that matter</strong>.</p><div><hr></div><h2>What Actually Gets You to L5</h2><p>Let me be direct about what I think the difference is, based on living through it:</p><p><strong>L4 is about reliable execution.</strong> You take a well-defined problem, you solve it well, you don’t create surprises.</p><p><strong>L5 is about independent problem identification.</strong> You see something that’s not working, you convince people it matters, you build the solution, you measure the impact. Without someone telling you to.</p><p>The shopping feed personalization work is a good example.</p><p>Nobody assigned me “go work on feed”.</p><p>I identified it as a high-leverage direction, built the case, got alignment, and shipped it. That’s the motion that gets you promoted (I think?).</p><p>The other thing: <strong>depth over breadth</strong>.</p><p>I spent the first part of my Google career spreading across domains. But in every domain, I take a specific scope and own it.</p><p>That’s what lets you identify the right problems in the first place.</p><div><hr></div><h2>The Part Nobody Tells You</h2><p>Promotions at L4→L5 take longer than they should.</p><p>The system is imperfect. You will do L5 work for 6-12 months before you get the title. That’s just the reality.</p><p>What matters is that you use that period to build a body of work that’s genuinely hard to argue with. </p><p>Not just one big project, but a consistent pattern of scope, independence, and impact.</p><p>That’s what I’ve been trying to do. The promotion decision isn’t in yet.</p><p>Ask me in a few months how that’s going ;)</p><p>Ludo</p>
+[](../assets/390ce0252728624d.png)
+
+They tell you to “show impact”, “be more senior”, “align with your manager”.
+
+Thanks. Very helpful.
+
+I want to tell you what’s happening in my case right now.
+
+The moves I’ve made, the bets I’ve taken, and the mistakes I needed to correct along the way.
+
+I haven’t gotten the promotion yet.
+
+But I’m deep in the process, and I think the story is more useful told from inside it than after the fact.
+
+* * *
+
+## The Starting Point: L3, Anti-Abuse, Getting Bored Fast
+
+I joined Google as an L3. Within 1.5 years I made L4, working on anti-abuse ML systems: detection models, signal engineering, the unglamorous but technically interesting work of catching bad actors at scale.
+
+And then I got bored.
+
+That’s not something people admit in promotion posts.
+
+But it matters. Because what you do when you’re bored determines whether you grow or stagnate.
+
+In May 2024 I made a deliberate move: I transferred to YouTube Ads.
+
+* * *
+
+## The YouTube Ads Chapter: Grinding Toward L5
+
+ _I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical (AND personal! like this one) details I can’t fit in free posts._
+
+YouTube Ads was a completely different beast.
+
+Higher stakes, more complex systems, larger scale. I had to prove myself from scratch in a new domain.
+
+I put my head down and grinded.
+
+Got top performance ratings (top 2% SWE at the company for that year. WOAH!)
+
+Started owning real problems rather than executing on someone else’s roadmap.
+
+Then I finished what I’d consider an L5 project: a **new ad inventory format on YouTube Home** , rolling out to ALL YouTube users.
+
+If you’ve seen a new ad format pop up on your YouTube home feed from 2024… there’s a decent chance that was mine.
+
+That’s not me being arrogant.
+
+That’s just the reality of working at scale: your decisions, your models, your launches reach numbers that are almost impossible to reason about intuitively.
+
+* * *
+
+## The Honest Pivot: Knowing When to Quit
+
+Here’s where most people would write “and then I got promoted.”
+
+That’s not what happened.
+
+Despite the impact, I made a decision to leave YouTube Ads in mid-2025.
+
+The reason? I was doing too much full-stack engineering and not enough ML.
+
+I was debugging frontend issues when I should have been building models.
+
+At the L5 threshold, you have to be brutally honest about what you’re optimizing for. Staying in a role where you’re grinding on the wrong skills, even if you’re performing well, is a trap.
+
+You get promoted into a job you don’t want.
+
+So I moved again.
+
+* * *
+
+## YouTube Shopping: Going Deep on What Actually Matters
+
+I joined YouTube Shopping and took ownership of a more interesting problem (to me at least, which is all that matters): **improving ML recommendations for long-form Shopping videos across Home and Watch Next surfaces**.
+
+This is where I started operating like a senior engineer (at least I believe so).
+
+Not executing tasks. Owning outcomes.
+
+In the past year I’ve:
+
+  * Shipped multiple modelling improvements across different stages of the recommendation funnel
+
+  * Taken on **Semantic IDs** : a generative approach to recommendations using learned discrete representations, which is genuinely frontier work in RecSys
+
+  * Led **shopping feed personalization** work that touches all YouTube users (research I’m planning to submit to **RecSys 2026 - industry track)**
+
+  * Started **onboarding new team members** and designing their starter projects: scoping work that’s meaningful enough to ramp them up fast, but contained enough that they can own it end-to-end
+
+That last point matters more than it sounds.
+
+Designing good starter projects requires you to understand the codebase, the team’s priorities, and the new hire’s background all at once.
+
+It’s one of those things that looks like “helping out” but is actually a signal of operating at a higher level of scope.
+
+The line across all of this: **independent ideas, end-to-end ownership, and measurable impact on metrics that matter**.
+
+* * *
+
+## What Actually Gets You to L5
+
+Let me be direct about what I think the difference is, based on living through it:
+
+**L4 is about reliable execution.** You take a well-defined problem, you solve it well, you don’t create surprises.
+
+**L5 is about independent problem identification.** You see something that’s not working, you convince people it matters, you build the solution, you measure the impact. Without someone telling you to.
+
+The shopping feed personalization work is a good example.
+
+Nobody assigned me “go work on feed”.
+
+I identified it as a high-leverage direction, built the case, got alignment, and shipped it. That’s the motion that gets you promoted (I think?).
+
+The other thing: **depth over breadth**.
+
+I spent the first part of my Google career spreading across domains. But in every domain, I take a specific scope and own it.
+
+That’s what lets you identify the right problems in the first place.
+
+* * *
+
+## The Part Nobody Tells You
+
+Promotions at L4→L5 take longer than they should.
+
+The system is imperfect. You will do L5 work for 6-12 months before you get the title. That’s just the reality.
+
+What matters is that you use that period to build a body of work that’s genuinely hard to argue with.
+
+Not just one big project, but a consistent pattern of scope, independence, and impact.
+
+That’s what I’ve been trying to do. The promotion decision isn’t in yet.
+
+Ask me in a few months how that’s going ;)
+
+Ludo
