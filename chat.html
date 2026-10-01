@@ -31,6 +31,10 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,46px);let
 .msg .srcs{margin-top:10px;padding-top:9px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .chip{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:1px 6px;margin:0 6px 4px 0}
 .chip.ok{border-color:rgba(15,111,102,.5);color:var(--accent-ink)}
+a.chip{text-decoration:none;color:var(--accent-ink);border-color:rgba(15,111,102,.45)}
+a.chip:hover{background:var(--accent-soft);border-color:var(--accent)}
+.chip .k{color:var(--faint);margin-right:4px}
+.chip.static{color:var(--faint)}
 .chip.no{color:var(--faint)}
 .suggest{margin-top:22px}
 .suggest .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
@@ -42,7 +46,19 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,46px);let
 .composer button{align-self:flex-end;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--panel);border:1px solid var(--ink);padding:12px 16px;cursor:pointer}
 .composer button:hover{background:var(--accent);border-color:var(--accent)}
 .composer button:disabled{opacity:.55;cursor:default}
-.status{font-family:var(--mono);font-size:11px;color:var(--faint);min-height:16px;margin-top:6px}
+.status{font-family:var(--mono);font-size:11px;color:var(--faint);min-height:16px;margin-top:6px;display:flex;align-items:center;gap:8px}
+.status .spin{width:10px;height:10px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;display:inline-block;animation:spin .7s linear infinite;flex:0 0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status .el{color:var(--faint)}
+.status.busy{color:var(--accent-ink)}
+/* thinking dots shown inside the pending tutor bubble */
+.dots{display:inline-flex;gap:4px;align-items:center;padding:3px 0}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--faint);display:inline-block;animation:blink 1.2s infinite both}
+.dots i:nth-child(2){animation-delay:.18s}
+.dots i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.dots i,.status .spin{animation:none}}
+.msg.pending .body{color:var(--muted)}
 a{color:var(--accent-ink)}
 .notice{margin-top:18px;border:1px solid var(--line);background:var(--panel);padding:12px 14px;font-size:13px;color:var(--muted);max-width:70ch}
 </style>
@@ -55,7 +71,7 @@ a{color:var(--accent-ink)}
     retrieval, ranking, sequential models, multi-task learning, the Twitter case study, embedding infrastructure —
     plus the 104-paper atlas and the 244-post reading library.
     Answers are retrieved from the course knowledge base and cite the module they came from.</p>
-  <div class="meta">backend: Butterbase serverless function · retrieval: native RAG + lexical fallback · model: glm-5.2 (project .env)</div>
+  <div class="meta">backend: Butterbase serverless function · retrieval: pgvector over 973 embedded course chunks · model: kimi-k2.6</div>
   <hr class="hr">
 
   <div class="thread" id="thread"></div>
@@ -76,11 +92,15 @@ a{color:var(--accent-ink)}
   <div class="status" id="status"></div>
 
   <div class="notice">
-    <strong>How it works.</strong> Your question is scored against the course knowledge base — Butterbase's native RAG,
-    with a lexical fallback over the exported notes while the account's embedding quota is inactive. The retrieved
-    passages plus your conversation history go to the tutor model configured in the project <code>.env</code>
-    (currently glm-5.2). The chips under each answer show which modules were retrieved. The
-    <a href="index.html">full interactive course</a> — lessons, widgets, exercises — lives on this site;
+    <strong>How it works.</strong> Your question is embedded and matched against 973 chunks of the course
+    (modules, the paper atlas and all 244 library posts) using pgvector similarity search; the best passages plus your
+    conversation history go to <strong>kimi-k2.6</strong>. The chips under each answer show which modules were
+    retrieved and how closely they matched. <strong>Every source chip is a link</strong> — click it to read the
+    lesson or the library article the answer was drawn from. Labels beginning <em>ML@Scale #N</em> are items in the
+    244-post reading library (a separate collection from the course's own M1–M11 modules, so an “#N” there is not a
+    lesson number); labels beginning <em>M1</em>–<em>M11</em> are course modules. Answers take roughly 5–20 seconds to
+    write — the status line and the animated placeholder show the request is still working, so please don't close the tab.
+    The <a href="index.html">full interactive course</a> — lessons, widgets, exercises — lives on this site;
     a DeepTutor CLI integration also exists in the repo under <code>deeptutor/</code>.
   </div>
 </div>
@@ -130,44 +150,122 @@ a{color:var(--accent-ink)}
     return b;
   }
 
+  // ---- progress feedback -------------------------------------------------------
+  // The proxy buffers responses, so we cannot stream tokens. Instead we keep the user
+  // informed: an animated placeholder, a staged status line, and a live elapsed counter
+  // with an honest expectation, so a 20s wait never looks like a dead page.
+  var timers = [];
+
+  function clearTimers(){ timers.forEach(clearInterval); timers = []; }
+
+  function startProgress(statusEl, bubble){
+    var t0 = Date.now();
+    var STAGES = [
+      [0,    "searching the course notes…"],
+      [2500, "reranking the best passages…"],
+      [6000, "writing the answer…"],
+      [14000, "still writing — long answers can take ~30s…"],
+      [30000, "almost there — thanks for waiting…"]
+    ];
+    bubble.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>';
+    function tick(){
+      var el = (Date.now() - t0) / 1000;
+      var stage = STAGES[0][1];
+      for (var i = 0; i < STAGES.length; i++) if (el * 1000 >= STAGES[i][0]) stage = STAGES[i][1];
+      statusEl.className = "status busy";
+      statusEl.innerHTML = '<span class="spin"></span><span>' + esc(stage) + '</span>' +
+        '<span class="el">' + el.toFixed(1) + 's</span>';
+    }
+    tick();
+    var id = setInterval(tick, 100);
+    timers.push(id);
+    return function stop(){ clearInterval(id); clearTimers(); };
+  }
+
   function ask(text){
     if (busy || !text.trim()) return;
     busy = true; sendBtn.disabled = true;
-    add("user", text.trim());
-    history.push({ role: "user", content: text.trim() });
+    var q = text.trim();
+    add("user", q);
+    history.push({ role: "user", content: q });
     input.value = ""; input.style.height = "auto";
-    status.textContent = "retrieving from the course notes…";
-    var b = add("tutor", "…");
+
+    var b = add("tutor", "");
+    b.parentNode.classList.add("pending");
+    var stop = startProgress(status, b);
+
+    // Abort if the backend hangs, so the page never spins forever.
+    var ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var killed = false;
+    var hardStop = setTimeout(function(){
+      killed = true;
+      if (ctl) ctl.abort();
+    }, 120000);
+
+    function finish(){
+      stop();
+      clearTimeout(hardStop);
+      clearTimers();
+      busy = false; sendBtn.disabled = false;
+      status.className = "status"; status.textContent = "";
+      b.parentNode.classList.remove("pending");
+      input.focus();
+    }
+
+    function fail(msg){
+      b.textContent = msg;
+      b.parentNode.classList.remove("pending");
+      finish();
+    }
+
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text.trim(), history: history.slice(-8) })
-    }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      body: JSON.stringify({ message: q, history: history.slice(-8) }),
+      signal: ctl ? ctl.signal : undefined
+    })
+      .then(function(r){ return r.text().then(function(t){
+        var j = null; try { j = JSON.parse(t); } catch(e){}
+        return { ok: r.ok, status: r.status, text: t, j: j };
+      }); })
       .then(function(res){
-        if (!res.ok || res.j.error) {
-          var d = res.j && res.j.error ? String(res.j.error) : "http " + res.ok;
-          b.textContent = "The tutor backend returned an error (" + d + "). Try again in a moment.";
-          status.textContent = "";
-        } else {
-          b.innerHTML = fmt(res.j.answer || "(empty response)");
-          var s = document.createElement("div"); s.className = "srcs";
-          var chips = (res.j.sources || []).map(function(x){
-            var name = x.module || x.file || "notes";
-            var sim = x.similarity != null ? " " + x.similarity : "";
-            return '<span class="chip ' + (res.j.grounded ? "ok" : "no") + '">' + esc(name) + sim + "</span>";
-          }).join("");
-          s.innerHTML = (res.j.grounded ? "grounded in " : "no notes retrieved · ") + chips +
-            ' <span class="chip">' + esc(res.j.model || "") + "</span>";
-          b.parentNode.appendChild(s);
-          history.push({ role: "assistant", content: res.j.answer || "" });
-          status.textContent = "";
+        if (!res.ok || !res.j || res.j.error) {
+          var d = (res.j && res.j.error) ? String(res.j.error) : ("http " + res.status);
+          fail("The tutor backend returned an error (" + d + "). Try again in a moment.");
+          return;
         }
+        var ans = (res.j.answer || "").trim();
+        if (!ans) {
+          fail("The tutor returned an empty answer this time. Try rephrasing, or ask a narrower question.");
+          return;
+        }
+        b.innerHTML = fmt(ans);
+        var s = document.createElement("div"); s.className = "srcs";
+        // Show what each source IS (course module vs. library post) and link straight to it.
+        // A bare "mls-0014-..." id is never shown alone: that number is the ML@Scale
+        // collection's own item number, not a course lesson.
+        var chips = (res.j.sources || []).map(function(x){
+          var sim = x.similarity != null ? " " + x.similarity : "";
+          var label = x.label || x.module || x.file || "notes";
+          var kindTag = x.note ? '<span class="k">' + esc(x.note) + "</span>" : "";
+          var cls = "chip " + (res.j.grounded ? "ok" : "no");
+          if (x.url) {
+            return '<a class="' + cls + '" href="' + esc(x.url) + '" target="_blank" rel="noopener" ' +
+              'title="open this source">' + kindTag + esc(label) + sim + "</a>";
+          }
+          return '<span class="' + cls + ' static">' + kindTag + esc(label) + sim + "</span>";
+        }).join("");
+        s.innerHTML = (res.j.grounded ? "grounded in " : "no notes retrieved · ") + chips +
+          ' <span class="chip static">' + esc(res.j.model || "") + "</span>";
+        b.parentNode.appendChild(s);
+        history.push({ role: "assistant", content: ans });
+        b.parentNode.classList.remove("pending");
+        finish();
       })
       .catch(function(e){
-        b.textContent = "Network error: " + e;
-        status.textContent = "";
-      })
-      .then(function(){ busy = false; sendBtn.disabled = false; input.focus(); });
+        if (killed) fail("The tutor took too long (over 2 minutes) and the request was cancelled. Try a narrower question.");
+        else fail("Network error: " + e);
+      });
   }
 
   sendBtn.addEventListener("click", function(){ ask(input.value); });

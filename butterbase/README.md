@@ -79,34 +79,33 @@ The course corpus lives in the app's own database:
   and all 244 *Machine Learning at Scale* posts.
 - Retrieval falls back to lexical scoring if the embedder is unavailable or returns
   nothing, so the chat degrades instead of failing.
-- Generation calls Moonshot directly (`OPENAI_BASE_URL`); `temperature` is pinned to 1 for
-  `kimi-k2.*` models, which reject any other value.
+- Generation calls Moonshot directly (`OPENAI_BASE_URL`). **`thinking` is disabled for
+  `kimi-k2.*`**: as a reasoning model it spends the entire `max_tokens` budget on
+  `reasoning_content` before emitting any answer, so a modest budget yields an EMPTY
+  completion (`finish_reason: "length"`, `content: ""`). Disabled mode requires
+  `temperature: 0.6`; enabled mode requires `1`. The prompt also caps answers at ~250 words,
+  otherwise a broad question runs past 25k characters and 80s.
 
-### Building the index
+  Measured effect: typical answers went from 25-40s, sometimes empty, to 6-20s.
 
-```bash
-python butterbase/tools/build_index.py --dry-run    # show chunk counts, write nothing
-python butterbase/tools/build_index.py              # embed + load everything
-python butterbase/tools/build_index.py --resume     # skip sources already indexed
-python butterbase/tools/index_one.py <source-stem>  # re-index a single document
-python butterbase/tools/check_tutor.py              # end-to-end checks against the live URL
-```
+- **The HTTP trigger buffers responses**, so token streaming is not possible: a probe emitting
+  five chunks 700ms apart delivered them all at t+4.97s. The page therefore shows progress
+  rather than streamed text - see `../chat.html` (animated placeholder, staged status line,
+  live elapsed timer, 2-minute client-side abort).
+- **Citations are readable and openable.** Each retrieved source is returned with a `label`
+  (the article's real title, or the course module's heading), a `note` (`ML@Scale #14`, `M2`),
+  a `kind` (`course` | `library` | `atlas`) and a `url`. The page renders them as links, so a
+  citation is never a dead end.
 
-Needs `GEMINI_API_KEY` (embeddings) and `BUTTERBASE_KEY` (database writes) in the
-environment. `make_env.py` writes the gitignored course `.env` that `deploy.py` reads.
+  This matters because the corpus mixes two different things: the course's own 12 modules
+  (`m0`-`m11`) and a 244-post external library (`mls-NNNN-slug`). The number inside an `mls-*`
+  id is that collection's own item number, **not a course lesson** - showing it bare (e.g.
+  `mls-0014-explainability-ml-models`) made readers look for a "lesson 14" that does not exist.
 
-### Schema
-
-The schema lives in `manage_schema` and is **declarative and total**: anything absent from
-a submitted schema is treated as a drop. When adding the `rt_*` tables, always submit the
-*current* schema plus the additions - submitting only the new tables would have dropped all
-nine of the other project's tables. Migration `recsytutor_vector_store` (id 35) added
-`rt_chunks` and `rt_documents`.
-
-### Env vars on the deployed function
-
-`BB_SERVICE_KEY`, `TUTOR_MODEL`, `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `GEMINI_API_KEY`,
-`DEBUG_TOKEN`. `deploy.py` merges these on redeploy (incoming keys win).
+  Link targets: modules resolve to `index.html#mN` (the lesson in the course page); library
+  posts resolve to `ml-at-scale/posts/<date>-<slug>.md`. The KB copies under
+  `deeptutor/content/` are deliberately **not** used as targets - their `../assets/` image
+  references do not resolve, so those pages would render with broken images.
 
 - `DEBUG_TOKEN` gates the diagnostic body: POST `{"message": "...", "debug": "<token>"}`
   returns retrieval mode, chunk count, max similarity and the raw provider status.
