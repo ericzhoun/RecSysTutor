@@ -5,104 +5,12 @@ date: 2026-06-25
 author: Ludovico Bessi
 collection: Machine Learning at Scale
 topics: [meta]
-paywalled: true
-words: 555
+paywalled: false
+words: 1180
 ---
 
 # Inside ML@Scale #3
 
 *MRR goes BRRRRR*
 
-> Paid post — only the publicly visible preview is included.
-
-*MRR goes BRRRRR*
-
-[![](../assets/e2943079c322692a.webp)](../assets/e2943079c322692a.webp)
-
-Every 25th of the month, I publish **Inside ML@Scale** — a full, honest look at the business behind this newsletter.
-
-The good, the bad.
-
-What’s growing, what’s stagnating, what I’m trying that isn’t working (or sometimes is?)
-
-**Why?**
-
-Three reasons.
-
-**1\. Because nobody else does it.**
-
-The ML newsletter space is full of people performing success. “Just crossed 50k subscribers 🚀” with zero context on how, for how long, at what cost, with what retention.
-
-I’ve been building ML@Scale since 2023: from 0 to 14k+ free subscribers, 45k on LinkedIn, and some of them paid.
-
-That didn’t happen linearly. It happened with a lot of stupid decisions in between. Those are worth writing about.
-
-**2\. Because transparency compounds.**
-
-The same way our 25th-of-the-month ritual makes us better at money, writing this publicly will make me better at running this business. You can’t hide from numbers you’ve committed to publishing.
-
-**3\. Because you deserve to know what you’re paying for.**
-
-If you’re a premium subscriber, you’re not just getting “The Blind ML Review” or “The Zürich Feed”. You’re buying into a thing that either works or doesn’t. I owe you visibility into which one it is.
-
-### **What’s in the free section (this part)**
-
-Every edition will have:
-
-  * Top-line numbers
-
-  * The _one thing_ that worked that month
-
-  * The _one thing_ that didn’t work
-
-  * What I’m trying next
-
-### **Top-line: where we are in June 2026**
-
-  * **14,000+** free subscribers
-
-  * **45,000+** LinkedIn followers
-
-  * **~25%** open rate (still constant, need to work on this!)
-
-  * **6x/week** LinkedIn cadence, **3x/week** newsletter cadence
-
-### **What worked this month**
-
-This month was a big month! Lots of thing drove it.
-
-[![THE ZÜRICH FEED \[Edition #4\] ](../assets/124ac4a8ba399f6f.jpg)THE ZÜRICH FEED [Edition #4] Ludovico Bessi·Jun 3[Read full story](2026-06-03-the-zurich-feed-edition-4.md)](2026-06-03-the-zurich-feed-edition-4.md)
-
-[![ML@SCALE - 1:1 - 100 billion rows, three mistakes, one lesson \[Edition #1\]](../assets/a5992b8fb79a6401.jpg)ML@SCALE - 1:1 - 100 billion rows, three mistakes, one lesson [Edition #1]Ludovico Bessi·Jun 7[Read full story](2026-06-07-mlscale-11-100-billion-rows-three.md)](2026-06-07-mlscale-11-100-billion-rows-three.md)
-
-[![How to pick the right ML team](../assets/7358ddcb7f081a24.jpg)How to pick the right ML teamLudovico Bessi·Jun 10[Read full story](2026-06-10-how-to-pick-the-right-ml-team.md)](2026-06-10-how-to-pick-the-right-ml-team.md)
-
-[![THE ZÜRICH FEED \[Edition #5\] ](../assets/99c112420faaf588.jpg)THE ZÜRICH FEED [Edition #5] Ludovico Bessi·Jun 17[Read full story](2026-06-17-the-zurich-feed-edition-5.md)](2026-06-17-the-zurich-feed-edition-5.md)
-
-Sub split:
-
-  * Zurich feed: 63 subs, 30+29 free subs, 0+4 paid subs
-
-  * ML@Scale 1:1: 20 subs, 2 paid 18 free
-
-  * How to pick the right ML team: 7 subs, 3 paid 4 free
-
-Not a bad month!
-
-### **What didn’t work**
-
-Honestly, this month was hard to find lowlights. Even deep technical content performed great. Love such months!
-
-### **What I’m trying next**
-
-Still trying to find time for a big month of august edition. Time is scarcest resource when you juggle a full time job (pretty demanding one) and this side project.
-
-No data on drip campaigns yet. But they are setup to convince paid subs to come back and to convince new free subs to convert to paid!
-
-I want to focus a bit more on “personal stories” as those seem to be the driving force behind things. Maybe a new format where I give advice to people in 1:1 on career things (which people seem to love) and then share the anonymized version of it for all paid subs. That’d be cool i think!
-
-# **The business numbers**
-
-All right. Let’s get into the details. (metrics are very shiny this month!!)
-
-## **Paid subs graph**
+<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/e2943079c322692a.webp" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/e2943079c322692a.webp 424w, ../assets/e2943079c322692a.webp 848w, ../assets/e2943079c322692a.webp 1272w, ../assets/e2943079c322692a.webp 1456w" sizes="100vw"><img src="../assets/e2943079c322692a.webp" width="752" height="322" data-attrs="{&quot;src&quot;:&quot;../assets/e2943079c322692a.webp" class="sizing-normal" alt="" srcset="../assets/e2943079c322692a.webp 424w, ../assets/e2943079c322692a.webp 848w, ../assets/e2943079c322692a.webp 1272w, ../assets/e2943079c322692a.webp 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p><span>Every 25th of the month, I publish </span><strong>Inside ML@Scale</strong><span> — a full, honest look at the business behind this newsletter.</span></p><p>The good, the bad.</p><p>What’s growing, what’s stagnating, what I’m trying that isn’t working (or sometimes is?)</p><p><strong>Why?</strong></p><p>Three reasons.</p><p><strong>1. Because nobody else does it.</strong></p><p>The ML newsletter space is full of people performing success. “Just crossed 50k subscribers 🚀” with zero context on how, for how long, at what cost, with what retention.</p><p>I’ve been building ML@Scale since 2023: from 0 to 14k+ free subscribers, 45k on LinkedIn, and some of them paid.</p><p>That didn’t happen linearly. It happened with a lot of stupid decisions in between. Those are worth writing about.</p><p><strong>2. Because transparency compounds.</strong></p><p>The same way our 25th-of-the-month ritual makes us better at money, writing this publicly will make me better at running this business. You can’t hide from numbers you’ve committed to publishing.</p><p><strong>3. Because you deserve to know what you’re paying for.</strong></p><p>If you’re a premium subscriber, you’re not just getting “The Blind ML Review” or “The Zürich Feed”. You’re buying into a thing that either works or doesn’t. I owe you visibility into which one it is.</p><h3><strong>What’s in the free section (this part)</strong></h3><p>Every edition will have:</p><ul><li><p>Top-line numbers</p></li><li><p><span>The </span><em>one thing</em><span> that worked that month</span></p></li><li><p><span>The </span><em>one thing</em><span> that didn’t work</span></p></li><li><p>What I’m trying next</p></li></ul><h3><strong>Top-line: where we are in June 2026</strong></h3><ul><li><p><strong>14,000+</strong><span> free subscribers</span></p></li><li><p><strong>45,000+</strong><span> LinkedIn followers</span></p></li><li><p><strong>~25%</strong><span> open rate (still constant, need to work on this!)</span></p></li><li><p><strong>6x/week</strong><span> LinkedIn cadence, </span><strong>3x/week</strong><span> newsletter cadence</span></p></li></ul><h3><strong>What worked this month</strong></h3><p>This month was a big month! Lots of thing drove it.</p><div class="digest-post-embed" data-attrs="{&quot;nodeId&quot;:&quot;269fa870-741f-4bf4-ad1e-3945dc2542cb&quot;,&quot;caption&quot;:&quot;Hey! Welcome to the fourth edition of The Zürich Feed. 🥂&quot;,&quot;cta&quot;:null,&quot;showBylines&quot;:true,&quot;showDescription&quot;:true,&quot;showImage&quot;:true,&quot;size&quot;:&quot;sm&quot;,&quot;isEditorNode&quot;:true,&quot;title&quot;:&quot;THE ZÜRICH FEED [Edition #4] &quot;,&quot;publishedBylines&quot;:[{&quot;id&quot;:32585278,&quot;name&quot;:&quot;Ludovico Bessi&quot;,&quot;bio&quot;:&quot;ML engineer @Google&quot;,&quot;photo_url&quot;:&quot;../assets/1604efa36119334a.png],&quot;post_date&quot;:&quot;2026-06-03T07:15:53.192Z&quot;,&quot;cover_image&quot;:&quot;../assets/124ac4a8ba399f6f.jpg Learning At Scale&quot;,&quot;publication_logo_url&quot;:&quot;../assets/cbdeda65b45c4859.png"></div><div class="digest-post-embed" data-attrs="{&quot;nodeId&quot;:&quot;d59001aa-5a66-4649-ac6d-e158b09bfd52&quot;,&quot;caption&quot;:&quot;The ML@Scale 1:1 is a recurring interview series. One engineer, six questions, no fluff. We go straight to the production scars.&quot;,&quot;cta&quot;:null,&quot;showBylines&quot;:true,&quot;showDescription&quot;:true,&quot;showImage&quot;:true,&quot;size&quot;:&quot;sm&quot;,&quot;isEditorNode&quot;:true,&quot;title&quot;:&quot;ML@SCALE - 1:1 - 100 billion rows, three mistakes, one lesson [Edition #1]&quot;,&quot;publishedBylines&quot;:[{&quot;id&quot;:32585278,&quot;name&quot;:&quot;Ludovico Bessi&quot;,&quot;bio&quot;:&quot;ML engineer @Google&quot;,&quot;photo_url&quot;:&quot;../assets/1604efa36119334a.png],&quot;post_date&quot;:&quot;2026-06-07T14:02:21.730Z&quot;,&quot;cover_image&quot;:&quot;../assets/a5992b8fb79a6401.jpg Learning At Scale&quot;,&quot;publication_logo_url&quot;:&quot;../assets/cbdeda65b45c4859.png"></div><div class="digest-post-embed" data-attrs="{&quot;nodeId&quot;:&quot;fb6c6b45-a968-4f37-b399-858bb931b1c0&quot;,&quot;caption&quot;:&quot;I’ve switched ML teams multiple times at Google. Anti-abuse → YouTube Ads → YouTube Shopping Recommendations.&quot;,&quot;cta&quot;:null,&quot;showBylines&quot;:true,&quot;showDescription&quot;:true,&quot;showImage&quot;:true,&quot;size&quot;:&quot;sm&quot;,&quot;isEditorNode&quot;:true,&quot;title&quot;:&quot;How to pick the right ML team&quot;,&quot;publishedBylines&quot;:[{&quot;id&quot;:32585278,&quot;name&quot;:&quot;Ludovico Bessi&quot;,&quot;bio&quot;:&quot;ML engineer @Google&quot;,&quot;photo_url&quot;:&quot;../assets/1604efa36119334a.png],&quot;post_date&quot;:&quot;2026-06-10T08:00:33.296Z&quot;,&quot;cover_image&quot;:&quot;../assets/7358ddcb7f081a24.jpg Learning At Scale&quot;,&quot;publication_logo_url&quot;:&quot;../assets/cbdeda65b45c4859.png"></div><div class="digest-post-embed" data-attrs="{&quot;nodeId&quot;:&quot;9d875c76-7246-4dce-9a61-6a776be98528&quot;,&quot;caption&quot;:&quot;Hey! Welcome to the fourth edition of The Zürich Feed. 🥂&quot;,&quot;cta&quot;:null,&quot;showBylines&quot;:true,&quot;showDescription&quot;:true,&quot;showImage&quot;:true,&quot;size&quot;:&quot;sm&quot;,&quot;isEditorNode&quot;:true,&quot;title&quot;:&quot;THE ZÜRICH FEED [Edition #5] &quot;,&quot;publishedBylines&quot;:[{&quot;id&quot;:32585278,&quot;name&quot;:&quot;Ludovico Bessi&quot;,&quot;bio&quot;:&quot;ML engineer @Google&quot;,&quot;photo_url&quot;:&quot;../assets/1604efa36119334a.png],&quot;post_date&quot;:&quot;2026-06-17T07:17:26.685Z&quot;,&quot;cover_image&quot;:&quot;../assets/99c112420faaf588.jpg Learning At Scale&quot;,&quot;publication_logo_url&quot;:&quot;../assets/cbdeda65b45c4859.png"></div><p>Sub split:</p><ul><li><p>Zurich feed: 63 subs, 30+29 free subs, 0+4 paid subs</p></li><li><p>ML@Scale 1:1: 20 subs, 2 paid 18 free</p></li><li><p>How to pick the right ML team: 7 subs, 3 paid 4 free</p></li></ul><p>Not a bad month!</p><h3><strong>What didn’t work </strong></h3><p>Honestly, this month was hard to find lowlights. Even deep technical content performed great. Love such months!</p><h3><strong>What I’m trying next</strong></h3><p>Still trying to find time for a big month of august edition. Time is scarcest resource when you juggle a full time job (pretty demanding one) and this side project.</p><p>No data on drip campaigns yet. But they are setup to convince paid subs to come back and to convince new free subs to convert to paid!</p><p>I want to focus a bit more on “personal stories” as those seem to be the driving force behind things. Maybe a new format where I give advice to people in 1:1 on career things (which people seem to love) and then share the anonymized version of it for all paid subs. That’d be cool i think!</p><h1><strong>The business numbers</strong></h1><p>All right. Let’s get into the details. (metrics are very shiny this month!!)</p><h2 style="text-align: center;"><strong>Paid subs graph</strong></h2><div class="paywall-jump" data-component-name="PaywallToDOM"></div><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/3951e8d750299c61.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/3951e8d750299c61.png 424w, ../assets/3951e8d750299c61.png 848w, ../assets/3951e8d750299c61.png 1272w, ../assets/3951e8d750299c61.png 1456w" sizes="100vw"><img src="../assets/3951e8d750299c61.png" width="1062" height="477" data-attrs="{&quot;src&quot;:&quot;../assets/3951e8d750299c61.png" class="sizing-normal" alt="" srcset="../assets/3951e8d750299c61.png 424w, ../assets/3951e8d750299c61.png 848w, ../assets/3951e8d750299c61.png 1272w, ../assets/3951e8d750299c61.png 1456w" sizes="100vw" loading="lazy"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Decent growth in the last 30 days, we are now at 120 paid subs!</p><p>This is reflected in the new MRR:</p><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/844f76af69338c3a.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/844f76af69338c3a.png 424w, ../assets/844f76af69338c3a.png 848w, ../assets/844f76af69338c3a.png 1272w, ../assets/844f76af69338c3a.png 1456w" sizes="100vw"><img src="../assets/844f76af69338c3a.png" width="399" height="368" data-attrs="{&quot;src&quot;:&quot;../assets/844f76af69338c3a.png" class="sizing-normal" alt="" srcset="../assets/844f76af69338c3a.png 424w, ../assets/844f76af69338c3a.png 848w, ../assets/844f76af69338c3a.png 1272w, ../assets/844f76af69338c3a.png 1456w" sizes="100vw" loading="lazy"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>A 23% increase in the last 30 days! Here we go! :) </p><p>You know what’s cool? I now have a subscriber churn rate that’s below 10%!</p><div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/6ea076d60e8b7da7.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/6ea076d60e8b7da7.png 424w, ../assets/6ea076d60e8b7da7.png 848w, ../assets/6ea076d60e8b7da7.png 1272w, ../assets/6ea076d60e8b7da7.png 1456w" sizes="100vw"><img src="../assets/6ea076d60e8b7da7.png" width="607" height="381" data-attrs="{&quot;src&quot;:&quot;../assets/6ea076d60e8b7da7.png" class="sizing-normal" alt="" srcset="../assets/6ea076d60e8b7da7.png 424w, ../assets/6ea076d60e8b7da7.png 848w, ../assets/6ea076d60e8b7da7.png 1272w, ../assets/6ea076d60e8b7da7.png 1456w" sizes="100vw" loading="lazy"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Happy happy happy!</p><p>I need to focus on providing value to people week over week to make their sub be worth it. :)</p><p>That’s all for this second edition! Let me know which numbers you’d like to see more or less of.</p><p>— Ludo</p>

@@ -4,24 +4,10 @@ date: 2026-01-06
 author: Ludovico Bessi
 collection: Machine Learning at Scale
 topics: [meta]
-paywalled: true
-words: 67
+paywalled: false
+words: 130
 ---
 
 # Adding a monthly deep dive to your subscription
 
-> Paid post — only the publicly visible preview is included.
-
-Hey!
-
-You’re one of 23 people paying for ML@Scale and I want to make this worth way more than $10/month.
-
-Right now you get 2 extra posts per month that are more personal / my unique perspective on ML topics.
-
-I’m adding something new on top of that:
-
-→ 1 massive monthly deep dive (5,000+ words)
-
-→ Production ML systems design with architecture diagrams 
-
-→ Real i…
+<p>Hey!</p><p>You’re one of 23 people paying for ML@Scale and I want to make this worth way more than $10/month.</p><p>Right now you get 2 extra posts per month that are more personal / my unique perspective on ML topics.</p><p>I’m adding something new on top of that:</p><p>→ 1 massive monthly deep dive (5,000+ words)</p><p>→ Production ML systems design with architecture diagrams  </p><p>→ Real implementation details</p><p>→ Code patterns, failure stories, lessons you won’t find elsewhere</p><p>Example topics:</p><p>- How an E2E rec sys actually works</p><p>- Ads auction systems at scale</p><p>- RLHF training infrastructure</p><p>- Real-time personalization engines</p><p><strong>Quick question: Which topic should I cover first? Or anything else you’d like me to add to the paid subs that you’d like to see.</strong></p><p><strong>Just reply to this email, I read everything.</strong></p><p><strong>Thanks for supporting this from the beginning. &lt;3</strong></p><p>- Ludo</p>

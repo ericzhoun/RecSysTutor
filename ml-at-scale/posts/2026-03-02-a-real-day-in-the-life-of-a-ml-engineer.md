@@ -5,52 +5,12 @@ date: 2026-03-02
 author: Ludovico Bessi
 collection: Machine Learning at Scale
 topics: [career]
-paywalled: true
-words: 296
+paywalled: false
+words: 771
 ---
 
 # A real day in the life of a ML engineer.
 
 *What actually happens between 9am and 6pm?*
 
-> Paid post — only the publicly visible preview is included.
-
-*What actually happens between 9am and 6pm?*
-
-[![](../assets/5525583431777bab.png)](../assets/5525583431777bab.png)
-
-Most people picture an ML engineer at FAANG spending their day building models.
-
-Training runs. Clean code. Elegant pipelines.
-
-The reality is messier. More interesting. And honestly? More human than that.
-
-Here’s what a real day looks like for me.
-
-I’m at my desk by 7:30am.
-
-Not because I have to be. Because I like it. The office is quiet, the coffee line is 0, and I can actually think before the day takes over.
-
-Also useful trick: that’s when the MTV timezone night-owls people are still awake. Catching them before they go to sleep means I don’t lose a full day waiting on a reply.
-
-**The first thing I do is go through emails.**
-
-Simple rule: if the action item takes less than 5 minutes, I just do it immediately. Review a doc, answer a question, approve something. Done.
-
-If it’s bigger, it goes on my notepad. Physical notepad. I’m not precious about tools, I just need somewhere to park things so my brain doesn’t have to hold them.
-
-Then I look at the list and pick the most important thing. And I just go do it.
-
-No elaborate prioritization system. No warming up. Action is everything for me.
-
-**I move fast, and I expect the same from the people around me.**
-
-Need a PR reviewed? Ping me. I’ll do it now.
-
-Need feedback on a design doc? Send it. I’ll read it today.
-
-I don’t want to be the bottleneck for anyone. I assume people like moving as fast as I do, so I treat their requests with urgency. It creates a kind of unspoken contract: I move fast for you, you move fast for me.
-
-The pace compounds.
-
-**The actual ML work looks like this:**
+<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/5525583431777bab.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/5525583431777bab.png 424w, ../assets/5525583431777bab.png 848w, ../assets/5525583431777bab.png 1272w, ../assets/5525583431777bab.png 1456w" sizes="100vw"><img src="../assets/5525583431777bab.png" width="928" height="1152" data-attrs="{&quot;src&quot;:&quot;../assets/5525583431777bab.png" class="sizing-normal" alt="" srcset="../assets/5525583431777bab.png 424w, ../assets/5525583431777bab.png 848w, ../assets/5525583431777bab.png 1272w, ../assets/5525583431777bab.png 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Most people picture an ML engineer at FAANG spending their day building models.</p><p>Training runs. Clean code. Elegant pipelines.</p><p>The reality is messier. More interesting. And honestly? More human than that.</p><p>Here’s what a real day looks like for me.</p><p>I’m at my desk by 7:30am.</p><p>Not because I have to be. Because I like it. The office is quiet, the coffee line is 0, and I can actually think before the day takes over.</p><p>Also useful trick: that’s when the MTV timezone night-owls people are still awake. Catching them before they go to sleep means I don’t lose a full day waiting on a reply.</p><p><strong>The first thing I do is go through emails.</strong></p><p>Simple rule: if the action item takes less than 5 minutes, I just do it immediately. Review a doc, answer a question, approve something. Done.</p><p>If it’s bigger, it goes on my notepad. Physical notepad. I’m not precious about tools, I just need somewhere to park things so my brain doesn’t have to hold them.</p><p>Then I look at the list and pick the most important thing. And I just go do it.</p><p>No elaborate prioritization system. No warming up. Action is everything for me.</p><p><strong>I move fast, and I expect the same from the people around me.</strong></p><p>Need a PR reviewed? Ping me. I’ll do it now.</p><p>Need feedback on a design doc? Send it. I’ll read it today.</p><p>I don’t want to be the bottleneck for anyone. I assume people like moving as fast as I do, so I treat their requests with urgency. It creates a kind of unspoken contract: I move fast for you, you move fast for me.</p><p>The pace compounds.</p><p><strong>The actual ML work looks like this:</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>Spinning up training runs. Setting up experiments with new data mixtures. Testing a new architectural pattern I’ve been thinking about. Looking at launches that happened recently and asking: can I leverage this? Does this change anything I’m doing?</p><p>I always have a backlog of side ideas I want to try. Things that aren’t on anyone’s roadmap yet but feel worth exploring. Some go nowhere. Some turn into real projects.</p><p>If I know something needs wall time, I kick it off early and let it run in parallel while I do other things. Waiting is just bad scheduling.</p><p><strong>I actually like the interruptions.</strong></p><p>I know that’s not the popular take. Everyone talks about protecting deep work, flow state, zero distractions.</p><p>I get it. But I genuinely don’t mind the chaos outside of my focus blocks.</p><p>Someone drops a question in Slack? I answer it.</p><p>Something breaks and the oncall person is already swamped? I’ll go take care of it.</p><p>The above happened yesterday. One indexer was broken for a week. I took a mental note of it to check the day after. Still broken.</p><p>I fixed it.</p><p>There’s something satisfying about being the person who just handles things.</p><p>No drama, no ticket, no waiting. Problem exists, problem gets fixed.</p><p>People recognize that and love you for it, trust me.</p><p><strong>Meetings are mostly 1:1s.</strong></p><p>With my manager. With leads. A weekly team sync to keep everyone aligned.</p><p>That’s mostly it. No death-by-standup culture, no 6-person meetings to make a decision that two people could’ve made over Slack.</p><p>The 1:1s are where the real conversations happen. What’s blocking you, what are you thinking about, where do you want to go.</p><p><strong>End of day honest accounting:</strong></p><p>A training run kicked off at 9am is still going. I’ll check results tomorrow.</p><p>I reviewed two PRs, unblocked a teammate who was stuck on a data issue, and caught a weird pattern in a recent launch that might be worth a quick experiment.</p><p>I also had one idea that I added to the backlog. It’s probably nothing. Maybe it isn’t.</p><p>Nothing shipped today. But the system moved forward.</p><p>That’s the job. High pace, high ownership, long feedback loops.</p><p>Tomorrow: what actually separates an MLE from a Software Engineer or a Research Scientist. The answer isn’t what most people think.</p><p>See you then!</p><p>Ludo</p>

@@ -137,5 +137,5 @@ Reproduced with attribution; the linked PDFs are hosted in that repository.
 244 production-ML posts from the *Machine Learning at Scale* collection (Ludovico Bessi,
 collected 2026-09-30), stored platform-free with local images. `deeptutor/content/m11-*.md`
 holds the topic map and reading paths cross-referenced to M1–M10; `deeptutor/content/mls-*.md`
-is the text-only corpus of the 164 free posts for the knowledge base. Paid posts (80) appear
-as previews in `ml-at-scale/posts/`.
+is the text-only corpus of all 244 posts for the knowledge base (the 80 paid posts were
+retrieved in full via the owner's own subscription).

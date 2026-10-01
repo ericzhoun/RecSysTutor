@@ -4,36 +4,10 @@ date: 2026-03-06
 author: Ludovico Bessi
 collection: Machine Learning at Scale
 topics: [career]
-paywalled: true
-words: 177
+paywalled: false
+words: 760
 ---
 
 # ML engineer - The Bigger Picture - My life in 10 years?
 
-> Paid post — only the publicly visible preview is included.
-
-[![](../assets/4e2f5b778cac7599.png)](../assets/4e2f5b778cac7599.png)
-
-Last one in the series. This one’s more personal.
-
-**My life outside of work is honestly quite simple.**
-
-Strong performance at my job. Taking care of my body. Managing relationships with friends, family, and my girlfriend.
-
-That’s it. No secret morning routine. No 5am cold plunge. No elaborate productivity system that I’m trying to sell you.
-
-For the body: I practice whatever sport feels right at the time. Tennis, gym, running, biking, skiing.
-
-The goal was never to become an athlete. It’s to disconnect, move, and stay in shape. 
-
-Variety keeps it fun, fun keeps it consistent, consistency keeps me sane.
-
-I’ve tried the “optimize everything” approach to fitness. It killed the joy. Now I just move and enjoy it.
-
-For relationships: this one requires more intentionality than people admit.
-
-When life gets busy the people you care about are the first thing that gets deprioritized without you even noticing.
-
-I protect that time deliberately. Dinners, weekends, being actually present instead of half-thinking about work. It doesn’t happen by accident.
-
-**What success looks like for me**
+<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/4e2f5b778cac7599.png" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/4e2f5b778cac7599.png 424w, ../assets/4e2f5b778cac7599.png 848w, ../assets/4e2f5b778cac7599.png 1272w, ../assets/4e2f5b778cac7599.png 1456w" sizes="100vw"><img src="../assets/4e2f5b778cac7599.png" width="928" height="1152" data-attrs="{&quot;src&quot;:&quot;../assets/4e2f5b778cac7599.png" class="sizing-normal" alt="" srcset="../assets/4e2f5b778cac7599.png 424w, ../assets/4e2f5b778cac7599.png 848w, ../assets/4e2f5b778cac7599.png 1272w, ../assets/4e2f5b778cac7599.png 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><p>Last one in the series. This one’s more personal.</p><p><strong>My life outside of work is honestly quite simple.</strong></p><p>Strong performance at my job. Taking care of my body. Managing relationships with friends, family, and my girlfriend.</p><p>That’s it. No secret morning routine. No 5am cold plunge. No elaborate productivity system that I’m trying to sell you.</p><p>For the body: I practice whatever sport feels right at the time. Tennis, gym, running, biking, skiing.</p><p>The goal was never to become an athlete. It’s to disconnect, move, and stay in shape. </p><p>Variety keeps it fun, fun keeps it consistent, consistency keeps me sane.</p><p>I’ve tried the “optimize everything” approach to fitness. It killed the joy. Now I just move and enjoy it.</p><p>For relationships: this one requires more intentionality than people admit.</p><p>When life gets busy the people you care about are the first thing that gets deprioritized without you even noticing.</p><p>I protect that time deliberately. Dinners, weekends, being actually present instead of half-thinking about work. It doesn’t happen by accident.</p><p><strong>What success looks like for me</strong></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><p>In 5 years: keep doing what I’m doing, but bigger.</p><p>Career advancing, content growing, body healthy, relationships strong.</p><p>No dramatic pivot. Just compounding on what’s already working.</p><p>In 10 years: a nest egg large enough that finances stop being a source of daily background stress.</p><p>Not “never work again” rich. just “I make decisions based on what I want, not what I need” free. There’s a difference and it matters.</p><p>Alongside that: a side business I can start treating like a real business rather than a passion project.</p><p>The newsletter and content platform I’m building now is the foundation.</p><p>In 10 years I want to be looking at it as a genuine second engine, not a hobby.</p><p>And seriously starting to think about moving back to Italy.</p><p>Remote job, brain return tax scheme, different pace of life.</p><p>Zürich has given me an enormous amount:the career, the salary, the mountains, the quality of life. But Italy is home.</p><p>The food, the culture, the way people relate to each other. At some point the calculus shifts.</p><p>I don’t have a precise plan for how all of this unfolds.</p><p>Nobody does, and anyone who claims otherwise is either lying or hasn’t been surprised by life yet.</p><p>I prefer to be directionally correct and adjust as I go. The direction is clear. The path will figure itself out.</p><p><strong>What I’m optimizing for right now</strong></p><p>Growth. Learning. Money. Health. All of it, at the same time.</p><p>I know that’s not the popular advice. Everyone tells you to focus, to say no, to ruthlessly prioritize. Pick one thing and go deep.</p><p>I disagree. Negotiating your ambitions down is for people who’ve already accepted a smaller life.</p><p>I want a strong career, people I love around me, a body I’m proud of, side projects I’m excited about, and enough financial runway to make real choices.</p><p>I don’t see why I should have to choose between them.</p><p>The secret is that these things aren’t actually in conflict if you’re ruthless about eliminating everything else.</p><p>I don’t watch much TV. I don’t doom scroll. I don’t spend energy on things that don’t compound.</p><p>The time is there. You just have to be honest about where it’s currently going.</p><p><strong>What I’d tell my past self</strong></p><p>Keep grinding. The reward is worth it times ten.</p><p>Not because the destination is so great.</p><p>But because the person you become in the process is unrecognizable from where you started.</p><p>The skills, the judgment, the network, the confidence.</p><p>None of that shows up on a balance sheet but all of it compounds quietly in the background until one day you look up and realize you’re a completely different person than the one who started.</p><p>That’s it for this series.</p><p>Thank you for reading all five. I hope something in here was useful, honest, or at least made this job feel a little more human from the outside.</p><p>More to come.<br>— Ludo</p>

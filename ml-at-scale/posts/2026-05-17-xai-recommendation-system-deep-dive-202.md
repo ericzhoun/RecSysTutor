@@ -5,617 +5,82 @@ date: 2026-05-17
 author: Ludovico Bessi
 collection: Machine Learning at Scale
 topics: [recsys]
-paywalled: true
-words: 5224
+paywalled: false
+words: 6456
 ---
 
 # xAI - Recommendation System deep dive [Part 2]
 
 * what changed in the May 15 update*
 
-> Paid post — only the publicly visible preview is included.
-
-* what changed in the May 15 update*
-
-[![](../assets/38f2e3f034c4309b.jpg)](../assets/38f2e3f034c4309b.jpg)
-
-## Introduction
-
-Four months ago I wrote a deep dive on xAI’s open-sourced recommendation system. That release was a readable codebase but not a runnable one.
-
-No model weights, two separate scripts for retrieval and ranking that you had to glue together by hand, no content understanding service, no ads logic in the public code.
-
-On May 15, 2026, xAI shipped a new commit. 187 files changed, +18,263 lines, -926 lines.
-
-This is Machine Learning at Scale and the May update has enough new architecture in it to deserve a follow-up deep dive.
-
-Read all the way for my take on it :)
-
-First things first.
-
-If you have not read the original deep dive, start there.
-
-[![xAI - Recommendation System Deep Dive](../assets/08556f980fdf8794.png)xAI - Recommendation System Deep DiveLudovico Bessi·Jan 23[Read full story](2026-01-23-xai-recommendation-system-deep-dive.md)](2026-01-23-xai-recommendation-system-deep-dive.md)
-
-This post assumes you know what Thunder is, what the two-tower retrieval does, and why candidate isolation in the attention mask matters.
-
-Now, with that out of the way, let’s get started!
-
-## TLDR
-
-The May update transitions the codebase from “open source dump” to “runnable system.”
-
-There is now a single entry point phoenix/run_pipeline.py that runs retrieval and ranking together, and a pre-trained mini model is shipped as well so you can run inference end to end on your own machine.
-
-Three subsystems that were missing in January are now public: a content understanding service (Grox), an ads blending module, and additional Phoenix retrieval clusters (one labeled MoE, one for topic-driven retrieval).
-
-The home mixer hydrates significantly more context per request: impression bloom filters, mutual follow Jaccard scores, served history, IP, inferred topics, starter pack membership.
-
-A second scorer file vm_ranker now sits next to the production scorer ranker scorer. Reading both reveals something important: the engineer-tuned weighted sum I assumed was gone is still alive. It is right there in ranker_scorer with 22 weighted actions.
-
-The new vm_reranker is a gRPC-based experimental reranker that adds DPP ([Determinantal Point Process](https://arxiv.org/abs/1207.6083)) diversity on top.
-
-> In the end of this post I will give my read on what is real, what is sanitized, and what xAI is still hiding. Keep reading for that!
-
-## Unified pipeline
-
-In the January release there were two scripts, run_retrieval.py and run_ranker.py, and running them in cascade required manual coordination and undocumented config dependencies.
-
-The new phoenix/run_pipeline.py replaces both with a single entry point.
-
-The code confirms the architecture:
-
-  1. Load retrieval model checkpoint, embedding table, and config.
-
-  2. Load ranker model checkpoint, embedding table, and config (separate from retrieval).
-
-  3. Load a pre-computed corpus of candidate representations and a user action sequence.
-
-  4. Hash the user history into embedding lookup indices (multiple hashes per ID).
-
-  5. Run the retrieval model to produce a user representation, then dot product against the corpus to get top-K candidates.
-
-  6. Batch the top-K through the ranker model, get per-action engagement probabilities.
-
-  7. Collapse to a single score with a weighted sum and rank.
-
-Two things worth noting from the code:
-
-  1. The retrieval and the ranker are **separate models** with **separate embedding tables**. They share architecture (the same transformer backbone) but they are trained and exported independently. This explains why the run_pipeline script loads two model configs.
-
-  2. The mini-model retrieval in this script does **brute-force** dot product over the corpus (corpus_repr @ user_repr), not HNSW. Production almost certainly uses HNSW or similar for sub-linear ANN. The brute force version is the runnable-on-your-laptop version.
-
-The “no light ranker between retrieval and ranking” point I made in the previous deep dive holds. The pipeline goes retrieval → ranker → weighted sum, no intermediate cull.
-
-## Pre-trained mini model
-
-The repo now ships a working artifact.
-
-Specs of the mini model:
-
-  * 256-dim embeddings
-
-  * 4 attention heads
-
-  * 2 transformer layers
-
-  * ~3 GB packaged size
-
-This is a toy. Production is almost certainly an order of magnitude larger on every axis. But the toy is enough to:
-
-  * Run inference end to end on a sample sports corpus they ship
-
-  * Verify the candidate isolation attention mask works the way the README describes
-
-  * See how hash-based embeddings are looked up at runtime
-
-That last point is worth pausing on, because the embedding mechanism is now clear from the code.
-
-The system uses hash-based embedding lookup. From run_pipeline.py:
-    
-    
-    raw = (ids[i] * scales[j] + biases[j]) % modulus
-    out[i, j] = 0 if ids[i] == 0 else int((int(raw) % (num_buckets - 1)) + 1)
-
-Linear congruential hash: multiply the ID by a per-hash-function scale, add a bias, take modulo a large prime, then map into the embedding table bucket range.
-
-Each ID gets hashed multiple times (the config has separate user_hash_scales, item_hash_scales, author_hash_scales, each a list).
-
-The result: a user ID becomes a small set of embedding indices, which are summed to form the user vector. Same for posts and authors.
-
-The retrieval and ranker have separate embedding tables but the same hashing scheme.
-
-**Implication** : there is no separate offline tower that produces a dense user embedding sitting in a KV store. The user representation is computed inside the model itself, from hashed inputs, on every request.
-
-Hash trick + large embedding tables + multiple hashes to reduce collisions, much more scalable than precomputing dense vectors per user.
-
-## Grox: content understanding service
-
-The new grox/ directory is a separate Python service. It runs in its own process (literally multiprocessing.Process) and talks to the rest of the system over data stores.
-
-### Engine architecture
-
-Reading engine.py, the architecture is simpler than the file tree suggested:
-
-  1. The engine runs in a dedicated subprocess.
-
-  2. Inside the subprocess, an asyncio loop polls a multiprocessing task queue.
-
-  3. For each task, it calls a single dispatcher class: PlanMaster.exec(task).
-
-  4. Results go back through a response queue.
-
-That’s it. No Kafka. No internal message bus. Just a process with a queue, an event loop, and a dispatcher.
-
-Two auxiliary processors start up alongside the engine:
-
-  * MediaProcessor: handles image processing
-
-  * ASRProcessor: automatic speech recognition for video audio
-
-They are transcribing the audio in videos so the content understanding pipeline can read what people are saying, not just look at frames.
-
-This is the kind of capability that quietly raises the floor on what the platform can detect (misinformation in podcast clips, policy violations in voice content, etc.).
-
-It is not mentioned in the README. It is just sitting in the code.
-
-### Strato as the data backbone
-
-The data layer file (tweet_strato_loader.py) reveals what I had wrong before. I claimed Grox routed work through Kafka and Strato. It does not. Strato is its data store, not a message bus.
-
-Specifically, Strato is used bidirectionally:
-
-Input (Grox reads):
-
-  * StratoContentUnderstandingMetadataV2: post metadata for a tweet ID
-
-  * StratoContentUnderstandingAuthorMetadata: author metadata
-
-  * StratoContentUnderstandingPostQuoteMetadata: post + quote metadata
-
-  * StratoUserRecentPosts: a user’s recent post history
-
-  * StratoSafetyLabel: existing safety labels
-
-Output (Grox writes):
-
-  * StratoReplyRankingScore.put: reply ranking scores
-
-  * StratoReplyRankingScoreV2Kafka.insert: reply ranking scores routed through a Kafka topic
-
-  * StratoReplySpamAnnotation.put: spam annotations on replies
-
-So Strato is both Grox’s input (the content metadata it reads to classify) and its output (the labels it writes back for downstream consumers like AdsBrandSafetyHydrator to read).
-
-Kafka shows up only as a routing layer for one specific output (ReplyRankingScoreKafka), not as the orchestration backbone.
-
-This matters because it changes the mental model: Grox is not a streaming pipeline. It is a task-processing service with a Strato-shaped read/write contract.
-
-### Task structure
-
-Tasks inherit from a base Task class and a TaskWithPost subclass for post-aware tasks. The pattern looks like this (from task_spam_detection.py):
-
-python
-    
-    
-    class TaskSpamDetection(TaskWithPost):
-        eapi_low_follower_classifier = SpamEapiLowFollowerClassifier()
-    
-        @classmethod
-        async def _exec_with_post(cls, ctx: TaskContext, post: Post) -> None:
-            res = await cls.eapi_low_follower_classifier.classify(post)
-            ctx.content_categories.extend(res)
-            # ... metrics emission with follower-bucket tagging
-
-Each task instantiates a classifier as a class-level attribute, defines _exec_with_post, and writes results into a shared TaskContext.content_categories list.
-
-Simple, stateless, parallelizable.
-
-One detail from TaskSpamDetection worth flagging: it explicitly targets replies, not top-level posts. It walks the reply chain (post.ancestors) and buckets by follower count of the reply target and root. Replies into accounts with under 1000 followers get extra logging. This is asymmetric protection: small accounts get more attention from the spam detector than large ones do.
-
-A second task, TaskBangerScreen, classifies posts for “banger” potential and reveals how Grox interacts with Grok the LLM:
-    
-    
-    class TaskBangerScreen(TaskWithPost):
-        classifier = BangerInitialScreenClassifier()
-        _cached_topics = None
-        _cache_timestamp = None
-        ...
-        res = await cls.classifier.classify(post, topics=cls._cached_topics)
-
-Three things this tells us:
-
-  1. “Banger” is a real classification category (ContentCategoryType.BANGER_INITIAL_SCREEN), not a filename joke. Posts get an explicit binary screen for whether they look like a banger.
-
-  2. The naming (”initial screen”) implies a two-stage pipeline: this is the cheap filter that runs on everything, presumably feeding a more expensive classifier downstream.
-
-  3. Banger detection is conditioned on topics fetched from Grok. The topics come from StratoGrokTopics(), cached at the class level with a TTL, refreshed periodically. So Grok the LLM generates a topic taxonomy, that taxonomy is stored in Strato, and Grox tasks consume it to condition their classification on what topics are currently relevant.
-
-This is the substrate I had not seen before: Grok produces topic structure → Strato persists it → Grox classifiers use it → safety labels and content categories propagate back to the home-mixer hydrators that feed the ranker.
-
-Grok shows up not as a ranker (which is what most public discussion assumes) but as a content-understanding co-processor that feeds the classifier layer.
-
-The task list visible in the file tree also includes PTOS category and policy classification, reply ranking, multimodal post embedding, and Grok-based user-post-action labeling.
-
-### Why this exists
-
-The ranker has no idea what a post is “about.” It only sees engagement sequences and hashed embeddings. That works for relevance, but it does not work for safety.
-
-You cannot rely on a transformer trained on Like prediction to also decide what counts as spam, what counts as a PTOS violation, or what gets a sensitive content label.
-
-So Grox sits beside the ranker.
-
-The ranker predicts engagement, trained on user actions.
-
-Grox classifies content, trained on labels. The two share a substrate (Strato) but have independent lifecycles, model families, and release cycles.
-
-## Ads module
-
-In January, ads were a black box. The code referenced a “for_you_server” but there was no ads logic in the public repo. May fixes this, and the ads code is the cleanest, most readable part of the whole release.
-
-The new home-mixer/ads/ module has two blenders with genuinely different strategies:
-
-  1. partition_organic_blender.rs: partitions the feed into safe and unsafe posts, places each ad between two safe posts as bookends, then distributes everything else as filler.
-
-  2. safe_gap_blender.rs: places ads only in positions where the natural feed order already has safe content on both sides, with controlled spacing between consecutive ads.
-
-Plus two new hydrators:
-
-  * ads_brand_safety_hydrator.rs: pulls safety labels per tweet and computes a brand safety verdict
-
-  * ads_brand_safety_vf_hydrator.rs: same thing but for the visibility filter pipeline
-
-And a new candidate source: ads_source.rs.
-
-The key design choice: ads are not ranked by the main transformer.
-
-They come in through their own source with their own scoring (almost certainly an ads auction model that is not in the public code), and the blender decides where they land relative to organic candidates.
-
-This is the same pattern Meta uses for Reels ads and Google uses for YouTube ads. Organic and paid are two separate ranking systems that meet at a blender. The blender’s job is to maximize a combined objective subject to constraints (min ad load, max ad load, brand safety, advertiser adjacency controls).
-
-### How brand safety verdicts are computed
-
-AdsBrandSafetyHydrator is the upstream component that attaches a BrandSafetyVerdict (Low / Medium / High risk) to each organic post.
-
-Mechanism:
-
-  1. Collect all tweet IDs from the candidate set, including retweeted and quoted IDs.
-
-  2. Batch-fetch safety labels from SafetyLabelStoreClient (this store is fed upstream, almost certainly by Grox).
-
-  3. For retweets, use the underlying tweet’s labels via retweeted_tweet_id.
-
-  4. For quote tweets, take the WORST verdict between the quoting post and the quoted post.
-
-That last point is a sharp piece of design. A clean post quoting toxic content inherits the toxic verdict. You cannot launder a brand-unsafe post by wrapping it in a quote tweet.
-
-There is also a defensive fallback: if the safety label lookup errors out for a quoted tweet, the verdict defaults to MediumRisk. Fail-closed on quotes.
-
-Caching is done with Moka, with TTLs that depend on tweet age:
-    
-    
-    new_tweet_ttl: 60 seconds   (under 5 minutes old, labels still updating)
-    old_tweet_ttl: 1 hour       (older, labels stable)
-    cache size: 1,000,000 entries
-
-This is the kind of cache tuning you only get from running the system in production. New tweets get short TTLs because their labels are still being computed by Grox. 
-
-Old tweets get long TTLs because their labels do not change.
-
-### How safe_gap_blender uses those verdicts
-    
-    
-    let safe_gaps = find_safe_gaps(&scored_posts);
-    let spacing = compute_spacing(&ads);
-    let placements = assign_ads_to_gaps(&safe_gaps, ads.len(), &spacing, first_ideal);
-    interleave_and_finalize(scored_posts, ads, &placements)
-
-find_safe_gaps is 11 lines and is the actual brand safety rule:
-    
-    
-    fn find_safe_gaps(scored_posts: &[ScoredPost]) -> Vec<usize> {
-        let n = scored_posts.len();
-        let mut safe = Vec::new();
-        for g in 1..n {
-            if has_avoid(&scored_posts[g - 1]) { continue; }
-            if g < n && has_avoid(&scored_posts[g]) { continue; }
-            safe.push(g);
-        }
-        safe
+<div class="captioned-image-container"><figure><a class="image-link image2 is-viewable-img" target="_blank" href="../assets/38f2e3f034c4309b.jpg" data-component-name="Image2ToDOM"><div class="image2-inset"><picture><source type="image/webp" srcset="../assets/38f2e3f034c4309b.jpg 424w, ../assets/38f2e3f034c4309b.jpg 848w, ../assets/38f2e3f034c4309b.jpg 1272w, ../assets/38f2e3f034c4309b.jpg 1456w" sizes="100vw"><img src="../assets/38f2e3f034c4309b.jpg" width="1456" height="634" data-attrs="{&quot;src&quot;:&quot;../assets/38f2e3f034c4309b.jpg" class="sizing-normal" alt="" srcset="../assets/38f2e3f034c4309b.jpg 424w, ../assets/38f2e3f034c4309b.jpg 848w, ../assets/38f2e3f034c4309b.jpg 1272w, ../assets/38f2e3f034c4309b.jpg 1456w" sizes="100vw" fetchpriority="high"></picture><div class="image-link-expand"><div class="pencraft pc-display-flex pc-gap-8 pc-reset"><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container restack-image buttonBase-GK1x3M"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke="var(--color-fg-primary)" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" class="icon-noB79L"><g><path d="M2.53001 7.81595C3.49179 4.73911 6.43281 2.5 9.91173 2.5C13.1684 2.5 15.9537 4.46214 17.0852 7.23684L17.6179 8.67647M17.6179 8.67647L18.5002 4.26471M17.6179 8.67647L13.6473 6.91176M17.4995 12.1841C16.5378 15.2609 13.5967 17.5 10.1178 17.5C6.86118 17.5 4.07589 15.5379 2.94432 12.7632L2.41165 11.3235M2.41165 11.3235L1.5293 15.7353M2.41165 11.3235L6.38224 13.0882"></path></g></svg></button><button tabindex="0" type="button" class="pencraft pc-reset pencraft icon-container view-image buttonBase-GK1x3M"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-maximize2 lucide-maximize-2 icon-noB79L"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg></button></div></div></div></a></figure></div><h2>Introduction</h2><p>Four months ago I wrote a deep dive on xAI’s open-sourced recommendation system. That release was a readable codebase but not a runnable one.</p><p>No model weights, two separate scripts for retrieval and ranking that you had to glue together by hand, no content understanding service, no ads logic in the public code.</p><p>On May 15, 2026, xAI shipped a new commit. 187 files changed, +18,263 lines, -926 lines.</p><p>This is Machine Learning at Scale and the May update has enough new architecture in it to deserve a follow-up deep dive.</p><p>Read all the way for my take on it :)</p><p>First things first.</p><p>If you have not read the original deep dive, start there.</p><div class="digest-post-embed" data-attrs="{&quot;nodeId&quot;:&quot;8c9cf50c-5a97-403d-b363-dee613719da7&quot;,&quot;caption&quot;:&quot;Introduction&quot;,&quot;cta&quot;:&quot;Read full story&quot;,&quot;showBylines&quot;:true,&quot;showDescription&quot;:true,&quot;showImage&quot;:true,&quot;size&quot;:&quot;sm&quot;,&quot;isEditorNode&quot;:true,&quot;title&quot;:&quot;xAI - Recommendation System Deep Dive&quot;,&quot;publishedBylines&quot;:[{&quot;id&quot;:32585278,&quot;name&quot;:&quot;Ludovico Bessi&quot;,&quot;bio&quot;:&quot;ML engineer @Google&quot;,&quot;photo_url&quot;:&quot;../assets/1604efa36119334a.png],&quot;post_date&quot;:&quot;2026-01-23T18:02:39.156Z&quot;,&quot;cover_image&quot;:&quot;../assets/08556f980fdf8794.png Learning At Scale&quot;,&quot;publication_logo_url&quot;:&quot;../assets/cbdeda65b45c4859.png"></div><p>This post assumes you know what Thunder is, what the two-tower retrieval does, and why candidate isolation in the attention mask matters.</p><p>Now, with that out of the way, let’s get started!</p><h2>TLDR</h2><p>The May update transitions the codebase from “open source dump” to “runnable system.”</p><p>There is now a single entry point phoenix/run_pipeline.py that runs retrieval and ranking together, and a pre-trained mini model is shipped as well so you can run inference end to end on your own machine.</p><p>Three subsystems that were missing in January are now public: a content understanding service (Grox), an ads blending module, and additional Phoenix retrieval clusters (one labeled MoE, one for topic-driven retrieval).</p><p>The home mixer hydrates significantly more context per request: impression bloom filters, mutual follow Jaccard scores, served history, IP, inferred topics, starter pack membership.</p><p>A second scorer file vm_ranker now sits next to the production scorer ranker scorer. Reading both reveals something important: the engineer-tuned weighted sum I assumed was gone is still alive. It is right there in ranker_scorer with 22 weighted actions.</p><p>The new vm_reranker is a gRPC-based experimental reranker that adds DPP (<a href="https://arxiv.org/abs/1207.6083">Determinantal Point Process</a>) diversity on top.</p><blockquote><p>In the end of this post I will give my read on what is real, what is sanitized, and what xAI is still hiding. Keep reading for that!</p></blockquote><h2>Unified pipeline</h2><p>In the January release there were two scripts, run_retrieval.py and  run_ranker.py, and running them in cascade required manual coordination and undocumented config dependencies.</p><p>The new phoenix/run_pipeline.py replaces both with a single entry point.</p><p>The code confirms the architecture:</p><ol><li><p>Load retrieval model checkpoint, embedding table, and config.</p></li><li><p>Load ranker model checkpoint, embedding table, and config (separate from retrieval).</p></li><li><p>Load a pre-computed corpus of candidate representations and a user action sequence.</p></li><li><p>Hash the user history into embedding lookup indices (multiple hashes per ID).</p></li><li><p>Run the retrieval model to produce a user representation, then dot product against the corpus to get top-K candidates.</p></li><li><p>Batch the top-K through the ranker model, get per-action engagement probabilities.</p></li><li><p>Collapse to a single score with a weighted sum and rank.</p></li></ol><p>Two things worth noting from the code:</p><ol><li><p>The retrieval and the ranker are <strong>separate models</strong> with <strong>separate embedding tables</strong>. They share architecture (the same transformer backbone) but they are trained and exported independently. This explains why the run_pipeline script loads two model configs.</p></li><li><p>The mini-model retrieval in this script does <strong>brute-force</strong> dot product over the corpus (corpus_repr @ user_repr), not HNSW. Production almost certainly uses HNSW or similar for sub-linear ANN. The brute force version is the runnable-on-your-laptop version.</p></li></ol><p>The “no light ranker between retrieval and ranking” point I made in the previous deep dive holds. The pipeline goes retrieval → ranker → weighted sum, no intermediate cull.</p><div class="subscription-widget-wrap-editor" data-attrs="{&quot;url&quot;:&quot;" data-component-name="SubscribeWidgetToDOM"><div class="subscription-widget show-subscribe"><div class="preamble"><p class="cta-caption">Machine Learning At Scale is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber.</p></div><form class="subscription-widget-subscribe"><input type="email" class="email-input" name="email" placeholder="Type your email…" tabindex="-1"><input type="submit" class="button primary" value="Subscribe"><div class="fake-input-wrapper"><div class="fake-input"></div><div class="fake-button"></div></div></form></div></div><h2>Pre-trained mini model</h2><p>The repo now ships a working artifact.</p><p>Specs of the mini model:</p><ul><li><p>256-dim embeddings</p></li><li><p>4 attention heads</p></li><li><p>2 transformer layers</p></li><li><p>~3 GB packaged size</p></li></ul><p>This is a toy. Production is almost certainly an order of magnitude larger on every axis. But the toy is enough to:</p><ul><li><p>Run inference end to end on a sample sports corpus they ship</p></li><li><p>Verify the candidate isolation attention mask works the way the README describes</p></li><li><p>See how hash-based embeddings are looked up at runtime</p></li></ul><p>That last point is worth pausing on, because the embedding mechanism is now clear from the code.</p><p>The system uses hash-based embedding lookup. From run_pipeline.py:</p><pre><code><code>raw = (ids[i] * scales[j] + biases[j]) % modulus
+out[i, j] = 0 if ids[i] == 0 else int((int(raw) % (num_buckets - 1)) + 1)</code></code></pre><p>Linear congruential hash: multiply the ID by a per-hash-function scale, add a bias, take modulo a large prime, then map into the embedding table bucket range.</p><p>Each ID gets hashed multiple times (the config has separate user_hash_scales, item_hash_scales, author_hash_scales, each a list).</p><p>The result: a user ID becomes a small set of embedding indices, which are summed to form the user vector. Same for posts and authors.</p><p>The retrieval and ranker have separate embedding tables but the same hashing scheme.</p><p><strong>Implication</strong>: there is no separate offline tower that produces a dense user embedding sitting in a KV store. The user representation is computed inside the model itself, from hashed inputs, on every request.</p><p>Hash trick + large embedding tables + multiple hashes to reduce collisions, much more scalable than precomputing dense vectors per user.</p><h2>Grox: content understanding service</h2><p>The new grox/ directory is a separate Python service. It runs in its own process (literally multiprocessing.Process) and talks to the rest of the system over data stores.</p><h3>Engine architecture</h3><p>Reading engine.py, the architecture is simpler than the file tree suggested:</p><ol><li><p>The engine runs in a dedicated subprocess.</p></li><li><p>Inside the subprocess, an asyncio loop polls a multiprocessing task queue.</p></li><li><p>For each task, it calls a single dispatcher class: PlanMaster.exec(task).</p></li><li><p>Results go back through a response queue.</p></li></ol><p>That’s it. No Kafka. No internal message bus. Just a process with a queue, an event loop, and a dispatcher.</p><p>Two auxiliary processors start up alongside the engine:</p><ul><li><p>MediaProcessor: handles image processing</p></li><li><p>ASRProcessor: automatic speech recognition for video audio</p></li></ul><p>They are transcribing the audio in videos so the content understanding pipeline can read what people are saying, not just look at frames.</p><p>This is the kind of capability that quietly raises the floor on what the platform can detect (misinformation in podcast clips, policy violations in voice content, etc.).</p><p>It is not mentioned in the README. It is just sitting in the code.</p><h3>Strato as the data backbone</h3><p>The data layer file (tweet_strato_loader.py) reveals what I had wrong before. I claimed Grox routed work through Kafka and Strato. It does not. Strato is its data store, not a message bus.</p><p>Specifically, Strato is used bidirectionally:</p><p>Input (Grox reads):</p><ul><li><p>StratoContentUnderstandingMetadataV2: post metadata for a tweet ID</p></li><li><p>StratoContentUnderstandingAuthorMetadata: author metadata</p></li><li><p>StratoContentUnderstandingPostQuoteMetadata: post + quote metadata</p></li><li><p>StratoUserRecentPosts: a user’s recent post history</p></li><li><p>StratoSafetyLabel: existing safety labels</p></li></ul><p>Output (Grox writes):</p><ul><li><p>StratoReplyRankingScore.put: reply ranking scores</p></li><li><p>StratoReplyRankingScoreV2Kafka.insert: reply ranking scores routed through a Kafka topic</p></li><li><p>StratoReplySpamAnnotation.put: spam annotations on replies</p></li></ul><p>So Strato is both Grox’s input (the content metadata it reads to classify) and its output (the labels it writes back for downstream consumers like AdsBrandSafetyHydrator to read).</p><p>Kafka shows up only as a routing layer for one specific output (ReplyRankingScoreKafka), not as the orchestration backbone.</p><p>This matters because it changes the mental model: Grox is not a streaming pipeline. It is a task-processing service with a Strato-shaped read/write contract.</p><h3>Task structure</h3><p>Tasks inherit from a base Task class and a TaskWithPost subclass for post-aware tasks. The pattern looks like this (from task_spam_detection.py):</p><p>python</p><pre><code><code>class TaskSpamDetection(TaskWithPost):
+    eapi_low_follower_classifier = SpamEapiLowFollowerClassifier()
+
+    @classmethod
+    async def _exec_with_post(cls, ctx: TaskContext, post: Post) -&gt; None:
+        res = await cls.eapi_low_follower_classifier.classify(post)
+        ctx.content_categories.extend(res)
+        # ... metrics emission with follower-bucket tagging</code></code></pre><p>Each task instantiates a classifier as a class-level attribute, defines _exec_with_post, and writes results into a shared TaskContext.content_categories list.</p><p>Simple, stateless, parallelizable.</p><p>One detail from TaskSpamDetection worth flagging: it explicitly targets replies, not top-level posts. It walks the reply chain (post.ancestors) and buckets by follower count of the reply target and root. Replies into accounts with under 1000 followers get extra logging. This is asymmetric protection: small accounts get more attention from the spam detector than large ones do.</p><p>A second task, TaskBangerScreen, classifies posts for “banger” potential and reveals how Grox interacts with Grok the LLM:</p><pre><code><code>class TaskBangerScreen(TaskWithPost):
+    classifier = BangerInitialScreenClassifier()
+    _cached_topics = None
+    _cache_timestamp = None
+    ...
+    res = await cls.classifier.classify(post, topics=cls._cached_topics)</code></code></pre><p>Three things this tells us:</p><ol><li><p>“Banger” is a real classification category (ContentCategoryType.BANGER_INITIAL_SCREEN), not a filename joke. Posts get an explicit binary screen for whether they look like a banger.</p></li><li><p>The naming (”initial screen”) implies a two-stage pipeline: this is the cheap filter that runs on everything, presumably feeding a more expensive classifier downstream.</p></li><li><p>Banger detection is conditioned on topics fetched from Grok. The topics come from StratoGrokTopics(), cached at the class level with a TTL, refreshed periodically. So Grok the LLM generates a topic taxonomy, that taxonomy is stored in Strato, and Grox tasks consume it to condition their classification on what topics are currently relevant.</p></li></ol><p>This is the substrate I had not seen before: Grok produces topic structure → Strato persists it → Grox classifiers use it → safety labels and content categories propagate back to the home-mixer hydrators that feed the ranker.</p><p>Grok shows up not as a ranker (which is what most public discussion assumes) but as a content-understanding co-processor that feeds the classifier layer.</p><p>The task list visible in the file tree also includes PTOS category and policy classification, reply ranking, multimodal post embedding, and Grok-based user-post-action labeling.</p><div class="subscription-widget-wrap-editor" data-attrs="{&quot;url&quot;:&quot;" data-component-name="SubscribeWidgetToDOM"><div class="subscription-widget show-subscribe"><div class="preamble"><p class="cta-caption">Machine Learning At Scale is a reader-supported publication. To receive new posts and support my work, consider becoming a free or paid subscriber.</p></div><form class="subscription-widget-subscribe"><input type="email" class="email-input" name="email" placeholder="Type your email…" tabindex="-1"><input type="submit" class="button primary" value="Subscribe"><div class="fake-input-wrapper"><div class="fake-input"></div><div class="fake-button"></div></div></form></div></div><h3>Why this exists</h3><p>The ranker has no idea what a post is “about.” It only sees engagement sequences and hashed embeddings. That works for relevance, but it does not work for safety.</p><p>You cannot rely on a transformer trained on Like prediction to also decide what counts as spam, what counts as a PTOS violation, or what gets a sensitive content label.</p><p>So Grox sits beside the ranker.</p><p>The ranker predicts engagement, trained on user actions.</p><p>Grox classifies content, trained on labels. The two share a substrate (Strato) but have independent lifecycles, model families, and release cycles.</p><h2>Ads module</h2><p>In January, ads were a black box. The code referenced a “for_you_server” but there was no ads logic in the public repo. May fixes this, and the ads code is the cleanest, most readable part of the whole release.</p><p>The new home-mixer/ads/ module has two blenders with genuinely different strategies:</p><ol><li><p>partition_organic_blender.rs: partitions the feed into safe and unsafe posts, places each ad between two safe posts as bookends, then distributes everything else as filler.</p></li><li><p>safe_gap_blender.rs: places ads only in positions where the natural feed order already has safe content on both sides, with controlled spacing between consecutive ads.</p></li></ol><p>Plus two new hydrators:</p><ul><li><p>ads_brand_safety_hydrator.rs: pulls safety labels per tweet and computes a brand safety verdict</p></li><li><p>ads_brand_safety_vf_hydrator.rs: same thing but for the visibility filter pipeline</p></li></ul><p>And a new candidate source: ads_source.rs.</p><p>The key design choice: ads are not ranked by the main transformer.</p><p>They come in through their own source with their own scoring (almost certainly an ads auction model that is not in the public code), and the blender decides where they land relative to organic candidates.</p><p>This is the same pattern Meta uses for Reels ads and Google uses for YouTube ads. Organic and paid are two separate ranking systems that meet at a blender. The blender’s job is to maximize a combined objective subject to constraints (min ad load, max ad load, brand safety, advertiser adjacency controls).</p><h3>How brand safety verdicts are computed</h3><p>AdsBrandSafetyHydrator is the upstream component that attaches a BrandSafetyVerdict (Low / Medium / High risk) to each organic post.</p><p>Mechanism:</p><ol><li><p>Collect all tweet IDs from the candidate set, including retweeted and quoted IDs.</p></li><li><p>Batch-fetch safety labels from SafetyLabelStoreClient (this store is fed upstream, almost certainly by Grox).</p></li><li><p>For retweets, use the underlying tweet’s labels via retweeted_tweet_id.</p></li><li><p>For quote tweets, take the WORST verdict between the quoting post and the quoted post.</p></li></ol><p>That last point is a sharp piece of design. A clean post quoting toxic content inherits the toxic verdict. You cannot launder a brand-unsafe post by wrapping it in a quote tweet.</p><p>There is also a defensive fallback: if the safety label lookup errors out for a quoted tweet, the verdict defaults to MediumRisk. Fail-closed on quotes.</p><p>Caching is done with Moka, with TTLs that depend on tweet age:</p><pre><code><code>new_tweet_ttl: 60 seconds   (under 5 minutes old, labels still updating)
+old_tweet_ttl: 1 hour       (older, labels stable)
+cache size: 1,000,000 entries</code></code></pre><p>This is the kind of cache tuning you only get from running the system in production. New tweets get short TTLs because their labels are still being computed by Grox. </p><p>Old tweets get long TTLs because their labels do not change.</p><h3>How safe_gap_blender uses those verdicts</h3><pre><code><code>let safe_gaps = find_safe_gaps(&amp;scored_posts);
+let spacing = compute_spacing(&amp;ads);
+let placements = assign_ads_to_gaps(&amp;safe_gaps, ads.len(), &amp;spacing, first_ideal);
+interleave_and_finalize(scored_posts, ads, &amp;placements)</code></code></pre><p>find_safe_gaps is 11 lines and is the actual brand safety rule:</p><pre><code><code>fn find_safe_gaps(scored_posts: &amp;[ScoredPost]) -&gt; Vec&lt;usize&gt; {
+    let n = scored_posts.len();
+    let mut safe = Vec::new();
+    for g in 1..n {
+        if has_avoid(&amp;scored_posts[g - 1]) { continue; }
+        if g &lt; n &amp;&amp; has_avoid(&amp;scored_posts[g]) { continue; }
+        safe.push(g);
     }
-
-A position is a safe gap only if neither the post immediately above nor the post immediately below is “avoid.” has_avoid returns true when the BrandSafetyVerdict is MediumRisk. That is the rule. No ad next to medium-risk content, in either direction.
-
-compute_spacing is dynamic. It takes the first 4 ads, looks at their insert_position values, and uses the smallest gap as the requested spacing. The minimum is requested / 2 (rounded up). With fewer than 2 ads or a tiny inferred gap, it falls back to DEFAULT_SPACING { requested: 3, min: 2 }.
-
-assign_ads_to_gaps walks the ad list and, for each ad, picks the safe gap closest to its ideal position subject to the min distance from the previous placement. The picker uses binary search via partition_point:
-    
-    
-    let min_offset = gaps.partition_point(|&g| g < min);
-    let candidates = &gaps[min_offset..];
-    let ideal_pos = candidates.partition_point(|&g| g < ideal);
-
-Two binary searches: first throw out gaps closer than min to the previous ad, then find the gap closest to ideal and tie-break on absolute distance. If no valid gap exists, return None and the blender stops placing ads early.
-
-### Brand suitability: advertiser-defined adjacency controls
-
-There is a separate layer in `util.rs` that I missed in my first read. Advertisers can attach controls per ad:
-
-  * A list of blocked handles (should_drop_handle): drop the ad if the post above or below is by one of these authors.
-
-  * A list of blocked keywords (should_drop_keyword): drop the ad if the post above or below contains any of these keywords (tokenized properly via a TweetTokenizer).
-
-  * A brand safety risk tier (should_drop_bsr_low): if the ad is tagged as BsrLow or BsrIas, drop it when adjacent to a LowRisk post.
-
-That last one is counterintuitive at first read. Why drop a low-risk ad next to a low-risk post? It is not about safety, it is about category exclusion at the advertiser tier. BsrIas is the IAS (Integral Ad Science) brand safety certification level. Advertisers who pay for IAS verification want their ads only in very specific contexts, and the rule says: if your ad is BsrLow or BsrIas and the adjacent post is even rated LowRisk (the most lenient bucket), drop the ad rather than risk a placement that violates the advertiser’s contractual standard.
-
-This is brand SUITABILITY (advertiser preferences) layered on top of brand SAFETY (platform-wide rules). Both are in the public code.
-
-### How partition_organic_blender is different
-
-partition_organic_blender.rs takes a more aggressive approach. Instead of finding safe gaps in the natural order, it actively partitions the feed:
-
-  1. Split scored posts into safe (LowRisk) and unsafe (MediumRisk) buckets.
-
-  2. Compute the max number of ads as min(ads.len(), n / spacing.requested, safe_count / 2). Each ad needs two safe posts to bookend it, so safe count divided by 2 is a hard ceiling.
-
-  3. Chunk the safe posts into actual_ads equal-sized groups. For each ad, take the first two posts of its group as the “above” and “below” bookends.
-
-  4. Run the brand suitability checks (BsrLow, handle blocklist, keyword blocklist) against those bookends. Skip the ad if any check fails. Emit counters per drop reason (bsr_drop, handle_drop, keyword_drop).
-
-  5. Build the feed as a sequence of [above, ad, below, ...filler] triples, with leftover safe posts and all unsafe posts sorted by score and distributed evenly as filler between triples.
-
-  6. Standard truncate-to-RESULT_SIZE, no-ending-on-ad.
-
-The difference matters. safe_gap_blender respects the natural feed order and only places ads where it can. partition_organic_blender rearranges the feed so every ad gets safe bookends, with unsafe content pushed into filler regions away from the ads.
-
-Trade-offs:
-
-  * Partition gives guaranteed safe-adjacency for every placed ad. Safe gap relies on the natural order having enough safe gaps.
-
-  * Partition is more invasive to the ranking. The score-sorted order is preserved within filler regions but the overall structure is dictated by ad placements.
-
-  * Safe gap is less disruptive to organic ranking but places fewer ads when the feed is “dirty.”
-
-These two strategies are presumably A/B tested in production. The codebase shows both, which means xAI has not committed to one strategy globally.
-
-### Two operational details that scream production system
-
-  1. interleave_and_finalize truncates the feed to RESULT_SIZE, and if the last item is an ad, pops it. No feed ever ends on an ad.
-
-  2. Two metrics are emitted per blend (AdsBlender.post_brand_safety_verdict and AdsBlender.ad_brand_safety_risk) so they can monitor the distribution of safety verdicts and ad risk tiers in production traffic.
-
-The blender itself is policy-free orchestration. The actual rules live in has_avoid, in the safety label store, and in the per-ad adjacency controls. That separation is the right one. You can change brand safety rules without touching the blender.
-
-## Phoenix retrieval clusters: MoE and topics
-
-Alongside the original dense retrieval source, two new sources appeared: phoenix_moe_source.rs and phoenix_topics_source.rs.
-
-When I first read the filenames I assumed these were three different retrieval architectures. Reading the code: they are not. They are three different parameterizations of the same retrieval client.
-
-All three sources call the same PhoenixRetrievalClient. They differ in three things:
-
-  1. Cluster ID. Each source reads a different config param for its target cluster: PhoenixRetrievalInferenceClusterId, PhoenixRetrievalMOEInferenceClusterId, PhoenixRetrievalTopicInferenceClusterId. These map to separate gRPC backend deployments.
-
-  2. Extra arguments. The topics source passes topic_entity_ids and a topic_filter_mode to the retrieval call. The MoE source passes empty topic IDs.
-
-  3. Enable conditions. The MoE source enables only when the user is not making a topic request and there are no cached posts. The topics source enables only when there IS an explicit topic request, OR when the user is new and has new-user topic IDs (cold start path). The regular Phoenix source covers the default case.
-
-So in production there are at least three Phoenix retrieval clusters running. The “MoE” cluster is presumably a Mixture of Experts model deployment, distinct from the regular dense retrieval, and the topics cluster is one tuned/trained for topic-conditioned retrieval. The home mixer just picks which cluster to call based on the query characteristics.
-
-What the routing logic does tell us: there is at least one specialized cluster for topic-driven requests (when you click into a Topic or Community), and another (MoE) presumably tuned for diversity or specialization that the regular cluster does not provide. The exact model differences are not in the public repo.
-
-Note also: candidates from each source are tagged with a different ServedType (ForYouPhoenixRetrieval vs ForYouPhoenixRetrievalMoe).
-
-Downstream code can attribute outcomes to specific retrieval paths for offline analysis.
-
-## Hydrators: feature engineering in disguise
-
-Hydrators attach context to each request and to each candidate before the model sees them. The May commit adds a long list of new hydrators. I have read two of them in detail; the others I can only name from the file tree.
-
-### Two hydrators worth understanding deeply
-
-**1\. impression_bloom_filter_query_hydrator**
-
-This hydrator fetches a per-user impression history as a list of bloom filters. The pattern:
-
-  * Calls ImpressionBloomFilterClient.get(user_id, SurfaceArea::HOME_TIMELINE) via Thrift.
-
-  * Receives a list of bloom filter entries, each with its own size_cap and false_positive_rate.
-
-  * Converts each entry into a proto for downstream consumption.
-
-The bloom filter is how the system tracks “you have already seen this post” without storing every impression ID per user. Multiple filters per user likely correspond to different time windows (recent impressions in a tight filter, older impressions in a looser one). The size cap and false positive rate are tuned per entry, which is a tell that they have explicit memory budgets per user for impression dedup.
-
-Note also: the surface area is hard-coded as HOME_TIMELINE. The bloom filter is surface-specific. Your impression history on the home feed is different from your impression history on the Following feed.
-
-**2\. mutual_follow_jaccard_hydrator.rs**
-
-This is the most technically interesting hydrator in the new release. It estimates the Jaccard similarity between the viewer’s follow set and the candidate author’s follow set, but it does not compare the raw follow sets.
-
-Instead, both sides have a pre-computed MinHash signature of length 256 (constant MIN_HASHES). The hydrator:
-
-  1. Reads the viewer’s MinHash from query.viewer_minhash (attached upstream).
-
-  2. Batch-fetches the MinHash for every unique candidate author from Strato.
-
-  3. For each candidate, compares the two 256-element signatures element-wise:
-
-    
-    
-    fn jaccard_from_minhash(a: &[i64], b: &[i64]) -> f64 {
-        let matching = a.iter().zip(b.iter()).filter(|(x, y)| x == y).count();
-        matching as f64 / len as f64
+    safe
+}</code></code></pre><p>A position is a safe gap only if neither the post immediately above nor the post immediately below is “avoid.” has_avoid returns true when the BrandSafetyVerdict is MediumRisk. That is the rule. No ad next to medium-risk content, in either direction.</p><p>compute_spacing is dynamic. It takes the first 4 ads, looks at their insert_position values, and uses the smallest gap as the requested spacing. The minimum is requested / 2 (rounded up). With fewer than 2 ads or a tiny inferred gap, it falls back to DEFAULT_SPACING { requested: 3, min: 2 }.</p><p>assign_ads_to_gaps walks the ad list and, for each ad, picks the safe gap closest to its ideal position subject to the min distance from the previous placement. The picker uses binary search via partition_point:</p><pre><code><code>let min_offset = gaps.partition_point(|&amp;g| g &lt; min);
+let candidates = &amp;gaps[min_offset..];
+let ideal_pos = candidates.partition_point(|&amp;g| g &lt; ideal);</code></code></pre><p>Two binary searches: first throw out gaps closer than min to the previous ad, then find the gap closest to ideal and tie-break on absolute distance. If no valid gap exists, return None and the blender stops placing ads early.</p><h3>Brand suitability: advertiser-defined adjacency controls</h3><p>There is a separate layer in <code>util.rs</code> that I missed in my first read. Advertisers can attach controls per ad:</p><ul><li><p>A list of blocked handles (should_drop_handle): drop the ad if the post above or below is by one of these authors.</p></li><li><p>A list of blocked keywords (should_drop_keyword): drop the ad if the post above or below contains any of these keywords (tokenized properly via a TweetTokenizer).</p></li><li><p>A brand safety risk tier (should_drop_bsr_low): if the ad is tagged as BsrLow or BsrIas, drop it when adjacent to a LowRisk post.</p></li></ul><p>That last one is counterintuitive at first read. Why drop a low-risk ad next to a low-risk post? It is not about safety, it is about category exclusion at the advertiser tier. BsrIas is the IAS (Integral Ad Science) brand safety certification level. Advertisers who pay for IAS verification want their ads only in very specific contexts, and the rule says: if your ad is BsrLow or BsrIas and the adjacent post is even rated LowRisk (the most lenient bucket), drop the ad rather than risk a placement that violates the advertiser’s contractual standard.</p><p>This is brand SUITABILITY (advertiser preferences) layered on top of brand SAFETY (platform-wide rules). Both are in the public code.</p><h3>How partition_organic_blender is different</h3><p>partition_organic_blender.rs takes a more aggressive approach. Instead of finding safe gaps in the natural order, it actively partitions the feed:</p><ol><li><p>Split scored posts into safe (LowRisk) and unsafe (MediumRisk) buckets.</p></li><li><p>Compute the max number of ads as min(ads.len(), n / spacing.requested, safe_count / 2). Each ad needs two safe posts to bookend it, so safe count divided by 2 is a hard ceiling.</p></li><li><p>Chunk the safe posts into actual_ads equal-sized groups. For each ad, take the first two posts of its group as the “above” and “below” bookends.</p></li><li><p>Run the brand suitability checks (BsrLow, handle blocklist, keyword blocklist) against those bookends. Skip the ad if any check fails. Emit counters per drop reason (bsr_drop, handle_drop, keyword_drop).</p></li><li><p>Build the feed as a sequence of [above, ad, below, ...filler] triples, with leftover safe posts and all unsafe posts sorted by score and distributed evenly as filler between triples.</p></li><li><p>Standard truncate-to-RESULT_SIZE, no-ending-on-ad.</p></li></ol><p>The difference matters. safe_gap_blender respects the natural feed order and only places ads where it can. partition_organic_blender rearranges the feed so every ad gets safe bookends, with unsafe content pushed into filler regions away from the ads.</p><p>Trade-offs:</p><ul><li><p>Partition gives guaranteed safe-adjacency for every placed ad. Safe gap relies on the natural order having enough safe gaps.</p></li><li><p>Partition is more invasive to the ranking. The score-sorted order is preserved within filler regions but the overall structure is dictated by ad placements.</p></li><li><p>Safe gap is less disruptive to organic ranking but places fewer ads when the feed is “dirty.”</p></li></ul><p>These two strategies are presumably A/B tested in production. The codebase shows both, which means xAI has not committed to one strategy globally.</p><h3>Two operational details that scream production system</h3><ol><li><p>interleave_and_finalize truncates the feed to RESULT_SIZE, and if the last item is an ad, pops it. No feed ever ends on an ad.</p></li><li><p>Two metrics are emitted per blend (AdsBlender.post_brand_safety_verdict and AdsBlender.ad_brand_safety_risk) so they can monitor the distribution of safety verdicts and ad risk tiers in production traffic.</p></li></ol><p>The blender itself is policy-free orchestration. The actual rules live in has_avoid, in the safety label store, and in the per-ad adjacency controls. That separation is the right one. You can change brand safety rules without touching the blender.</p><h2>Phoenix retrieval clusters: MoE and topics</h2><p>Alongside the original dense retrieval source, two new sources appeared: phoenix_moe_source.rs and phoenix_topics_source.rs.</p><p>When I first read the filenames I assumed these were three different retrieval architectures. Reading the code: they are not. They are three different parameterizations of the same retrieval client.</p><p>All three sources call the same PhoenixRetrievalClient. They differ in three things:</p><ol><li><p>Cluster ID. Each source reads a different config param for its target cluster: PhoenixRetrievalInferenceClusterId, PhoenixRetrievalMOEInferenceClusterId, PhoenixRetrievalTopicInferenceClusterId. These map to separate gRPC backend deployments.</p></li><li><p>Extra arguments. The topics source passes topic_entity_ids and a topic_filter_mode to the retrieval call. The MoE source passes empty topic IDs.</p></li><li><p>Enable conditions. The MoE source enables only when the user is not making a topic request and there are no cached posts. The topics source enables only when there IS an explicit topic request, OR when the user is new and has new-user topic IDs (cold start path). The regular Phoenix source covers the default case.</p></li></ol><p>So in production there are at least three Phoenix retrieval clusters running. The “MoE” cluster is presumably a Mixture of Experts model deployment, distinct from the regular dense retrieval, and the topics cluster is one tuned/trained for topic-conditioned retrieval. The home mixer just picks which cluster to call based on the query characteristics.</p><p>What the routing logic does tell us: there is at least one specialized cluster for topic-driven requests (when you click into a Topic or Community), and another (MoE) presumably tuned for diversity or specialization that the regular cluster does not provide. The exact model differences are not in the public repo.</p><p>Note also: candidates from each source are tagged with a different ServedType (ForYouPhoenixRetrieval vs ForYouPhoenixRetrievalMoe).</p><p>Downstream code can attribute outcomes to specific retrieval paths for offline analysis.</p><h2>Hydrators: feature engineering in disguise</h2><p>Hydrators attach context to each request and to each candidate before the model sees them. The May commit adds a long list of new hydrators. I have read two of them in detail; the others I can only name from the file tree.</p><h3>Two hydrators worth understanding deeply</h3><p><strong>1. impression_bloom_filter_query_hydrator</strong></p><p>This hydrator fetches a per-user impression history as a list of bloom filters. The pattern:</p><ul><li><p>Calls ImpressionBloomFilterClient.get(user_id, SurfaceArea::HOME_TIMELINE) via Thrift.</p></li><li><p>Receives a list of bloom filter entries, each with its own size_cap and false_positive_rate.</p></li><li><p>Converts each entry into a proto for downstream consumption.</p></li></ul><p>The bloom filter is how the system tracks “you have already seen this post” without storing every impression ID per user. Multiple filters per user likely correspond to different time windows (recent impressions in a tight filter, older impressions in a looser one). The size cap and false positive rate are tuned per entry, which is a tell that they have explicit memory budgets per user for impression dedup.</p><p>Note also: the surface area is hard-coded as HOME_TIMELINE. The bloom filter is surface-specific. Your impression history on the home feed is different from your impression history on the Following feed.</p><p><strong>2. mutual_follow_jaccard_hydrator.rs</strong></p><p>This is the most technically interesting hydrator in the new release. It estimates the Jaccard similarity between the viewer’s follow set and the candidate author’s follow set, but it does not compare the raw follow sets.</p><p>Instead, both sides have a pre-computed MinHash signature of length 256 (constant MIN_HASHES). The hydrator:</p><ol><li><p>Reads the viewer’s MinHash from query.viewer_minhash (attached upstream).</p></li><li><p>Batch-fetches the MinHash for every unique candidate author from Strato.</p></li><li><p>For each candidate, compares the two 256-element signatures element-wise:</p></li></ol><pre><code><code>fn jaccard_from_minhash(a: &amp;[i64], b: &amp;[i64]) -&gt; f64 {
+    let matching = a.iter().zip(b.iter()).filter(|(x, y)| x == y).count();
+    matching as f64 / len as f64
+}</code></code></pre><p>The fraction of matching positions in the two MinHash arrays is an unbiased estimator of the Jaccard similarity of the original sets. MinHash-LSH is a 25-year-old technique from web search deduplication. Seeing it here, in production code, doing graph-overlap estimation for a recommendation system, is genuinely instructive.</p><p>Why this matters: storing every user’s full follow set as a sortable signature would cost gigabytes per active user. Storing a 256-element sketch costs 2 KB per user. The hydrator can batch-fetch sketches for hundreds of candidate authors per request and compute their graph overlap with the viewer in microseconds.</p><p>If you take one thing from this section: this is what production ML at scale actually looks like. Not bigger models, not more parameters. Sketches that turn intractable storage problems into tractable ones, with bounded error.</p><h3>The longer hydrator list (named only)</h3><p>Many more hydrators are added in this commit, including handlers for impressed posts, mutual follow signals, followed/inferred topics, starter pack membership, IP, demographics, served history, retrieval and scoring sequences, request timestamps, engagement counts, media metadata, video duration, quote-tweet expansion, follow-of-repliers signals, language codes, and tweet-type metrics.</p><p>The pattern, from the two I have read: each hydrator is a thin wrapper around an upstream data store (Thrift service, Strato, Kafka feed) that fetches a specific signal and attaches it to either the query or the candidate. They are small, single-purpose, and parallelizable.</p><p>The home mixer chains them together to assemble the full context the model needs.</p><h3>Implication for the “no feature engineering” narrative</h3><p>The hydrator pattern is what people mean when they call something “feature engineering in disguise.” The model does not compute these features. The model receives them as inputs after they have been fetched, sketched, bucketed, and proto-encoded by hand-written code. Someone chose to expose MinHash-derived Jaccard scores to the model. Someone tuned the bloom filter false positive rates. Someone wired up the impression surface mapping. None of that is automatic, and none of it is learned. It is editorial choice, executed in Rust.</p><p>The model learns the weights on those signals. The signals themselves are still picked by engineers.</p><h2>The scoring stack: phoenix_scorer.rs, ranking_scorer.rs, vm_ranker.rs</h2><p>Inside home-mixer/scorers/ there are three files:</p><ul><li><p>phoenix_scorer.rs: routes the ranking request to a specific Phoenix inference cluster and attaches per-action probabilities to each candidate.</p></li><li><p>ranking_scorer.rs: takes those per-action probabilities and collapses them into a single ranking score.</p></li><li><p>vm_ranker.rs: an alternative reranker behind a feature flag.</p></li></ul><p>This is where the most important reveal of the May release lives, and I want to spend time on it.</p><h3>phoenix_scorer.rs: cluster routing is doing more work than you think</h3><p>I assumed this scorer was a thin wrapper that just called the Phoenix prediction service. Reading the code, the routing logic alone deserves a section.</p><p>New-user cluster routing. If the user’s scoring sequence has fewer actions than PhoenixRankerNewUserHistoryThreshold, the request goes to a separate dedicated cluster (PhoenixRankerNewUserInferenceClusterId):</p><pre><code><code>if action_count &lt; threshold {
+    return PhoenixCluster::parse(&amp;query.params.get(PhoenixRankerNewUserInferenceClusterId));
+}</code></code></pre><p>There is a different Phoenix model serving predictions for users without enough history. Combined with the new-user OON reweighting I covered earlier, that is <strong>two distinct cold-start interventions</strong> in the same request:</p><ol><li><p>A separate inference cluster running a model presumably trained or tuned for sparse-history users.</p></li><li><p>A separate OON weight multiplier amplifying out-of-network candidates after scoring.</p></li></ol><p>Both kick in for accounts younger than a threshold with a minimum follow count. The feed your first week on the platform really is structurally different.</p><p><strong>A/B experiment routing baked into the scorer.</strong> This was missing from the January release and is now visible:</p><pre><code><code>match configured_cluster {
+    PhoenixCluster::Experiment1Fou if decider.enabled("override_qf_use_lap7") =&gt; {
+        return PhoenixCluster::Experiment1Lap7;
     }
-
-The fraction of matching positions in the two MinHash arrays is an unbiased estimator of the Jaccard similarity of the original sets. MinHash-LSH is a 25-year-old technique from web search deduplication. Seeing it here, in production code, doing graph-overlap estimation for a recommendation system, is genuinely instructive.
-
-Why this matters: storing every user’s full follow set as a sortable signature would cost gigabytes per active user. Storing a 256-element sketch costs 2 KB per user. The hydrator can batch-fetch sketches for hundreds of candidate authors per request and compute their graph overlap with the viewer in microseconds.
-
-If you take one thing from this section: this is what production ML at scale actually looks like. Not bigger models, not more parameters. Sketches that turn intractable storage problems into tractable ones, with bounded error.
-
-### The longer hydrator list (named only)
-
-Many more hydrators are added in this commit, including handlers for impressed posts, mutual follow signals, followed/inferred topics, starter pack membership, IP, demographics, served history, retrieval and scoring sequences, request timestamps, engagement counts, media metadata, video duration, quote-tweet expansion, follow-of-repliers signals, language codes, and tweet-type metrics.
-
-The pattern, from the two I have read: each hydrator is a thin wrapper around an upstream data store (Thrift service, Strato, Kafka feed) that fetches a specific signal and attaches it to either the query or the candidate. They are small, single-purpose, and parallelizable.
-
-The home mixer chains them together to assemble the full context the model needs.
-
-### Implication for the “no feature engineering” narrative
-
-The hydrator pattern is what people mean when they call something “feature engineering in disguise.” The model does not compute these features. The model receives them as inputs after they have been fetched, sketched, bucketed, and proto-encoded by hand-written code. Someone chose to expose MinHash-derived Jaccard scores to the model. Someone tuned the bloom filter false positive rates. Someone wired up the impression surface mapping. None of that is automatic, and none of it is learned. It is editorial choice, executed in Rust.
-
-The model learns the weights on those signals. The signals themselves are still picked by engineers.
-
-## The scoring stack: phoenix_scorer.rs, ranking_scorer.rs, vm_ranker.rs
-
-Inside home-mixer/scorers/ there are three files:
-
-  * phoenix_scorer.rs: routes the ranking request to a specific Phoenix inference cluster and attaches per-action probabilities to each candidate.
-
-  * ranking_scorer.rs: takes those per-action probabilities and collapses them into a single ranking score.
-
-  * vm_ranker.rs: an alternative reranker behind a feature flag.
-
-This is where the most important reveal of the May release lives, and I want to spend time on it.
-
-### phoenix_scorer.rs: cluster routing is doing more work than you think
-
-I assumed this scorer was a thin wrapper that just called the Phoenix prediction service. Reading the code, the routing logic alone deserves a section.
-
-New-user cluster routing. If the user’s scoring sequence has fewer actions than PhoenixRankerNewUserHistoryThreshold, the request goes to a separate dedicated cluster (PhoenixRankerNewUserInferenceClusterId):
-    
-    
-    if action_count < threshold {
-        return PhoenixCluster::parse(&query.params.get(PhoenixRankerNewUserInferenceClusterId));
+    PhoenixCluster::Experiment1Lap7 if decider.enabled("override_qf_use_fou") =&gt; {
+        return PhoenixCluster::Experiment1Fou;
     }
-
-There is a different Phoenix model serving predictions for users without enough history. Combined with the new-user OON reweighting I covered earlier, that is **two distinct cold-start interventions** in the same request:
-
-  1. A separate inference cluster running a model presumably trained or tuned for sparse-history users.
-
-  2. A separate OON weight multiplier amplifying out-of-network candidates after scoring.
-
-Both kick in for accounts younger than a threshold with a minimum follow count. The feed your first week on the platform really is structurally different.
-
-**A/B experiment routing baked into the scorer.** This was missing from the January release and is now visible:
-    
-    
-    match configured_cluster {
-        PhoenixCluster::Experiment1Fou if decider.enabled("override_qf_use_lap7") => {
-            return PhoenixCluster::Experiment1Lap7;
-        }
-        PhoenixCluster::Experiment1Lap7 if decider.enabled("override_qf_use_fou") => {
-            return PhoenixCluster::Experiment1Fou;
-        }
-        _ => {}
-    }
-
-There are explicit experimental cluster codenames (Experiment1Fou, Experiment1Lap7). A decider system can override the assigned cluster for specific traffic slices. This is the A/B testing infrastructure for model variants, and it lives in the scorer.
-
-In the previous deep dive I flagged the absence of experimentation infrastructure in the public code as suspicious. It is no longer absent. They have multiple Phoenix model variants deployed simultaneously, with traffic-splitting controlled by named decider flags.
-
-**Egress sidecar with fallback.** Production reliability detail I would not have guessed:
-    
-    
-    let mut predictions = client.predict(cluster, request.clone()).await;
-    if predictions.is_err() && use_egress {
-        predictions = self.phoenix_client.predict(cluster, request).await;
-    }
-
-An “egress sidecar” client is the primary path when UseEgressSidecar is enabled. If it fails, fall back to the direct phoenix client. This pattern suggests inference traffic is routed through an egress proxy (likely for cross-region or cross-zone resilience), and the fallback exists because that path can fail independently of the model itself.
-
-**Surface awareness.** The product surface is set explicitly in the request:
-    
-    
-    let product_surface = if query.in_network_only {
-        ProductSurface::HomeTimelineRankedFollowing
-    } else {
-        ProductSurface::HomeTimelineRanking
-    };
-
-The Phoenix model sees which surface the request is for (Following feed vs main For You feed) and can behave differently per surface.
-
-### ranking_scorer.rs: the hand-tuned weighted sum is still alive
-
-I expected this collapsing step to be a learned model. The 2023 Heavy Ranker famously used hand-tuned weights (”a reply is 13.5x a like, a report is -369x”) and the headline framing around Phoenix was that engineers no longer need to pick weights.
-
-Reading ranking_scorer.rs: that framing is wrong. The hand-tuned weighted sum is still right there, with 22 weighted actions:
-    
-    
-    favorite * w_fav
-    + reply * w_reply
-    + retweet * w_retweet
-    + photo_expand * w_photo_expand
-    + click * w_click
-    + profile_click * w_profile_click
-    + vqv * vqv_weight
-    + share * w_share
-    + share_via_dm * w_share_via_dm
-    + share_via_copy_link * w_share_via_copy_link
-    + dwell * w_dwell
-    + quote * w_quote
-    + quoted_click * w_quoted_click
-    + quoted_vqv * quoted_vqv_weight
-    + dwell_time * w_cont_dwell_time
-    + click_dwell_time * w_cont_click_dwell_time
-    + follow_author * w_follow_author
-    + not_interested * w_not_interested
-    + block_author * w_block_author
-    + mute_author * w_mute_author
-    + report * w_report
-    + not_dwelled * w_not_dwelled
-
-Every weight is loaded from a config param: params.get(FavoriteWeight), params.get(ReplyWeight), and so on. These are feature switches that engineers tune externally.
-
-Three other pieces of logic in this scorer that matter:
-
-1\. Offset normalization (offset_score). If the total weight sum is zero, the score is clamped to non-negative. If the combined score is negative, it gets rescaled by (combined + negative_sum) / total_sum * NEGATIVE_SCORES_OFFSET. Otherwise add NEGATIVE_SCORES_OFFSET to keep everything in a known range. This is how they prevent negative scores from breaking downstream consumers that assume positive ranges.
-
-2\. Author diversity penalty (apply_author_diversity). Sort candidates by weighted score, then for each subsequent post from the same author, multiply by:
-    
-    
-    (1.0 - floor) * decay_factor^position + floor
-
-The second post from an author gets decay^1, the third decay^2, etc. With decay_factor = 0.5 and floor = 0.3, the second post is at 65% of its original score, the third at 47.5%, and so on, asymptoting at the floor. This is the “do not show me five tweets from the same person in a row” rule, and it is hard-coded as a multiplicative penalty in the scorer.
-
-3\. Out-of-network reweighting (effective_oon_weight). Out-of-network candidates get multiplied by an OON weight factor before final ranking. Three paths:
-
-  * Topic requests: use TopicOonWeightFactor
-
-  * Eligible new users (account age below threshold AND following at least NEW_USER_MIN_FOLLOWING people): use NEW_USER_OON_WEIGHT_FACTOR
-
-  * Everyone else: use the regular OonWeightFactor
-
-New users get more OON weight because their follow graph is too thin to fill a feed. This is an explicit, code-level cold start handling. The feed actually behaves differently for accounts created recently. That has been an open question for years and is now confirmed in the open code.
-
-### vm_ranker.rs: an experimental gRPC reranker with DPP
-
-VM stands for Value Model. The naming is right. But what it actually does was not what I expected.
-
-VMRanker is not an in-process scorer. It is a gRPC client that calls a separate VMRankerClient service. The home-mixer side just builds a RankRequest proto with all the candidate features (including all 22 per-action scores from Phoenix), sends it to the VM service, and uses the returned per-candidate score.
-
-What makes it interesting: the RankRequest carries DppParams { theta, max_selected_rank }. DPP = Determinantal Point Process. This is a diversity-aware reranking method that mathematically promotes candidates that are different from already-selected ones, with theta controlling the strength of the diversity term and max_selected_rank capping how deep the diversity reranking applies.
-
-So VMRanker is two things at once:
-
-  1. An external service that can recompute a single score from the Phoenix action probabilities, with whatever model logic xAI runs server-side (genuinely a learned value model).
-
-  2. A DPP-based diversity reranker that fights the “all similar content” failure mode that pure pointwise ranking suffers from.
-
-The two pieces of evidence that this is experimental and not the default:
-
-  * It is gated behind EnableVMRanker. Default-off for most traffic.
-
-  * It has its own cluster ID (VMRankerClusterId) and its own value model ID (VMRankerValueModelId), suggesting they can deploy multiple value models in parallel for A/B testing.
-
-So the production stack today is: Phoenix transformer produces 22 action probabilities. RankingScorer collapses them with hand-tuned weights, applies author diversity and OON reweighting. Final score.
-
-In an experimental treatment: same Phoenix probabilities, but sent to VMRanker instead, which returns a learned scalar with DPP-based diversity reranking baked in.
-
-The implication: the “fully learned ranking” future I assumed was already shipped is actually still being A/B tested. The default in May 2026 is still hand-tuned weights with hard-coded diversity penalties. That is a more honest picture of where production is.
-
-## Personal deep dive
-
- _I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical details I can’t fit in free posts._
+    _ =&gt; {}
+}</code></code></pre><p>There are explicit experimental cluster codenames (Experiment1Fou, Experiment1Lap7). A decider system can override the assigned cluster for specific traffic slices. This is the A/B testing infrastructure for model variants, and it lives in the scorer.</p><p>In the previous deep dive I flagged the absence of experimentation infrastructure in the public code as suspicious. It is no longer absent. They have multiple Phoenix model variants deployed simultaneously, with traffic-splitting controlled by named decider flags.</p><p><strong>Egress sidecar with fallback.</strong> Production reliability detail I would not have guessed:</p><pre><code><code>let mut predictions = client.predict(cluster, request.clone()).await;
+if predictions.is_err() &amp;&amp; use_egress {
+    predictions = self.phoenix_client.predict(cluster, request).await;
+}</code></code></pre><p>An “egress sidecar” client is the primary path when UseEgressSidecar is enabled. If it fails, fall back to the direct phoenix client. This pattern suggests inference traffic is routed through an egress proxy (likely for cross-region or cross-zone resilience), and the fallback exists because that path can fail independently of the model itself.</p><p><strong>Surface awareness.</strong> The product surface is set explicitly in the request:</p><pre><code><code>let product_surface = if query.in_network_only {
+    ProductSurface::HomeTimelineRankedFollowing
+} else {
+    ProductSurface::HomeTimelineRanking
+};</code></code></pre><p>The Phoenix model sees which surface the request is for (Following feed vs main For You feed) and can behave differently per surface.</p><h3>ranking_scorer.rs: the hand-tuned weighted sum is still alive</h3><p>I expected this collapsing step to be a learned model. The 2023 Heavy Ranker famously used hand-tuned weights (”a reply is 13.5x a like, a report is -369x”) and the headline framing around Phoenix was that engineers no longer need to pick weights.</p><p>Reading ranking_scorer.rs: that framing is wrong. The hand-tuned weighted sum is still right there, with 22 weighted actions:</p><pre><code><code>favorite * w_fav
++ reply * w_reply
++ retweet * w_retweet
++ photo_expand * w_photo_expand
++ click * w_click
++ profile_click * w_profile_click
++ vqv * vqv_weight
++ share * w_share
++ share_via_dm * w_share_via_dm
++ share_via_copy_link * w_share_via_copy_link
++ dwell * w_dwell
++ quote * w_quote
++ quoted_click * w_quoted_click
++ quoted_vqv * quoted_vqv_weight
++ dwell_time * w_cont_dwell_time
++ click_dwell_time * w_cont_click_dwell_time
++ follow_author * w_follow_author
++ not_interested * w_not_interested
++ block_author * w_block_author
++ mute_author * w_mute_author
++ report * w_report
++ not_dwelled * w_not_dwelled</code></code></pre><p>Every weight is loaded from a config param: params.get(FavoriteWeight), params.get(ReplyWeight), and so on. These are feature switches that engineers tune externally.</p><p>Three other pieces of logic in this scorer that matter:</p><p>1. Offset normalization (offset_score). If the total weight sum is zero, the score is clamped to non-negative. If the combined score is negative, it gets rescaled by (combined + negative_sum) / total_sum * NEGATIVE_SCORES_OFFSET. Otherwise add NEGATIVE_SCORES_OFFSET to keep everything in a known range. This is how they prevent negative scores from breaking downstream consumers that assume positive ranges.</p><p>2. Author diversity penalty (apply_author_diversity). Sort candidates by weighted score, then for each subsequent post from the same author, multiply by:</p><pre><code><code>(1.0 - floor) * decay_factor^position + floor</code></code></pre><p>The second post from an author gets decay^1, the third decay^2, etc. With decay_factor = 0.5 and floor = 0.3, the second post is at 65% of its original score, the third at 47.5%, and so on, asymptoting at the floor. This is the “do not show me five tweets from the same person in a row” rule, and it is hard-coded as a multiplicative penalty in the scorer.</p><p>3. Out-of-network reweighting (effective_oon_weight). Out-of-network candidates get multiplied by an OON weight factor before final ranking. Three paths:</p><ul><li><p>Topic requests: use TopicOonWeightFactor</p></li><li><p>Eligible new users (account age below threshold AND following at least NEW_USER_MIN_FOLLOWING people): use NEW_USER_OON_WEIGHT_FACTOR</p></li><li><p>Everyone else: use the regular OonWeightFactor</p></li></ul><p>New users get more OON weight because their follow graph is too thin to fill a feed. This is an explicit, code-level cold start handling. The feed actually behaves differently for accounts created recently. That has been an open question for years and is now confirmed in the open code.</p><h3>vm_ranker.rs: an experimental gRPC reranker with DPP</h3><p>VM stands for Value Model. The naming is right. But what it actually does was not what I expected.</p><p>VMRanker is not an in-process scorer. It is a gRPC client that calls a separate VMRankerClient service. The home-mixer side just builds a RankRequest proto with all the candidate features (including all 22 per-action scores from Phoenix), sends it to the VM service, and uses the returned per-candidate score.</p><p>What makes it interesting: the RankRequest carries DppParams { theta, max_selected_rank }. DPP = Determinantal Point Process. This is a diversity-aware reranking method that mathematically promotes candidates that are different from already-selected ones, with theta controlling the strength of the diversity term and max_selected_rank capping how deep the diversity reranking applies.</p><p>So VMRanker is two things at once:</p><ol><li><p>An external service that can recompute a single score from the Phoenix action probabilities, with whatever model logic xAI runs server-side (genuinely a learned value model).</p></li><li><p>A DPP-based diversity reranker that fights the “all similar content” failure mode that pure pointwise ranking suffers from.</p></li></ol><p>The two pieces of evidence that this is experimental and not the default:</p><ul><li><p>It is gated behind EnableVMRanker. Default-off for most traffic.</p></li><li><p>It has its own cluster ID (VMRankerClusterId) and its own value model ID (VMRankerValueModelId), suggesting they can deploy multiple value models in parallel for A/B testing.</p></li></ul><p>So the production stack today is: Phoenix transformer produces 22 action probabilities. RankingScorer collapses them with hand-tuned weights, applies author diversity and OON reweighting. Final score.</p><p>In an experimental treatment: same Phoenix probabilities, but sent to VMRanker instead, which returns a learned scalar with DPP-based diversity reranking baked in.</p><p>The implication: the “fully learned ranking” future I assumed was already shipped is actually still being A/B tested. The default in May 2026 is still hand-tuned weights with hard-coded diversity penalties. That is a more honest picture of where production is.</p><h2>Personal deep dive</h2><p><em>I write about ML systems in production — the tradeoffs, the architecture decisions, the stuff that doesn’t make it into papers. If you want to go deeper, the paid tier covers the technical details I can’t fit in free posts.</em></p><div class="paywall-jump" data-component-name="PaywallToDOM"></div><h3>1. The “no feature engineering” claim was always misleading. Now we know how misleading.</h3><p>The framing around Phoenix is that engineers no longer need to pick weights or design features. The transformer learns everything.</p><p>Reading the May code: the transformer learns the per-action probabilities. Engineers still pick the weight on each action. RankingScorer has 22 weighted actions, all loaded from config params, all tunable externally without retraining the model. Plus author diversity decay, plus OON reweighting, plus new-user cold start handling. All hard-coded, all tunable, none of it learned.</p><p>So the right framing is: the <strong>scoring head</strong> is a learned multi-task transformer. The <strong>ranking policy</strong> is still hand-tuned config. Production has two layers of decision-making, and the human-tunable one is doing more work than the marketing implies.</p><p>This is not bad design. Hand-tuned weights at the top of the stack means engineers can shift platform behavior in minutes by changing a config, without retraining a billion-parameter model.</p><p>What anyone telling you “Phoenix is fully end-to-end learned” is wrong about: the action vector exists, the weights on the action vector exist, the diversity decay exists, the OON multipliers exist. All knobs are in the code, all are config-driven, all are external to the model.</p><h3>2. There are TWO cold start interventions in the open code</h3><p>The most surprising thing about reading this codebase carefully is that new-user handling is everywhere.</p><p><strong>Intervention 1</strong>: In phoenix_scorer.rs, if the user’s history is shorter than a threshold, the ranker request is routed to a separate dedicated Phoenix cluster (PhoenixRankerNewUserInferenceClusterId). Different model, presumably trained or tuned for sparse-history users.</p><p><strong>Intervention 2</strong>: In ranking_scorer.rs‘s effective_oon_weight, eligible new users get a different out-of-network multiplier (NEW_USER_OON_WEIGHT_FACTOR). More OON content gets amplified relative to in-network candidates when your follow graph is too thin to fill a feed.</p><p>So a new user with a thin follow graph gets:</p><ol><li><p>A different model serving their predictions (in PhoenixScorer)</p></li><li><p>A different OON weight applied to the predictions (in RankingScorer)</p></li></ol><p>The feed you see in your first week on the platform is structurally different from the feed you see in month three, in two ways, at two different layers of the stack. Bonus: there is also a topic-specific OON multiplier (TopicOonWeightFactor) for when you are inside a Topic or Community surface, so feed behavior also varies by surface.</p><h3>3. Grox is the most underrated part of the release</h3><p>Everyone is going to write about the transformer ranker again. Almost no one will write about Grox.</p><p>Grox is where content policy lives. Spam detection, reply protection, PTOS enforcement, multimodal embedding, video audio transcription. The fact that they shipped a separate subprocess service with its own asyncio engine, classifier instances, and a Strato-backed read/write contract tells you content classification is treated as a first-class production system, not a side project.</p><p>Two specific things worth absorbing:</p><ul><li><p>The asymmetric reply protection in TaskSpamDetection: replies into accounts with under 1000 followers get extra logging attention. Small accounts get protected more aggressively from reply spam than large accounts do. This is a deliberate platform policy choice, sitting in 10 lines of code.</p></li><li><p>The ASR processor running alongside the main engine: they transcribe video audio. This is the kind of capability that quietly raises what the platform can detect, and it does not appear in any of xAI’s public communication about the recommender. You only find it by reading the engine init code.</p></li></ul><h3>4. MinHash and bloom filters: production ML is about sketches</h3><p>The mutual_follow_jaccard_hydrator and the impression_bloom_filter_query_hydrator are the two pieces of code I would recommend any aspiring rec systems engineer read.</p><p>Both solve the same kind of problem: you have a per-user signal whose true representation is too large to fetch on every request (the full follow set, the full impression history), and you need a sub-millisecond approximation that fits in a small fixed budget.</p><p>The answers, lifted directly out of the May 2026 production code:</p><ul><li><p>For follow-graph overlap: 256-element MinHash sketches, compared element-wise. Jaccard from matching positions divided by length. Bounded error, fixed memory per user, batch-friendly.</p></li><li><p>For impression history: per-user bloom filter entries with explicit size_cap and false_positive_rate per entry. Multiple filters per user, likely time-windowed.</p></li></ul><p>This is what production ML at scale actually looks like. Not bigger models. Not more parameters. Sketches and probabilistic data structures that turn intractable problems into bounded-error tractable ones.</p><p>If you are a junior MLE reading code to learn, prioritize these two files over the transformer. The transformer is impressive but it is also opinionated and unique to this stack. The sketches are universally reusable, and the engineering principles they embody transfer to every recommender system on earth.</p><h3>5. The ads code is the most legible part of the release</h3><p>I genuinely did not expect xAI to ship the ads logic publicly.</p><p>xAI shipping the blender code is either a confidence flex (”our model is the moat, the blender is just plumbing”) or a regulatory hedge.</p><p>But more importantly: this is the most readable code in the entire repo. find_safe_gaps is 11 lines and is the actual production brand safety rule. The brand suitability layer (handle blocklists, keyword blocklists, IAS-certified ad tier) is in one file. The TTL strategy on the brand safety cache shows real production tuning (1 minute for new tweets, 1 hour for old). And the two blenders represent two genuinely different strategies (gap-finding vs partition-and-bookend) that are presumably A/B tested.</p><p>If you are interviewing for ads ranking at any company, this code is now the best free reference for how organic/paid mixing is actually done at scale. The brand safety verdict propagation through quote tweets is also a production-quality example.</p><p>Two operational details worth internalizing: feeds never end on an ad, and per-blend metrics are emitted for monitoring verdict and risk distributions in production. Both are the kind of thing you only know to do after running the system at scale.</p><h3>6. DPP is the actual technical surprise in the scoring stack</h3><p>VMRanker brings Determinantal Point Process diversity reranking into the open code. DPP is not a new technique academically, but seeing it actually wired into a production rec system, gated behind a feature flag, with configurable theta, is meaningful.</p><p>It also tells you something about what hand-tuned diversity (the author decay in <code>RankingScorer</code>) is not enough for. They are clearly experimenting with a learned diversity term that can prevent topical clustering, not just author clustering. The author penalty stops you from seeing five tweets from the same person. DPP stops you from seeing five similar tweets from five different people.</p><p>If VMRanker becomes the default path, the practical effect on creators will be: harder to dominate a feed by being similar to other top performers. That is a meaningfully different ranking world than “engagement-rate-wins.”</p><h3>7. They are still hiding the policy layer</h3><p>The model architecture, the scorer, the hydrators, the blenders, the ads code: all open.</p><p>What is NOT open: the actual values of all those weight parameters (FavoriteWeight, ReplyWeight, BlockAuthorWeight, etc.), the NEW_USER_OON_WEIGHT_FACTOR constant, the training data, the training objective, the value model that VMRanker calls, the boost/penalty rules for blue check verification, all-caps detection, sensitive content reach suppression. X’s public documentation lists those last ones, but they are not in this repo.</p><p>The architecture is open. The numerical values that decide what gets distributed are closed. That is the actual interesting thing about open-sourcing a recommender system. You can show the machinery without revealing the policy.</p><p>A specific example: the entire 22-action weighted sum is right there in code. But if ReportWeight is -369 in production, you cannot know that.</p><p>You would have to be inside xAI to see the config.</p><h2>Caveats</h2><ul><li><p>The mini model shipped is explicitly described as not the production model. The production model is almost certainly much larger. I have not seen production size numbers from xAI.</p></li><li><p>I have read two hydrators in detail (bloom filter and MinHash Jaccard). The other hydrators in the file tree follow the same general pattern (thin wrapper around an upstream data store) but I have not verified each one individually.</p></li><li><p>VMRanker being a value model with DPP is what the code clearly shows. What the value model on the server side actually does is not in the public code. It could be anything from a small MLP to a much larger model.</p></li><li><p>The “multiple Phoenix retrieval clusters” claim is grounded in different cluster ID config params. The phoenix_scorer.rs also reveals additional named experimental clusters (Experiment1Fou, Experiment1Lap7). There may be more clusters in production not surfaced in this code.</p></li></ul><p>— Ludo</p>

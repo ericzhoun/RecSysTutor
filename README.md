@@ -57,7 +57,8 @@ A companion library of **244 production-ML posts** from the *Machine Learning at
 collection by **Ludovico Bessi** (collected 2026-09-30): recommender deep-dives (TikTok,
 xAI, Airbnb, LinkedIn, ByteDance, Alibaba, Pinterest, a full [RecSys] series), LLM/RAG and
 serving engineering, and production war stories. Copies are platform-free with local
-images; 80 paid posts appear as previews only. Topic map and course cross-references:
+images; all 244 posts are stored in full — the 80 paid posts were retrieved via the
+owner's own subscription (session handled locally, never stored). Topic map and course cross-references:
 `ml-at-scale/README.md`, full table: `ml-at-scale/index.md`, course companion module:
 `deeptutor/content/m11-ml-at-scale-reading-library.md`.
 
