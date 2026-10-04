@@ -225,6 +225,10 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
 
 /* ---------- misc ---------- */
 .landscape{width:100%;height:auto;border:1px solid var(--line);background:var(--panel);margin:20px 0;}
+.landscape a{cursor:pointer;outline:none;text-decoration:none;}
+.landscape a rect{pointer-events:all;transition:stroke-opacity .15s ease,fill .15s ease;}
+.landscape a:hover rect,.landscape a:focus-visible rect{stroke:var(--accent);stroke-opacity:1;fill:var(--accent-soft);}
+.landscape a:hover text,.landscape a:focus-visible text{fill:var(--accent-ink);}
 .chip{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
   border:1px solid var(--line);padding:2px 7px;border-radius:3px;color:var(--muted);margin:0 4px 4px 0;}
 .colophon{border-top:2px solid var(--ink);margin-top:70px;padding-top:18px;font-size:13.5px;color:var(--faint);}
@@ -317,7 +321,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
       the course simply zooms into each cell.</p>
   </div>
   <div class="bleed">
-    <svg class="landscape" viewBox="0 0 1040 430" role="img" aria-label="Map of recommender-system model families">
+    <svg class="landscape" viewBox="0 0 1040 430" role="group" aria-label="Map of recommender-system model families — each cell links to the lesson that covers it">
       <rect x="0" y="0" width="1040" height="430" fill="#fbfbf9"/>
       <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="11" fill="#8b9097">
         <text x="26" y="30">CANDIDATE GENERATION</text><text x="26" y="47">(millions → thousands, &lt;100 ms)</text>
@@ -332,40 +336,40 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
       </g>
       <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#17181a">
         <g>
-          <rect x="250" y="20" width="150" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="39">Two-Tower</text>
-          <rect x="412" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="428" y="39">YouTube DNN</text>
-          <rect x="574" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="590" y="39">FM retriever</text>
-          <rect x="716" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="732" y="39">SimClusters</text>
-          <rect x="858" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="874" y="39">GraphJet / RealGraph</text>
+          <a href="#l2-1" aria-label="Two-Tower"><rect x="250" y="20" width="150" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="39">Two-Tower</text></a>
+          <a href="#l1-2" aria-label="YouTube DNN"><rect x="412" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="428" y="39">YouTube DNN</text></a>
+          <a href="#l2-3" aria-label="FM retriever"><rect x="574" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="590" y="39">FM retriever</text></a>
+          <a href="#l6-3" aria-label="SimClusters"><rect x="716" y="20" width="130" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="732" y="39">SimClusters</text></a>
+          <a href="#l6-1" aria-label="GraphJet / RealGraph"><rect x="858" y="20" width="150" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="874" y="39">GraphJet / RealGraph</text></a>
         </g>
         <g>
-          <rect x="250" y="116" width="120" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="135">Wide &amp; Deep</text>
-          <rect x="382" y="116" width="90" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="135">DeepFM</text>
-          <rect x="484" y="116" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="500" y="135">DCN&nbsp;V2</text>
-          <rect x="576" y="116" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="592" y="135">xDeepFM</text>
-          <rect x="676" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="692" y="135">AutoInt</text>
-          <rect x="774" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="790" y="135">MaskNet</text>
-          <rect x="872" y="116" width="136" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="888" y="135">DLRM / FinalMLP</text>
+          <a href="#l3-1" aria-label="Wide and Deep"><rect x="250" y="116" width="120" height="30" fill="none" stroke="#0f6f66"/><text x="266" y="135">Wide &amp; Deep</text></a>
+          <a href="#l3-2" aria-label="DeepFM"><rect x="382" y="116" width="90" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="135">DeepFM</text></a>
+          <a href="#l3-3" aria-label="DCN V2"><rect x="484" y="116" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="500" y="135">DCN&nbsp;V2</text></a>
+          <a href="#l3-4" aria-label="xDeepFM"><rect x="576" y="116" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="592" y="135">xDeepFM</text></a>
+          <a href="#l3-5" aria-label="AutoInt"><rect x="676" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="692" y="135">AutoInt</text></a>
+          <a href="#l3-8" aria-label="MaskNet"><rect x="774" y="116" width="86" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="790" y="135">MaskNet</text></a>
+          <a href="#l3-6" aria-label="DLRM / FinalMLP"><rect x="872" y="116" width="136" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="888" y="135">DLRM / FinalMLP</text></a>
         </g>
         <g>
-          <rect x="250" y="212" width="120" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="231">Transformer</text>
-          <rect x="382" y="212" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="231">BERT</text>
-          <rect x="482" y="212" width="92" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="498" y="231">SASRec</text>
-          <rect x="586" y="212" width="100" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="602" y="231">BERT4Rec</text>
-          <rect x="698" y="212" width="310" height="30" fill="none" stroke="#0f6f66"/><text x="714" y="231">HSTU — generative recommender</text>
+          <a href="#l4-1" aria-label="Transformer"><rect x="250" y="212" width="120" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="231">Transformer</text></a>
+          <a href="#l4-2" aria-label="BERT"><rect x="382" y="212" width="88" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="398" y="231">BERT</text></a>
+          <a href="#l4-3" aria-label="SASRec"><rect x="482" y="212" width="92" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="498" y="231">SASRec</text></a>
+          <a href="#l4-4" aria-label="BERT4Rec"><rect x="586" y="212" width="100" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="602" y="231">BERT4Rec</text></a>
+          <a href="#l4-5" aria-label="HSTU — generative recommender"><rect x="698" y="212" width="310" height="30" fill="none" stroke="#0f6f66"/><text x="714" y="231">HSTU — generative recommender</text></a>
         </g>
         <g>
-          <rect x="250" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="327">MMoE</text>
-          <rect x="342" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="358" y="327">ESMM</text>
-          <rect x="434" y="308" width="240" height="30" fill="none" stroke="#0f6f66"/><text x="450" y="327">MTL optimisers I–III</text>
-          <rect x="686" y="308" width="322" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="702" y="327">Industry practice: label design + loss weighting</text>
+          <a href="#l5-1" aria-label="MMoE"><rect x="250" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="327">MMoE</text></a>
+          <a href="#l5-2" aria-label="ESMM"><rect x="342" y="308" width="80" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="358" y="327">ESMM</text></a>
+          <a href="#l5-3" aria-label="MTL optimisers I–III"><rect x="434" y="308" width="240" height="30" fill="none" stroke="#0f6f66"/><text x="450" y="327">MTL optimisers I–III</text></a>
+          <a href="#l5-5" aria-label="Industry practice: label design + loss weighting"><rect x="686" y="308" width="322" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="702" y="327">Industry practice: label design + loss weighting</text></a>
         </g>
       </g>
       <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#17181a">
-        <rect x="250" y="379" width="200" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="398">Twitter: RealGraph → GraphJet → SimClusters → MaskNet → TwHIN</text>
+        <a href="#m6" aria-label="Twitter case study"><rect x="250" y="379" width="200" height="30" fill="none" stroke="#141618" stroke-opacity="0.3"/><text x="266" y="398">Twitter: RealGraph → GraphJet → SimClusters → MaskNet → TwHIN</text></a>
       </g>
       <g font-family="ui-monospace, SF Mono, Menlo, monospace" font-size="10.5" fill="#8b9097">
-        <text x="250" y="428">teal outline = the model the blog treats as a reference implementation</text>
+        <text x="250" y="428">teal outline = the model the blog treats as a reference implementation · click any box to jump to its lesson</text>
       </g>
     </svg>
   </div>
