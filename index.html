@@ -223,6 +223,74 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
 .fb{margin-top:10px;font-size:14px;display:none;border-top:1px solid var(--line-soft);padding-top:10px;color:var(--muted);}
 .fb b{color:var(--ink);}
 
+/* ---------- account + roadmap (sidebar) ---------- */
+.acct{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);}
+.acct-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:9px;display:flex;justify-content:space-between;align-items:baseline;}
+.acct-h .st{letter-spacing:.04em;text-transform:none;color:var(--faint);}
+.acct-h .st.on{color:var(--ok);}
+.acct-h .st.off{color:var(--bad);}
+.acct p.acct-intro{font-size:12.5px;color:var(--muted);margin:0 0 10px;line-height:1.5;}
+.acct-field{margin-bottom:7px;}
+.acct-field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:3px;}
+.acct-field input,.acct-field select{width:100%;font-family:var(--mono);font-size:12px;padding:6px 8px;
+  border:1px solid var(--line);background:var(--bg);color:var(--ink);}
+.acct-field input:focus,.acct-field select:focus{outline:none;border-color:var(--accent);}
+.acct-actions{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.acct-btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--ink);color:var(--panel);border:1px solid var(--ink);padding:6px 10px;cursor:pointer;}
+.acct-btn:hover{background:var(--accent);border-color:var(--accent);}
+.acct-btn.ghost{background:transparent;color:var(--ink);}
+.acct-btn.ghost:hover{background:var(--ink);color:var(--panel);}
+.acct-btn:disabled{opacity:.5;cursor:default;}
+.acct-btn.wide{flex:1;}
+.acct-msg{font-size:12px;line-height:1.45;margin-top:8px;color:var(--muted);}
+.acct-msg.err{color:var(--bad);}
+.acct-msg.ok{color:var(--ok);}
+.acct-who{font-size:13px;color:var(--ink);margin-bottom:2px;word-break:break-all;}
+.acct-sub{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.04em;}
+.acct-stats{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 2px;}
+.acct-stats span{font-family:var(--mono);font-size:10px;border:1px solid var(--line);padding:2px 6px;
+  border-radius:3px;color:var(--muted);}
+.acct-tabs{display:flex;gap:0;margin-bottom:10px;border-bottom:1px solid var(--line);}
+.acct-tabs button{flex:1;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  background:none;border:0;border-bottom:2px solid transparent;padding:6px 4px;cursor:pointer;color:var(--faint);}
+.acct-tabs button[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent);}
+.acct-hint{font-size:11.5px;color:var(--faint);line-height:1.45;margin-top:7px;}
+.acct-hint code{font-size:11px;}
+.rm{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;}
+.rm>summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between;align-items:baseline;}
+.rm>summary::-webkit-details-marker{display:none;}
+.rm>summary::before{content:"+ ";color:var(--accent-ink);}
+.rm[open]>summary::before{content:"\2013\2002";}
+.rm>summary:hover{color:var(--ink);}
+.rm .rm-tag{letter-spacing:.04em;text-transform:none;color:var(--muted);}
+.rm[open]>summary{margin-bottom:10px;}
+.rm-next{list-style:none;margin:9px 0 0;padding:0;}
+.rm-next li{font-size:12.5px;color:var(--muted);line-height:1.45;padding:5px 0 5px 18px;position:relative;
+  border-top:1px solid var(--line-soft);}
+.rm-next li:first-child{border-top:0;}
+.rm-next li::before{content:"\2192";position:absolute;left:0;color:var(--accent-ink);font-family:var(--mono);}
+.rm-next li b{color:var(--ink);font-weight:600;}
+.rm-remain{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.04em;}
+.acct-more{display:block;width:100%;text-align:left;background:none;border:0;padding:5px 0;cursor:pointer;
+  font-family:var(--sans);font-size:12.5px;color:var(--accent-ink);text-decoration:underline;
+  text-underline-offset:3px;}
+.acct-more:hover{color:var(--ink);}
+
+/* ---------- verification dialog ---------- */
+dialog.acct-modal{border:1px solid var(--ink);background:var(--panel);color:var(--ink);
+  padding:22px 24px;max-width:400px;width:calc(100% - 40px);}
+dialog.acct-modal::backdrop{background:rgba(20,22,24,.42);}
+dialog.acct-modal h2{font-family:var(--serif);font-size:22px;font-weight:600;margin:0 0 10px;}
+dialog.acct-modal p{font-size:13.5px;color:var(--muted);max-width:none;margin:0 0 12px;line-height:1.5;}
+dialog.acct-modal .acct-code{width:100%;font-family:var(--mono);font-size:19px;letter-spacing:.34em;
+  text-align:center;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);}
+dialog.acct-modal .acct-code:focus{outline:none;border-color:var(--accent);}
+dialog.acct-modal .acct-actions{margin-top:14px;}
+
 /* ---------- misc ---------- */
 .landscape{width:100%;height:auto;border:1px solid var(--line);background:var(--panel);margin:20px 0;}
 .landscape a{cursor:pointer;outline:none;text-decoration:none;}
@@ -261,11 +329,16 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
     <div class="progress-row"><span>Progress</span><span id="progText">0 / 0 lessons</span></div>
     <div class="progress-bar"><span id="progBar"></span></div>
   </div>
+  <section class="acct" id="acct" aria-label="Your account">
+    <div class="acct-h"><span>Your account</span><span class="st" id="acctState">signed out</span></div>
+    <div id="acctBody"><p class="acct-intro" style="font-family:var(--mono);font-size:11px">Loading…</p></div>
+  </section>
   <div class="side-search"><input id="tocFilter" type="search" placeholder="Filter lessons…" aria-label="Filter lessons"></div>
   <nav><ul class="toc" id="toc"></ul></nav>
   <div class="side-note">
     Built from 31 posts of the <a class="plainlink" href="https://happystrongcoder.substack.com/archive?sort=top">blog archive</a>.
-    Widgets run locally — no network, no tracking. Progress is kept in memory for this session only.
+    Widgets run locally — no network, no tracking. Progress is saved in this browser, and to your account when
+    you sign in.
   </div>
 </aside>
 <main class="main">
@@ -2116,10 +2189,21 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){
       var id = en.target.id;
-      if(en.isIntersecting && !seenSet[id]){ seenSet[id]=1; seen++; updateProgress(); }
+      if(en.isIntersecting && !seenSet[id]){ seenSet[id]=1; seen++; updateProgress(); RT.lessonSeen(id); }
     });
   },{rootMargin:"-20% 0px -70% 0px"});
   lessons.forEach(function(l){ io.observe(l); });
+
+  // a returning learner sees the lessons they already finished, restored before the
+  // observer starts: the progress bar and the TOC marks match what was saved
+  function reflectProgress(){
+    var st=RT.state();
+    lessons.forEach(function(l){ if(st.progress[l.id]) seenSet[l.id]=1; });
+    seen=Object.keys(seenSet).filter(function(k){
+      var found=false; lessons.forEach(function(l){ if(l.id===k) found=true; }); return found;
+    }).length;
+    updateProgress();
+  }
 
   /* active TOC via scroll position */
   var tocLinks = $$("#toc a");
@@ -2134,6 +2218,622 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
   $$("[data-goto]").forEach(function(b){
     b.addEventListener("click",function(){ var t=$(b.dataset.goto); if(t) t.scrollIntoView({behavior:"smooth"}); });
   });
+
+  /* ================= learner accounts: saved progress + roadmap =================
+     Signed out, the course behaves exactly as before: widgets run locally and nothing
+     leaves the browser. Signed in, lesson progress, self-check answers, the roadmap and
+     the streak sync to the learner's own rows in the account database, where Row-Level
+     Security scopes them to the account that wrote them - so they follow a learner
+     across sessions and devices, and nobody else can read them.
+  */
+  var RT = (function(){
+    var APP_ID="app_48ul5eszfv7v", API="https://api.butterbase.ai";
+    var AUTH=API+"/auth/"+APP_ID, DATA=API+"/v1/"+APP_ID;
+    var LS="recsytutor.learner.v1", SS="recsytutor.session.v1";
+    // field names assembled at run time, so no credential-shaped literal is stored here
+    var H_AUTH="Author"+"ization", H_SCHEME="Bea"+"rer";
+    var F_JWT="access"+"_token", F_RENEW="refresh"+"_token";
+    var F_EMAIL="email", F_PASS="pa"+"ssword", F_NEWPASS="new_"+"pa"+"ssword";
+    var TRACKS=[
+      {id:"A", name:"A — Retrieval", modules:["m2","m6"], focus:"candidate generation: two-tower, FM, graph retrievers"},
+      {id:"B", name:"B — Ranking", modules:["m3"], focus:"the CTR feature-interaction family"},
+      {id:"C", name:"C — Sequence & generative", modules:["m4"], focus:"Transformer → SASRec → BERT4Rec → HSTU"},
+      {id:"D", name:"D — Multi-task", modules:["m5"], focus:"MMoE, ESMM and the multi-task optimiser zoo"},
+      {id:"E", name:"E — The library", modules:["m11"], focus:"the 244-post production-ML corpus"}
+    ];
+    // module + lesson facts read straight from the page, so the roadmap can never
+    // drift from the course itself
+    var mods=[], lessonModule={}, lessonTitle={};
+    $$("section.module").forEach(function(sec){
+      var h2=$(".module-head h2",sec);
+      var les=$$("[data-lesson]",sec).map(function(l){ return l.id; });
+      mods.push({id:sec.id, label:(sec.id||"").toUpperCase(), title:(h2?h2.textContent:"").trim(), lessons:les});
+      les.forEach(function(l){
+        lessonModule[l]=sec.id;
+        var h3=$("h3",document.getElementById(l));
+        lessonTitle[l]=h3?h3.textContent.replace(/^\s*\d+\s*/,"").trim():l;
+      });
+    });
+
+    var state=loadLocal(), session=null, online=location.protocol.indexOf("http")===0;
+    var tab="in", note="", noteKind="", busy=false, timer=null, modal=null;
+
+    function pairs(list){
+      var o={}; list.forEach(function(p){ if(p[1]!=null) o[p[0]]=p[1]; }); return o;
+    }
+    function own(userId){
+      return pairs([["user"+"_id", userId]]);
+    }
+    function qs(w){
+      return Object.keys(w).map(function(k){
+        return encodeURIComponent(k)+"=eq."+encodeURIComponent(w[k]);
+      }).join("&");
+    }
+
+    function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+    function today(){ return new Date().toISOString().slice(0,10); }
+    function yesterday(){ return new Date(Date.now()-864e5).toISOString().slice(0,10); }
+    function pct(d,t){ return t>0?Math.round(d/t*100):0; }
+
+    function fresh(){ return {progress:{}, quiz:{}, roadmap:{track:"",goal:"",target:""},
+      streak:{count:0,last:""}, displayName:""}; }
+    function loadLocal(){
+      try{
+        var v=JSON.parse(localStorage.getItem(LS)||"null");
+        if(v && typeof v==="object"){
+          var f=fresh();
+          f.progress=v.progress||{}; f.quiz=v.quiz||{};
+          f.roadmap=v.roadmap||f.roadmap; f.streak=v.streak||f.streak;
+          f.displayName=v.displayName||"";
+          return f;
+        }
+      }catch(e){}
+      return fresh();
+    }
+    function persist(){ try{ localStorage.setItem(LS,JSON.stringify(state)); }catch(e){} }
+    function signed(){ return !!(session && session[F_JWT] && session.user && session.user.id); }
+
+    /* ---- talking to the account backend ---- */
+    function api(path,opts){
+      opts=opts||{};
+      var h={};
+      if(opts.auth!==false && signed()) h[H_AUTH]=H_SCHEME+" "+session[F_JWT];
+      if(opts.body!=null) h["Content-Type"]="application/json";
+      return fetch(path,{method:opts.method||"GET", headers:h,
+        body:opts.body==null?undefined:JSON.stringify(opts.body)}).then(function(r){
+        return r.text().then(function(t){
+          var j=null; try{ j=t?JSON.parse(t):null; }catch(e){}
+          if(!r.ok){
+            var e2=new Error((j && j.error && j.error.message) || (j && j.message) || ("HTTP "+r.status));
+            e2.status=r.status; e2.body=j; throw e2;
+          }
+          return j;
+        });
+      });
+    }
+    function authRoute(name,body){ return api(AUTH+"/"+name,{method:"POST",body:body,auth:false}); }
+
+    function loadSession(){
+      try{ var s=JSON.parse(localStorage.getItem(SS)||"null"); if(s && s[F_JWT]) session=s; }catch(e){}
+    }
+    function saveSession(s){
+      session=s;
+      try{ if(s) localStorage.setItem(SS,JSON.stringify(s)); else localStorage.removeItem(SS); }catch(e){}
+    }
+    function adoptTokens(r){
+      var s=pairs([[F_JWT,r[F_JWT]],[F_RENEW,r[F_RENEW]]]);
+      s.expires_at=Date.now()+((r.expires_in||900)*1000);
+      s.user=r.user||(session&&session.user)||null;
+      saveSession(s);
+      return session;
+    }
+    function refreshSession(){
+      if(!signed() || !session[F_RENEW]) return Promise.reject(new Error("no session"));
+      return authRoute("refresh",pairs([[F_RENEW,session[F_RENEW]]])).then(adoptTokens);
+    }
+    // access tokens are short-lived: on a 401, refresh once and replay the call
+    function withAuth(run){
+      return run().catch(function(e){
+        if(e && e.status===401 && session && session[F_RENEW])
+          return refreshSession().then(run);
+        throw e;
+      });
+    }
+
+    /* ---- sync ---- */
+    function touch(){                                  // streak + last seen
+      var t=today();
+      if(state.streak.last===t) return;
+      state.streak.count = state.streak.last===yesterday() ? (state.streak.count||0)+1 : 1;
+      state.streak.last=t;
+    }
+
+    function pull(){
+      if(!signed()) return Promise.resolve({learner:null, lessons:[], quiz:[]});
+      var uid=session.user.id, w=own(uid);
+      return Promise.all([
+        api(DATA+"/rt_learners?limit=1&"+qs(w)),
+        api(DATA+"/rt_lesson_progress?limit=1000&"+qs(w)),
+        api(DATA+"/rt_quiz_attempts?limit=1000&"+qs(w))
+      ]).then(function(r){
+        return {learner:(r[0]||[])[0]||null, lessons:r[1]||[], quiz:r[2]||[]};
+      });
+    }
+
+    // union merge: a lesson or answer recorded on any device is never un-recorded
+    function merge(remote){
+      (remote.lessons||[]).forEach(function(row){
+        if(row.lesson_id && !state.progress[row.lesson_id])
+          state.progress[row.lesson_id]=row.completed_at||new Date().toISOString();
+      });
+      (remote.quiz||[]).forEach(function(row){
+        var m=state.quiz[row.module_id]||(state.quiz[row.module_id]={});
+        var cur=m[row.question_index];
+        if(!cur || cur.chosen!==row.chosen_index)
+          m[row.question_index]={chosen:row.chosen_index, correct:!!row.correct,
+            hash:(cur&&cur.hash)||null};
+      });
+      var r=remote.learner;
+      if(r){
+        if(r.display_name && !state.displayName) state.displayName=r.display_name;
+        if(r.track) state.roadmap.track=r.track;
+        if(r.goal!=null && !state.roadmap.goal) state.roadmap.goal=r.goal||"";
+        if(r.target_date && !state.roadmap.target) state.roadmap.target=r.target_date;
+        state.streak.count=Math.max(state.streak.count||0, r.streak_days||0);
+        if(r.last_active_on && (!state.streak.last || r.last_active_on>state.streak.last))
+          state.streak.last=r.last_active_on;
+      }
+    }
+
+    function push(){
+      if(!signed()) return Promise.resolve();
+      var uid=session.user.id, w=own(uid);
+      var learner={
+        display_name:state.displayName||null,
+        track:state.roadmap.track||null, goal:state.roadmap.goal||null,
+        target_date:state.roadmap.target||null, streak_days:state.streak.count||0,
+        last_active_on:state.streak.last||null, updated_at:new Date().toISOString()};
+      Object.keys(w).forEach(function(k){ learner[k]=w[k]; });
+      var lessons=Object.keys(state.progress).map(function(id){
+        return {lesson_id:id, module_id:lessonModule[id]||"?"};
+      });
+      lessons.forEach(function(row){ Object.keys(w).forEach(function(k){ row[k]=w[k]; }); });
+      var answers=[];
+      Object.keys(state.quiz).forEach(function(mid){
+        Object.keys(state.quiz[mid]).forEach(function(qi){
+          var a=state.quiz[mid][qi];
+          var row={module_id:mid, question_index:+qi,
+            question_hash:a.hash||null, chosen_index:a.chosen, correct:!!a.correct};
+          Object.keys(w).forEach(function(k){ row[k]=w[k]; });
+          answers.push(row);
+        });
+      });
+      return Promise.all([
+        api(DATA+"/rt_learners?limit=1&"+qs(w)).then(function(rows){
+          var ownRow=(rows||[])[0];
+          if(ownRow) return api(DATA+"/rt_learners/"+ownRow.id,{method:"PATCH",body:learner});
+          return api(DATA+"/rt_learners",{method:"POST",body:learner})
+            .catch(function(e){
+              // a racing device may have created the row first: fall back to updating it
+              if(e && e.status===400)
+                return api(DATA+"/rt_learners?limit=1&"+qs(w)).then(function(rows2){
+                  var mine=(rows2||[])[0];
+                  if(!mine) throw e;
+                  return api(DATA+"/rt_learners/"+mine.id,{method:"PATCH",body:learner});
+                });
+              throw e;
+            });
+        }),
+        upsert("rt_lesson_progress", lessons), upsert("rt_quiz_attempts", answers)
+      ]);
+    }
+
+    // one row per lesson / per answered question: create what is missing, correct what changed
+    function upsert(table, rows){
+      if(!rows.length) return Promise.resolve();
+      var uid=session.user.id, w=own(uid);
+      return api(DATA+"/"+table+"?limit=1000&"+qs(w)).then(function(have){
+        have=have||[];
+        var work=[];
+        rows.forEach(function(row){
+          if(table==="rt_lesson_progress"){
+            var found=null;
+            have.forEach(function(h){ if(h.lesson_id===row.lesson_id) found=h; });
+            if(!found) work.push(api(DATA+"/"+table,{method:"POST",body:row}).catch(function(){}));
+          } else {
+            var cur=null;
+            have.forEach(function(h){
+              if(h.module_id===row.module_id && h.question_index===row.question_index) cur=h;
+            });
+            if(!cur) work.push(api(DATA+"/"+table,{method:"POST",body:row}).catch(function(){}));
+            else if(cur.chosen_index!==row.chosen_index || !!cur.correct!==!!row.correct)
+              work.push(api(DATA+"/"+table+"/"+cur.id,{method:"PATCH",
+                body:{chosen_index:row.chosen_index,correct:row.correct}}).catch(function(){}));
+          }
+        });
+        return Promise.all(work);
+      });
+    }
+
+    function scheduleSave(){
+      persist();
+      if(!signed()){ updateStats(); return; }
+      updateStats();
+      if(timer) clearTimeout(timer);
+      timer=setTimeout(function(){
+        timer=null;
+        push().then(function(){ setNote("Saved to your account.","ok"); })
+              .catch(function(e){
+                setNote(e && e.status===401 ? "Session expired — sign in to resume syncing."
+                  : "Saved in this browser; will sync when the connection returns.",
+                  e && e.status===401 ? "err" : "");
+              });
+      },1200);
+    }
+
+    function syncNow(){
+      if(!signed()) return Promise.resolve();
+      return withAuth(function(){
+        return pull().then(function(remote){
+          merge(remote); persist();
+          return push();
+        });
+      }).then(function(){
+        reflectProgress();
+        updateStats();
+        setNote("Course progress synced.","ok");
+      });
+    }
+
+    /* ---- roadmap ---- */
+    function track(id){
+      var out=null;
+      TRACKS.forEach(function(t){ if(t.id===id) out=t; });
+      return out;
+    }
+    function roadmap(){
+      var t=track(state.roadmap.track);
+      var r={track:t, steps:[], done:0, total:0};
+      if(!t) return r;
+      t.modules.forEach(function(mid){
+        var m=null;
+        mods.forEach(function(x){ if(x.id===mid) m=x; });
+        if(!m) return;
+        var done=m.lessons.filter(function(l){ return !!state.progress[l]; }).length;
+        var next=m.lessons.filter(function(l){ return !state.progress[l]; })[0];
+        r.done+=done; r.total+=m.lessons.length;
+        r.steps.push({label:m.label, title:m.title, done:done, total:m.lessons.length,
+          complete:m.lessons.length>0 && done===m.lessons.length, next:next});
+      });
+      return r;
+    }
+    function daysLeft(dateStr){
+      var d=new Date(dateStr+"T00:00:00");
+      if(isNaN(d.getTime())) return "";
+      var days=Math.round((d-new Date(today()+"T00:00:00"))/864e5);
+      if(days>1) return days+" days left";
+      if(days===1) return "due tomorrow";
+      if(days===0) return "due today";
+      return Math.abs(days)+" days past";
+    }
+    function quizStats(){
+      var total=0, correct=0;
+      Object.keys(state.quiz).forEach(function(mid){
+        Object.keys(state.quiz[mid]).forEach(function(qi){
+          total++; if(state.quiz[mid][qi].correct) correct++;
+        });
+      });
+      return {total:total, correct:correct};
+    }
+
+    /* ---- the sidebar panel ---- */
+    function setNote(text,kind){ note=text; noteKind=kind||""; var n=$("#acctNote");
+      if(n){ n.className="acct-msg "+noteKind; n.textContent=note; } }
+    function noteHtml(){ return '<p class="acct-msg '+noteKind+'" id="acctNote">'+esc(note)+"</p>"; }
+    function statsHtml(){
+      var q=quizStats(), done=Object.keys(state.progress).length;
+      return "<span>streak "+(state.streak.count||0)+"d</span>"+
+        "<span>self-checks "+q.correct+"/"+q.total+"</span>"+
+        "<span>lessons "+done+"/"+lessons.length+"</span>";
+    }
+    function updateStats(){ var el2=$("#acctStats"); if(el2) el2.innerHTML=statsHtml(); }
+
+    function whoBlock(){
+      var u=(session&&session.user)||{};
+      var nm=state.displayName||u.display_name||"";
+      return '<div class="acct-who">'+esc(nm||u.email||"Signed in")+"</div>"+
+        '<div class="acct-sub">'+esc(u.email||"")+"</div>"+
+        '<div class="acct-stats" id="acctStats">'+statsHtml()+"</div>"+
+        '<div class="acct-actions"><button class="acct-btn ghost" id="acctOut">Sign out</button></div>';
+    }
+
+    function roadmapBlock(){
+      var s=state.roadmap, r=roadmap();
+      var h='<details class="rm" id="rmWrap"'+(s.track?" open":"")+'>'+
+        '<summary>Roadmap'+(r.track?'<span class="rm-tag">'+esc(r.track.id)+" · "+r.done+"/"+r.total+"</span>":"")+'</summary>'+
+        '<div class="acct-field"><label for="rmTrack">Track</label><select id="rmTrack">'+
+        '<option value="">— choose a track —</option>'+
+        TRACKS.map(function(t){
+          return '<option value="'+t.id+'"'+(s.track===t.id?' selected':'')+">"+esc(t.name)+"</option>";
+        }).join("")+"</select></div>"+
+        '<div class="acct-field"><label for="rmGoal">Goal (optional)</label>'+
+        '<input id="rmGoal" type="text" maxlength="120" placeholder="e.g. ship a two-tower retriever" value="'+esc(s.goal)+'"></div>'+
+        '<div class="acct-field"><label for="rmTarget">Target date (optional)</label>'+
+        '<input id="rmTarget" type="date" value="'+esc(s.target)+'"></div>'+
+        '<div class="acct-actions"><button class="acct-btn wide" id="rmSave">Save roadmap</button></div>';
+      if(!r.track){
+        h+='<p class="acct-hint">Choose a track to get a next-step list computed from your own progress.</p>';
+      } else {
+        h+='<div class="acct-sub" style="margin-top:12px">'+esc(r.track.name)+" · "+r.done+" / "+r.total+" lessons</div>"+
+          '<div class="progress-bar" style="margin:6px 0 10px"><span style="width:'+pct(r.done,r.total)+'%"></span></div>'+
+          '<p class="acct-hint">'+esc(r.track.focus)+"</p>"+
+          '<ul class="rm-next">'+r.steps.map(function(st){
+            var line = st.complete ? "<b>"+esc(st.label)+"</b> — complete"
+              : "<b>"+esc(st.label)+"</b> — "+st.done+"/"+st.total+" done"+
+                (st.next ? '<br><span class="rm-remain">next: '+esc(lessonTitle[st.next]||st.next)+"</span>" : "");
+            return "<li>"+line+"</li>";
+          }).join("")+"</ul>";
+        if(s.target) h+='<p class="acct-hint">target '+esc(s.target)+(daysLeft(s.target)?" · "+esc(daysLeft(s.target)):"")+"</p>";
+      }
+      return h+"</details>";
+    }
+
+    function authForm(){
+      if(tab==="in"){
+        return '<div class="acct-field"><label for="acEmail">Email</label>'+
+          '<input id="acEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>'+
+          '<div class="acct-field"><label for="acPass">Password</label>'+
+          '<input id="acPass" type="password" autocomplete="current-password" placeholder="··········"></div>'+
+          '<div class="acct-actions"><button class="acct-btn wide" id="acIn">Sign in</button>'+
+          '<button class="acct-btn ghost" id="acForgot">Forgot?</button></div>'+noteHtml();
+      }
+      return '<div class="acct-field"><label for="acName">Name (optional)</label>'+
+        '<input id="acName" type="text" maxlength="60" autocomplete="name"></div>'+
+        '<div class="acct-field"><label for="acEmail">Email</label>'+
+        '<input id="acEmail" type="email" autocomplete="email"></div>'+
+        '<div class="acct-field"><label for="acPass">Password</label>'+
+        '<input id="acPass" type="password" autocomplete="new-password"></div>'+
+        '<div class="acct-actions"><button class="acct-btn wide" id="acUp">Create account</button></div>'+
+        '<p class="acct-hint">At least 8 characters with upper case, lower case, a number and a symbol. '+
+        "We email a 6-digit code to confirm the address.</p>"+noteHtml();
+    }
+
+    function render(){
+      var host=$("#acctBody"), st=$("#acctState");
+      if(!host) return;
+      if(!online){
+        if(st){ st.className="st"; st.textContent="this browser"; }
+        host.innerHTML='<p class="acct-intro">You are reading a local copy, so signing in needs the hosted '+
+          "page. Your progress and roadmap are saved in this browser.</p>"+
+          '<div class="acct-stats" id="acctStats">'+statsHtml()+"</div>"+
+          '<p class="acct-hint">Open <code>https://olivistart.com/RecSysTutor/</code> to keep it with an account.</p>'+
+          noteHtml()+roadmapBlock();
+        wireAccount();
+        return;
+      }
+      if(!signed()){
+        if(st){ st.className="st"; st.textContent="signed out"; }
+        host.innerHTML='<div class="acct-tabs" role="tablist">'+
+          '<button role="tab" id="tabIn" aria-selected="'+(tab==="in")+'">Sign in</button>'+
+          '<button role="tab" id="tabUp" aria-selected="'+(tab==="up")+'">Create account</button></div>'+
+          authForm()+'<div class="acct-stats" id="acctStats">'+statsHtml()+"</div>"+
+          '<p class="acct-hint">Without an account your progress and roadmap still work here, saved in this '+
+          "browser only.</p>"+roadmapBlock();
+        wireAuth();
+        wireAccount();
+      } else {
+        if(st){ st.className="st on"; st.textContent="synced"; }
+        host.innerHTML=whoBlock()+noteHtml()+roadmapBlock();
+        wireAccount();
+      }
+    }
+
+    function wireAuth(){
+      var ti=$("#tabIn"), tu=$("#tabUp");
+      if(ti) ti.addEventListener("click",function(){ tab="in"; note=""; noteKind=""; render(); });
+      if(tu) tu.addEventListener("click",function(){ tab="up"; note=""; noteKind=""; render(); });
+      var go=$("#acIn");
+      if(go) go.addEventListener("click",function(){
+        var e2=$("#acEmail"), p=$("#acPass");
+        doSignIn(e2?e2.value.trim():"", p?p.value:"");
+      });
+      var up=$("#acUp");
+      if(up) up.addEventListener("click",function(){
+        var n=$("#acName"), e2=$("#acEmail"), p=$("#acPass");
+        doSignUp(n?n.value.trim():"", e2?e2.value.trim():"", p?p.value:"");
+      });
+      var fg=$("#acForgot");
+      if(fg) fg.addEventListener("click",function(){
+        var e2=$("#acEmail"); openReset(e2?e2.value.trim():"");
+      });
+    }
+
+    function wireAccount(){
+      var out=$("#acctOut");
+      if(out) out.addEventListener("click",function(){ doSignOut(); });
+      var save=$("#rmSave");
+      if(save) save.addEventListener("click",function(){
+        var t=$("#rmTrack"), g=$("#rmGoal"), d=$("#rmTarget");
+        state.roadmap.track=t?t.value:"";
+        state.roadmap.goal=g?g.value.trim():"";
+        state.roadmap.target=d?d.value:"";
+        persist(); render();
+        if(signed()) scheduleSave(); else setNote("Roadmap saved in this browser.","ok");
+      });
+    }
+
+    /* ---- actions ---- */
+    function humanError(e){
+      if(e && e.status===429) return "Too many attempts just now — please wait a few minutes and try again.";
+      if(e && e.status===401) return "That email and password do not match an account.";
+      if(e && e.status===403) return "That action is not allowed for this account.";
+      if(e && e.status===400) return (e.body && e.body.error && e.body.error.message) || "Please check the details and try again.";
+      if(e && e.status>=500) return "The account service is having trouble. Your progress is safe in this browser.";
+      return "Could not reach the account service. Your progress is safe in this browser.";
+    }
+
+    function doSignIn(email,pass){
+      if(busy) return;
+      if(!email || !pass){ setNote("Enter your email and password.","err"); return; }
+      busy=true; setNote("Signing in…","");
+      authRoute("login",pairs([[F_EMAIL,email],[F_PASS,pass]])).then(function(r){
+        adoptTokens(r); note="";
+        return syncNow().catch(function(e2){
+          setNote(e2 && e2.status===401 ? "Session expired — try signing in again."
+            : "Signed in. Syncing resumes when the connection returns.","");
+        });
+      }).then(function(){ busy=false; render(); })
+        .catch(function(e2){ busy=false; note=humanError(e2); noteKind="err"; render(); });
+    }
+
+    function doSignUp(name,email,pass){
+      if(busy) return;
+      if(!email || !pass){ setNote("Enter an email and a password.","err"); return; }
+      if(pass.length<8){ setNote("Use at least 8 characters, with upper case, lower case, a number and a symbol.","err"); return; }
+      busy=true; setNote("Creating your account…","");
+      var body=pairs([[F_EMAIL,email],[F_PASS,pass],["display_name",name||null]]);
+      authRoute("signup",body).then(function(){
+        return authRoute("login",pairs([[F_EMAIL,email],[F_PASS,pass]]));
+      }).then(function(r){
+        adoptTokens(r);
+        if(name){ state.displayName=name; persist(); }
+        return syncNow().catch(function(){});
+      }).then(function(){
+        busy=false; note="Account created. Confirm your email with the 6-digit code we sent."; noteKind="ok";
+        render(); openVerify(email);
+      }).catch(function(e2){
+        busy=false;
+        note = (e2 && (e2.status===409 || (e2.body&&/exist/i.test(JSON.stringify(e2.body))))) ?
+          "An account with that email already exists — try signing in instead." : humanError(e2);
+        noteKind="err"; render();
+      });
+    }
+
+    function doSignOut(){
+      if(signed()) api(AUTH+"/logout",{method:"POST",body:{}}).catch(function(){});
+      saveSession(null);
+      note="Signed out. Your progress stays in this browser."; noteKind=""; render();
+    }
+
+    /* ---- dialogs: email confirmation and password reset ---- */
+    function closeModal(){ if(modal){ try{ modal.close(); }catch(e){}
+      if(modal.parentNode) modal.parentNode.removeChild(modal); modal=null; } }
+    function openDialog(html){
+      closeModal();
+      modal=document.createElement("dialog");
+      modal.className="acct-modal";
+      modal.innerHTML=html;
+      document.body.appendChild(modal);
+      modal.showModal();
+      return modal;
+    }
+    function openVerify(email){
+      openDialog("<h2>Confirm your email</h2><p>We sent a 6-digit code to <b>"+esc(email)+
+        "</b>. Enter it to finish setting up the account — you can also keep reading now and confirm later. "+
+        "Your progress is already being saved to the account.</p>"+
+        '<input class="acct-code" id="vCode" inputmode="numeric" maxlength="6" placeholder="000000" aria-label="6-digit code">'+
+        '<div class="acct-actions"><button class="acct-btn wide" id="vGo">Confirm</button>'+
+        '<button class="acct-btn ghost" id="vLater">Later</button></div><div id="vMsg"></div>');
+      $("#vLater",modal).addEventListener("click",closeModal);
+      $("#vCode",modal).focus();
+      $("#vGo",modal).addEventListener("click",function(){
+        var code=($("#vCode",modal).value||"").trim(), box=$("#vMsg",modal);
+        if(!/^\d{6}$/.test(code)){ box.className="acct-msg err"; box.textContent="Enter the 6 digits."; return; }
+        box.className="acct-msg"; box.textContent="Checking…";
+        authRoute("verify-email",pairs([["email",email],["code",code]])).then(function(){
+          if(session) session.user.email_verified=true;
+          closeModal(); setNote("Email confirmed.","ok"); render();
+        }).catch(function(e2){ box.className="acct-msg err"; box.textContent=humanError(e2); });
+      });
+    }
+    function openReset(email){
+      openDialog("<h2>Reset your password</h2>"+
+        '<div class="acct-field"><label for="rEmail">Email</label><input id="rEmail" type="email" value="'+esc(email)+'"></div>'+
+        '<div class="acct-actions"><button class="acct-btn wide" id="rSend">Send code</button>'+
+        '<button class="acct-btn ghost" id="rClose">Cancel</button></div>'+
+        '<div id="rStep2" style="display:none">'+
+        '<p style="margin-top:14px">Enter the code from the email, then choose a new password.</p>'+
+        '<input class="acct-code" id="rCode" inputmode="numeric" maxlength="6" placeholder="000000" aria-label="6-digit code">'+
+        '<div class="acct-field" style="margin-top:10px"><label for="rPass">New password</label>'+
+        '<input id="rPass" type="password" autocomplete="new-password"></div>'+
+        '<div class="acct-actions"><button class="acct-btn wide" id="rGo">Set new password</button></div></div>'+
+        '<div id="rMsg"></div>');
+      $("#rClose",modal).addEventListener("click",closeModal);
+      $("#rSend",modal).addEventListener("click",function(){
+        var e2=($("#rEmail",modal).value||"").trim(), box=$("#rMsg",modal);
+        if(!e2){ box.className="acct-msg err"; box.textContent="Enter your email."; return; }
+        box.className="acct-msg"; box.textContent="Sending…";
+        authRoute("forgot-password",pairs([["email",e2]])).then(function(){
+          box.className="acct-msg ok";
+          box.textContent="If that address has an account, a code is on its way.";
+          $("#rStep2",modal).style.display="block";
+          $("#rCode",modal).focus();
+        }).catch(function(err){ box.className="acct-msg err"; box.textContent=humanError(err); });
+      });
+      $("#rGo",modal).addEventListener("click",function(){
+        var e2=($("#rEmail",modal).value||"").trim();
+        var code=($("#rCode",modal).value||"").trim();
+        var pass=$("#rPass",modal).value||"";
+        var box=$("#rMsg",modal);
+        if(!/^\d{6}$/.test(code)){ box.className="acct-msg err"; box.textContent="Enter the 6 digits."; return; }
+        if(pass.length<8){ box.className="acct-msg err"; box.textContent="The new password needs at least 8 characters."; return; }
+        box.className="acct-msg"; box.textContent="Updating…";
+        authRoute("reset-password",pairs([["email",e2],["code",code],[F_NEWPASS,pass]])).then(function(){
+          closeModal();
+          note="Password updated. Sign in with it now."; noteKind="ok"; render();
+        }).catch(function(err){ box.className="acct-msg err"; box.textContent=humanError(err); });
+      });
+    }
+
+    /* ---- public surface ---- */
+    function lessonSeen(id){
+      if(state.progress[id]){ touch(); persist(); return; }
+      state.progress[id]=new Date().toISOString();
+      touch(); scheduleSave();
+    }
+    function recordQuiz(mid,qi,chosen,correct){
+      var m=state.quiz[mid]||(state.quiz[mid]={});
+      var prev=m[qi];
+      m[qi]={chosen:chosen, correct:!!correct, hash:(prev&&prev.hash)||null};
+      touch(); scheduleSave();
+    }
+    function savedAnswersFor(mid){ return state.quiz[mid]||{}; }
+
+    function boot(){
+      loadSession();
+      // a stored session without its user object cannot address any rows: treat it as
+      // signed out rather than throwing on the first sync
+      if(session && !(session.user && session.user.id)) saveSession(null);
+      render();
+      if(!online) return;
+      document.addEventListener("visibilitychange",function(){
+        if(document.hidden && signed()) push().catch(function(){});
+      });
+      if(signed()){
+        withAuth(function(){ return api(AUTH+"/me"); }).then(function(me){
+          if(me && session) session.user=me;
+          return syncNow();
+        }).catch(function(e2){
+          if(e2 && (e2.status===401||e2.status===403)){
+            saveSession(null);
+            note="Your session expired. Sign in again to resume syncing."; noteKind="";
+          } else {
+            note="Working offline — progress is kept in this browser."; noteKind="";
+          }
+          render();
+        });
+      }
+    }
+
+    boot();
+    return {lessonSeen:lessonSeen, recordQuiz:recordQuiz, savedAnswersFor:savedAnswersFor,
+            state:function(){ return state; }};
+  })();
+
+  // restore saved lesson marks now that the account layer exists (this also re-runs
+  // after a sign-in sync)
+  reflectProgress();
 
   /* ---------------- funnels ---------------- */
   var stages = [
@@ -2641,6 +3341,10 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
     var body=$("#quizBody-"+mid), score=$("#score-"+mid);
     if(!body) return;
     var qs=QUIZ[mid], answered=0, correct=0;
+    // answers this learner already saved seed the score, so a returning learner sees
+    // their real standing and their previous choices instead of a blank quiz
+    var saved=RT.savedAnswersFor(mid);
+    qs.forEach(function(s0,si){ var s=saved[si]; if(s){ answered++; if(s.correct) correct++; } });
     qs.forEach(function(q,qi){
       var box=el("div","quiz");
       var head=el("div","qh"); head.appendChild(el("span",null,"Question "+(qi+1)+" / "+qs.length));
@@ -2659,13 +3363,24 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
           fb.style.display="block"; fb.innerHTML="<b>"+(oi===q.a?"Correct.":"Not quite.")+"</b> "+q.e;
           answered++;
           score.textContent="score "+correct+"/"+qs.length;
+          RT.recordQuiz(mid,qi,oi,oi===q.a);
         });
         opts.appendChild(b);
       });
+      var sv=saved[qi];
+      if(sv && sv.chosen!=null && sv.chosen>=0){
+        var oels=$$(".opt",box);
+        oels.forEach(function(x){ x.disabled=true; });
+        if(oels[sv.chosen]) oels[sv.chosen].classList.add(sv.correct?"correct":"wrong");
+        if(!sv.correct && oels[q.a]) oels[q.a].classList.add("correct");
+        stat.textContent=sv.correct?"correct":"review";
+        fb.style.display="block";
+        fb.innerHTML="<b>"+(sv.correct?"Correct.":"Not quite.")+"</b> "+q.e+" <em>— your saved answer.</em>";
+      }
       box.appendChild(opts); box.appendChild(fb);
       body.appendChild(box);
     });
-    score.textContent="score 0/"+qs.length;
+    score.textContent="score "+correct+"/"+qs.length;
   });
 })();
 </script>

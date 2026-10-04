@@ -110,6 +110,67 @@ The course corpus lives in the app's own database:
 - `DEBUG_TOKEN` gates the diagnostic body: POST `{"message": "...", "debug": "<token>"}`
   returns retrieval mode, chunk count, max similarity and the raw provider status.
 
+## Learner accounts (progress, roadmap, streak)
+
+The course page can now hold an account, and a learner's progress follows them between
+browsers and devices. This is a **separate feature from the chat**: no function, no service
+key, no shared secret. The browser talks to the app's auth and data APIs with the
+**learner's own token**, and Row-Level Security is the security boundary.
+
+```
+learner's browser
+  ├─POST─▶ /auth/<app>/signup | login | refresh | verify-email | forgot-password | reset-password
+  └─GET/POST/PATCH─▶ /v1/<app>/rt_learners | rt_lesson_progress | rt_quiz_attempts   (Bearer <learner JWT>)
+```
+
+| Table | One row per | Purpose |
+|---|---|---|
+| `rt_learners` | learner | display name, chosen track, goal, target date, streak, last seen |
+| `rt_lesson_progress` | lesson a learner finished | unique on `(user_id, lesson_id)`, so marking twice is harmless |
+| `rt_quiz_attempts` | answered self-check question | chosen option, correctness, attempt time |
+
+Each table has RLS enabled with user isolation on `user_id` plus a `BEFORE INSERT` trigger
+that fills it from the authenticated identity, so a client cannot write a row owned by
+somebody else. Anonymous callers read nothing and write nothing.
+
+> **The app is shared with the `herfield` studio product**, which is why learner tables are
+> namespaced `rt_` and why nothing here alters the studio's tables, policies or functions.
+
+### Runbook
+
+```bash
+python butterbase/tools/learner_schema.py           # dry run: print the planned DDL
+python butterbase/tools/learner_schema.py --apply   # create tables + RLS (additive, idempotent)
+python butterbase/tools/learner_schema.py --check   # show tables, indexes and policies
+python butterbase/tools/test_learner_rls.py         # prove per-learner isolation
+node   butterbase/tools/test_account_e2e.mjs        # prove sync across devices and accounts
+node   butterbase/tools/check_roadmap_render.mjs    # prove the roadmap panel renders offline
+node   butterbase/tools/check_inline_js.mjs         # syntax-check the page's inline JS
+```
+
+`learner_schema.py` merges the learner tables into the schema it reads back before
+applying, so the declarative diff can only add. Both network tests are self-cleaning: they
+delete whatever they wrote and fail loudly if a row cannot be removed. The two `check_*`
+scripts need no network and no account: they run the page's own inline script against a
+minimal DOM, which is also how a broken roadmap template gets caught before it ships.
+
+**Auth rate limits matter when testing:** 5 signups and 10 logins per 15 minutes. Both
+tests therefore reuse two accounts (their throwaway passphrase is kept in
+`~/.butterbase/`, never in the repo) and wait out a reported reset instead of retrying hard.
+
+### Behaviour the page guarantees
+
+- **Signed out** — progress and roadmap live in `localStorage`; nothing is sent anywhere.
+- **Signing in** — local state is merged up (union), not replaced: a lesson finished before
+  signing in stays finished, and one finished on another device is pulled down.
+- **Token expiry** — a 401 triggers one refresh and a replay; if that fails the panel says so
+  and the browser copy is kept.
+- **Local file** — opened from `file://` the origin is `null`, which the auth API does not
+  allow, so the panel explains that signing in needs the hosted page and keeps saving locally.
+
+The hosted page is <https://olivistart.com/RecSysTutor/>, an origin already allowed for both
+the auth and data APIs.
+
 ## Sharing the app
 
 `app_48ul5eszfv7v` is named **herfield** and its database also holds a music/art-school
@@ -126,3 +187,6 @@ endpoint and only messages the user when it is unhealthy. Manage it with the `cr
 
 Butterbase KV: 100k keys, 10 MB, 50 ops/s (rate-limit keys are tiny and self-expiring). Generation and embedding cost is billed to
 the providers named in `.env` (Moonshot, Google) - Butterbase credits are not involved. Public endpoint abuse is bounded by the KV rate limit above.
+
+Learner accounts add no provider cost: they are auth records plus a few rows per learner in
+the app's own Postgres, and the auth service's own rate limits bound abuse.

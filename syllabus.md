@@ -6,9 +6,11 @@ An interactive course for machine-learning engineers, built from the full archiv
 - **Interactive course:** `index.html` (single file, offline, no dependencies)
 - **Audience:** ML engineers who know deep learning but are new to (or levelling up in) recommender systems
 - **12 modules · 58 lessons · 11 interactive widgets · 10 self-checks · 20 exercises · 104 linked papers · 244-post reading library · DeepTutor-powered tutor**
+- **Optional account** — sign in (via the live page) to keep progress, self-check answers, a roadmap and a streak across
+  sessions and devices; signed out, progress is saved in the browser.
 
 Each lesson follows the same shape: the problem → the idea → the mechanics → a practical takeaway.
-Every module ends with a graded self-check, and progress is tracked in the sidebar for the session.
+Every module ends with a graded self-check, and progress is tracked in the sidebar.
 
 ---
 
@@ -68,7 +70,8 @@ recalibration, atlas/lineage research tasks, sizing/sharding an embedding table,
 Each of those modules also ends with a graded
 self-check (2–4 questions).
 
-Widgets run entirely in the page: no network, no tracking, nothing stored beyond the session.
+Widgets run entirely in the page: no network, no tracking. Progress is stored in your browser, and kept with your
+account when you sign in on the live page.
 
 ---
 
