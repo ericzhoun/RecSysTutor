@@ -26,12 +26,14 @@ Every module ends with a graded self-check, and progress is tracked in the sideb
 
 **Personal learning path.** Lesson 01 of M0 asks six questions (recommender experience, engineering background, maths
 comfort, goal, focus area, weekly time) and lays out a recommended track plus a phased plan: lessons to study, lessons
-to skim, and lessons to save for later, with an hours-and-weeks estimate. Two reference learners:
+to skim, and lessons to save for later, with an hours-and-weeks estimate, plus up to six posts from the reading library
+(career positioning, RAG-to-recommender bridges) when they fit the learner. Three reference learners:
 
 | Learner | Recommended | Path |
 |---|---|---|
 | Fresh PhD graduate, new to recommenders, no SWE experience, aiming for a first role | Track A, then B | Foundations (M1) → the two core stages (two-tower, Wide & Deep, DeepFM, DCN) → one lesson from each frontier → make it real (Criteo preprocessing, capstone, embedding tables, war stories, interview framing) |
 | Mid-career engineer who has shipped DNN recommenders and wants depth | Track C, then D | Skim (diversity, A/B testing, negative sampling, choosing a ranker) → SASRec → BERT4Rec → HSTU → multi-task (MMoE, ESMM, the reality check) → paper lineage and reading paths |
+| Backend engineer turned AI engineer (RAG, agents, LLM systems), targeting AI-engineer roles | Track A, then B | Foundations with A/B testing → two-tower and the core rankers, framed against RAG retrieval and reranking → FM retriever, SimClusters, TwHIN → where LLMs meet recommenders (Transformer, SASRec, HSTU) → capstone and interview framing; reads the market-positioning posts and LinkedIn's LLM search architecture alongside |
 
 ---
 

@@ -44,8 +44,9 @@ The sidebar carries an account panel and a roadmap. Everything is optional:
 - **Roadmap** — choose one of the syllabus tracks (A–E), optionally add a goal and a target date, and the panel computes
   the next steps and the remaining lessons from your own completion state.
 - **Personal learning path** - lesson 01 ("How to use this course") asks six questions: recommender experience,
-  engineering background, comfort with the maths, goal, the part of the system you care about, and weekly time. It
-  answers with a recommended track and a phased lesson plan (study, skim, save for later) with a time estimate. *Use as
+  engineering background (including AI/LLM engineers coming from RAG and agents), comfort with the maths, goal, the part
+  of the system you care about, and weekly time. It answers with a recommended track, a phased lesson plan (study, skim,
+  save for later) with a time estimate, and up to six matching posts from the reading library. *Use as
   my roadmap* puts that path in the sidebar roadmap, where it is stored as a short code in the track field
   (`P1.<answers>`), so it syncs with an account like any other track and needs no schema change.
 
@@ -60,7 +61,7 @@ python butterbase/tools/test_learner_rls.py    # isolation: two real accounts, r
 node   butterbase/tools/test_account_e2e.mjs   # sync: two accounts, signed-out → signed-in → second device
 ```
 
-The learning-path engine has its own offline check, which runs every one of the 2,592 answer combinations against the
+The learning-path engine has its own offline check, which runs every one of the 3,456 answer combinations against the
 page's real lesson list:
 
 ```bash

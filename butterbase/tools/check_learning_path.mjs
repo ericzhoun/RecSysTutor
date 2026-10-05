@@ -18,7 +18,9 @@ while ((m = lessonRe.exec(html))) {
   const text = m[2].replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
   lessons.push({ id: m[1], h3: { textContent: text, n: { textContent: n } } });
 }
-const $ = (sel, root) => (sel === "h3" ? root.h3 : sel === ".n" ? root.n : null);
+const libJson = (/<script id="libData" type="application\/json">([\s\S]*?)<\/script>/.exec(html) || [, "[]"])[1];
+const $ = (sel, root) =>
+  sel === "#libData" ? { textContent: libJson } : sel === "h3" ? root.h3 : sel === ".n" ? root.n : null;
 const PATH = new Function("$", "lessons", engine + "\nreturn PATH;")($, lessons);
 const ids = new Set(lessons.map((l) => l.id));
 
@@ -45,6 +47,9 @@ let combos = 0;
     chk(/^[ABCD]$/.test(p.track) && p.trackName, "no recommended track for " + tag);
     chk(p.weeks >= 1 && p.hours > 0, "no time estimate for " + tag);
     chk(JSON.stringify(PATH.decode(p.code)) === JSON.stringify(a), "code does not round-trip for " + tag);
+    chk(p.reading.every((r) => r.title && fs.existsSync("ml-at-scale/posts/" + r.file)), "a reading points at a missing post for " + tag);
+    chk(new Set(p.reading.map((r) => r.file)).size === p.reading.length, "a reading appears twice for " + tag);
+    chk(p.reading.length <= 6, "more than six readings for " + tag);
     return;
   }
   for (const o of Q[i].o) walk(i + 1, { ...a, [Q[i].k]: o[0] });
@@ -73,9 +78,18 @@ chk(!mid.beginner && mid.track === "C" && mid.then === "D", "mid-career engineer
 chk(mid.phases[0].mode === "skim", "mid-career engineer's first phase should be a skim");
 chk(!flat(mid).includes("l1-1") && !flat(mid).includes("l2-1"), "mid-career engineer should skip the basics");
 chk(["l4-3", "l4-4", "l4-5", "l5-1"].every((id) => flat(mid).includes(id)), "mid-career engineer should get SASRec to HSTU and MMoE");
-pass("reference learners: PhD graduate -> track A then B; mid-career engineer -> track C then D");
+const ai = PATH.plan(PATH.EXAMPLES.ai.a);
+chk(ai.beginner && ai.track === "A" && ai.then === "B", "AI engineer should get track A then B (got " + ai.track + ")");
+chk(ai.phases.some((ph) => /LLMs meet recommenders/.test(ph.title)), "AI engineer should get the LLM-to-recommender bridge phase");
+chk(["l1-4", "l2-1", "l2-2", "l4-3", "l4-5", "l7-2", "l10-4"].every((id) => flat(ai).includes(id)), "AI engineer should get A/B testing, two-tower, SASRec, HSTU, the capstone and interview framing");
+chk(!flat(ai).includes("l6-2"), "AI engineer should not be sent through the graph retrievers");
+const aiFiles = ai.reading.map((r) => r.file).join(" ");
+chk(/barbell/.test(aiFiles) && /linkedin-architecture/.test(aiFiles), "AI engineer should get the market-positioning and LLM-search readings");
+chk(ai.why.some((w) => /AI-engineer roles/.test(w)), "AI engineer should get positioning advice");
+pass("reference learners: PhD graduate -> A then B; mid-career engineer -> C then D; AI engineer -> A then B");
 console.log("    PhD graduate:  " + phd.phases.map((p) => p.title).join(" | "));
 console.log("    mid-career:    " + mid.phases.map((p) => p.title).join(" | "));
+console.log("    AI engineer:   " + ai.phases.map((p) => p.title).join(" | ") + " + " + ai.reading.length + " readings");
 
 console.log("\n" + (bad ? bad + " CHECK(S) FAILED" : "ALL CHECKS PASSED"));
 process.exit(bad ? 1 : 0);

@@ -332,6 +332,13 @@ dialog.acct-modal .acct-actions{margin-top:14px;}
 .pp-cols{columns:2;column-gap:28px;}
 .pp-cols li{break-inside:avoid;}
 .pp-later{margin-top:12px;}
+.pp-read{border:1px solid var(--line-soft);background:var(--bg);padding:12px 14px 4px;margin:0 0 8px;}
+.pp-read ul{list-style:none;padding:0;margin:8px 0 0;max-width:none;}
+.pp-read li{margin:0;padding:7px 0;border-top:1px solid var(--line-soft);font-size:14px;}
+.pp-read li:first-child{border-top:0;}
+.pp-read a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line);}
+.pp-read a:hover{color:var(--accent-ink);border-bottom-color:var(--accent);}
+.pp-read-why{display:block;font-size:13px;color:var(--muted);margin-top:2px;}
 .pp-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center;}
 .pp-actions a.btn{text-decoration:none;}
 .pp-actions .btn:disabled{opacity:.6;cursor:default;background:transparent;color:var(--ok);border-color:var(--ok);}
@@ -2301,13 +2308,14 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
       {k:"bg", q:"Which best describes your engineering background?", o:[
         ["research","Research or academia - strong maths, little production software"],
         ["swe","Software engineer - production code, newer to ML"],
+        ["llm","AI or LLM engineer - RAG, agents, LLM systems in production"],
         ["mle","ML engineer - I train and ship models"]]},
       {k:"math", q:"How comfortable are you with deep-learning maths?", o:[
         ["refresh","I could use a refresher on embeddings, softmax and attention"],
         ["solid","Comfortable training networks in PyTorch or TensorFlow"],
         ["papers","I read ML papers and work through the maths myself"]]},
       {k:"goal", q:"What do you most want from this course?", o:[
-        ["job","Land a recommender-systems or ML-engineering role"],
+        ["job","Land a recommender-systems, ML or AI-engineering role"],
         ["ship","Build or improve a recommender at work"],
         ["deepen","Go deeper: sequence, generative and multi-task models"],
         ["research","Do research: the paper lineage and open problems"]]},
@@ -2326,8 +2334,36 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
       phd:{label:"PhD graduate, new to recommenders",
         a:{exp:"none", bg:"research", math:"papers", goal:"job", focus:"unsure", time:"10"}},
       mid:{label:"Mid-career engineer, knows DNN recommenders",
-        a:{exp:"dnn", bg:"mle", math:"solid", goal:"deepen", focus:"sequence", time:"6"}}
+        a:{exp:"dnn", bg:"mle", math:"solid", goal:"deepen", focus:"sequence", time:"6"}},
+      ai:{label:"AI engineer from backend, targeting AI roles",
+        a:{exp:"none", bg:"llm", math:"refresh", goal:"job", focus:"retrieval", time:"6"}}
     };
+    // library posts a path can recommend alongside its lessons; each must exist in the
+    // reading library (M11), and is dropped silently if it ever leaves it
+    var READS={
+      barbell:["2026-05-20-the-barbell-market-for-ml-engineers.md",
+        "Where AI engineers sit in today's ML job market, and why orchestrating other people's models is a shallow moat on its own."],
+      bet:["2026-07-29-the-bet-im-making-for-the-next-18.md",
+        "The follow-up: a concrete plan for moving toward one end of that market rather than the squeezed middle."],
+      value:["2026-09-20-whats-your-value-as-an-mle-in-2026.md",
+        "Where an engineer's leverage moves once agents write much of the code."],
+      roles:["2026-03-03-mle-vs-swe-vs-research-scientist.md",
+        "What MLEs, SWEs and research scientists own day to day, so you know which job you are interviewing for."],
+      getin:["2026-01-28-what-would-i-do-if-i-wanted-to-get.md",
+        "How to stand out when entering ML in 2026."],
+      oss:["2026-02-18-how-to-break-into-mlsys-through-open.md",
+        "Open-source contributions as public proof of skill a hiring manager can check in minutes."],
+      linkedin:["2026-06-14-linkedin-architecture-for-production.md",
+        "LinkedIn's LLM search: a bi-encoder retriever plus a small-LM ranker, the same funnel this course teaches, built from RAG parts."],
+      colbert:["2024-12-22-68-colbert-and-colpali-late-interaction.md",
+        "Late interaction, the middle ground between the bi-encoders and cross-encoders you already use in RAG."],
+      genrec:["2026-08-30-generative-recsys-in-2026-the-papers.md",
+        "Generative retrieval with semantic IDs, where LLM techniques enter recommenders most directly."],
+      genreal:["2026-05-06-generative-recsys-wont-save-you-what.md",
+        "A counterweight: why adding an LLM is rarely the answer at billion-user scale."]
+    };
+    var lib={};
+    try{ JSON.parse(($("#libData")||{}).textContent||"[]").forEach(function(x){ lib[x.f]=x.t; }); }catch(e){}
     var TRACK_NAMES={A:"A - Retrieval", B:"B - Ranking", C:"C - Sequence & generative", D:"D - Multi-task", E:"E - The library"};
     var FOCUS_TRACK={retrieval:"A", ranking:"B", sequence:"C", multitask:"D"};
     var FOCUS_NAME={retrieval:"retrieval", ranking:"ranking", sequence:"sequence & generative models",
@@ -2387,7 +2423,9 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         phase("The two core stages", "Retrieval and ranking: the two-tower model and the first three rankers you will meet everywhere.",
           ["l2-1","l2-2","l3-1","l3-2","l3-3","l3-9","le2"]);
         var spec={
-          retrieval:["l2-3","l6-1","l6-2","l6-3","le6"],
+          // an LLM engineer already knows dense retrieval from RAG: skip the graph
+          // retrievers and spend the time on the embedding side of retrieval
+          retrieval:a.bg==="llm" ? ["l2-3","l6-3","l6-5"] : ["l2-3","l6-1","l6-2","l6-3","le6"],
           ranking:["l3-4","l3-5","l3-6","l3-7","l3-8","le3"],
           sequence:(a.math==="refresh"?["l4-1"]:[]).concat(["l4-2","l4-3","l4-4","le4"]),
           multitask:["l5-1","l5-2","l5-3","le5"],
@@ -2397,8 +2435,12 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         phase("Specialise: "+FOCUS_NAME[a.focus],
           a.focus==="unsure" ? "One lesson from each frontier, so you can tell which direction pulls you before going deep."
                              : "Your chosen stage, taken past the basics.", spec);
+        if(a.bg==="llm") phase("Where LLMs meet recommenders",
+          "Sequence models treat a user's history like a sentence; HSTU turns ranking into generation. Your transformer instincts transfer here.",
+          (a.math==="refresh"?["l4-1"]:[]).concat(["l4-3","l4-5","le4"]));
         var apply=["l7-1","l7-2","le7"];
         if(a.bg==="research") apply=apply.concat(["l10-1","l11-4"]);
+        if(a.bg==="llm") apply=apply.concat(["l11-3"]);
         if(a.goal==="job") apply=apply.concat(["l10-4"]);
         if(a.goal==="ship") apply=apply.concat(["l10-1","l10-3","l11-4"]);
         if(a.goal==="research") apply=apply.concat(["l8-1","l8-2"]);
@@ -2442,9 +2484,13 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
 
       if(a.bg==="research") why.push("Your maths is ahead of your production experience, so the path adds data preprocessing, embedding infrastructure and real incident write-ups.");
       if(a.bg==="swe") why.push("You bring production habits; spend the saved effort on the modelling lessons and their exercises.");
+      if(a.bg==="llm"){
+        why.push("Your RAG work already covers embeddings, vector search and reranking. Two-tower retrieval is the same bi-encoder trained on behaviour instead of text, and a ranker is a reranker scored on clicks, so the path spends its time on what RAG rarely teaches: sampling bias, learned ranking and online experiments.");
+        if(a.goal==="job") why.push("For AI-engineer roles, sell the combination: you ship LLM systems, and you can measure whether they help. The A/B testing lesson, the capstone and the interview framing give you that vocabulary, and the reading list below covers how the market sees the role.");
+      }
       if(a.math==="refresh") why.push("The Transformer lesson is placed before any attention-based model, and the prerequisites box below lists what to brush up on.");
       if(a.math==="papers") why.push("Every module ends with its source papers; the paper atlas (M8) lets you follow each model's lineage.");
-      if(a.goal==="job") why.push("The capstone and the interview-framing lesson turn what you learn into answers for system-design interviews.");
+      if(a.goal==="job" && a.bg!=="llm") why.push("The capstone and the interview-framing lesson turn what you learn into answers for system-design interviews.");
       if(a.goal==="ship") why.push("The last phase leans on production practice: embedding tables, capacity planning and post-mortems.");
 
       var track = FOCUS_TRACK[a.focus] || (a.focus==="infra" ? "B" : (beginner ? "A" : "C"));
@@ -2455,7 +2501,19 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
       phases.forEach(function(p){ p.lessons.forEach(function(id){ total+=minutes(id,p.mode); count++; }); });
       var hours=Math.round(total/60);
       var later=order.filter(function(id){ return !used[id] && id!=="l0-1"; });
-      return {answers:a, code:encode(a), beginner:beginner, phases:phases, why:why, later:later,
+      // career posts first when the goal is a job, then the RAG-to-recommender bridge;
+      // six at most, so the list stays a reading list rather than a second syllabus
+      var picks=[];
+      if(a.goal==="job"){
+        picks.push("barbell");
+        if(a.bg==="llm" || a.bg==="swe") picks.push("bet","value");
+        else picks.push("roles");
+        if(a.bg==="research") picks.push("getin","oss");
+      }
+      if(a.bg==="llm") picks.push("linkedin","genrec","colbert","genreal");
+      var reading=picks.filter(function(k,i){ return picks.indexOf(k)===i && lib[READS[k][0]]; }).slice(0,6)
+        .map(function(k){ return {file:READS[k][0], title:lib[READS[k][0]], why:READS[k][1]}; });
+      return {answers:a, code:encode(a), beginner:beginner, phases:phases, why:why, later:later, reading:reading,
         track:track, trackName:TRACK_NAMES[track], then:then, thenName:TRACK_NAMES[then],
         lessons:count, hours:hours, weeks:Math.max(1, Math.ceil(hours/Number(a.time)))};
     }
@@ -3174,6 +3232,11 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
           "</div></div>"+
         '<ul class="pp-why">'+p.why.map(function(w){ return "<li>"+esc(w)+"</li>"; }).join("")+"</ul>"+
         '<ol class="pp-phases">'+phases+"</ol>"+
+        (p.reading.length ? '<div class="pp-read"><div class="pp-k">Read alongside · from the library (M11)</div>'+
+          '<ul>'+p.reading.map(function(r){
+            return '<li><a href="ml-at-scale/posts/'+esc(r.file)+'" target="_blank" rel="noopener">'+esc(r.title)+"</a>"+
+              '<span class="pp-read-why">'+esc(r.why)+"</span></li>";
+          }).join("")+"</ul></div>" : "")+
         (p.later.length ? '<details class="ex pp-later"'+(laterOpen?" open":"")+'><summary>Save for later · '+p.later.length+" lessons</summary>"+
           '<div class="ex-body"><p>Not on your path for now. Come back to them once the path is done, or whenever one comes up.</p>'+
           '<ul class="pp-lessons pp-cols">'+p.later.map(function(id){ return lessonLink(id,!!prog[id]); }).join("")+"</ul></div></details>" : "")+
