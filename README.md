@@ -43,6 +43,11 @@ The sidebar carries an account panel and a roadmap. Everything is optional:
   copy you had before signing in is carried into the account.
 - **Roadmap** — choose one of the syllabus tracks (A–E), optionally add a goal and a target date, and the panel computes
   the next steps and the remaining lessons from your own completion state.
+- **Personal learning path** - lesson 01 ("How to use this course") asks six questions: recommender experience,
+  engineering background, comfort with the maths, goal, the part of the system you care about, and weekly time. It
+  answers with a recommended track and a phased lesson plan (study, skim, save for later) with a time estimate. *Use as
+  my roadmap* puts that path in the sidebar roadmap, where it is stored as a short code in the track field
+  (`P1.<answers>`), so it syncs with an account like any other track and needs no schema change.
 
 Security model: the page talks to the account API with the learner's own token and **Row-Level Security** scopes every
 row to the account that wrote it — lessons, answers and roadmap are not readable by another learner, and anonymous
@@ -53,6 +58,13 @@ Two tests back this up, and both clean up after themselves:
 ```bash
 python butterbase/tools/test_learner_rls.py    # isolation: two real accounts, run through the data API
 node   butterbase/tools/test_account_e2e.mjs   # sync: two accounts, signed-out → signed-in → second device
+```
+
+The learning-path engine has its own offline check, which runs every one of the 2,592 answer combinations against the
+page's real lesson list:
+
+```bash
+node butterbase/tools/check_learning_path.mjs
 ```
 
 The operators' documentation for the schema, the runbook and the guarantees lives in

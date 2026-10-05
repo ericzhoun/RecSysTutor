@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Recommendation Systems, End to End — An Interactive Course</title>
+<link rel="icon" href="data:,">
 <style>
 :root{
   --bg:#f5f5f2;
@@ -59,7 +60,7 @@ a{color:inherit;}
 .sources{margin:30px 0 0;border-top:1px solid var(--line);padding-top:14px;}
 .sources-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:9px;}
 .sources ul{list-style:none;padding:0;margin:0;max-width:78ch;}
-.sources li{font-size:13.5px;color:var(--muted);margin:5px 0;display:flex;gap:10px;align-items:baseline;}
+.sources li{font-size:13.5px;color:var(--muted);margin:5px 0;display:flex;gap:10px;align-items:baseline;overflow-wrap:anywhere;}
 .src-type{flex:0 0 52px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);}
 .sources a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
 .src-note{color:var(--faint);font-style:italic;}
@@ -261,12 +262,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--acce
 .acct-hint code{font-size:11px;}
 .rm{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;}
 .rm>summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between;align-items:baseline;}
+  text-transform:uppercase;color:var(--faint);display:flex;align-items:baseline;}
 .rm>summary::-webkit-details-marker{display:none;}
 .rm>summary::before{content:"+ ";color:var(--accent-ink);}
 .rm[open]>summary::before{content:"\2013\2002";}
 .rm>summary:hover{color:var(--ink);}
-.rm .rm-tag{letter-spacing:.04em;text-transform:none;color:var(--muted);}
+.rm .rm-tag{margin-left:auto;letter-spacing:.04em;text-transform:none;color:var(--muted);}
 .rm[open]>summary{margin-bottom:10px;}
 .rm-next{list-style:none;margin:9px 0 0;padding:0;}
 .rm-next li{font-size:12.5px;color:var(--muted);line-height:1.45;padding:5px 0 5px 18px;position:relative;
@@ -291,6 +292,59 @@ dialog.acct-modal .acct-code{width:100%;font-family:var(--mono);font-size:19px;l
 dialog.acct-modal .acct-code:focus{outline:none;border-color:var(--accent);}
 dialog.acct-modal .acct-actions{margin-top:14px;}
 
+/* ---------- learning-path survey (M0) ---------- */
+.pp-examples{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-bottom:16px;margin-bottom:4px;
+  border-bottom:1px solid var(--line-soft);}
+.pp-examples .pp-k{flex-basis:100%;}
+.pp-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+.btn.pp-ex{text-transform:none;letter-spacing:0;font-size:12px;}
+.pp-form{margin:0;}
+.pp-q{border:0;margin:0;padding:16px 0 4px;min-width:0;}
+.pp-q legend{padding:0;font-weight:600;font-size:15px;margin-bottom:9px;display:flex;gap:10px;align-items:baseline;}
+.pp-num{font-family:var(--mono);font-size:11px;color:var(--accent-ink);font-weight:400;}
+.pp-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:6px;}
+.pp-opt{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);background:var(--bg);padding:8px 11px;
+  cursor:pointer;font-size:13.8px;line-height:1.4;color:var(--ink);min-width:0;}
+.pp-opt:hover{border-color:var(--faint);}
+.pp-opt input{margin:2px 0 0;accent-color:var(--accent);flex:0 0 auto;}
+.pp-opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft);}
+.pp-opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:1px;}
+.pp-result{margin-top:20px;border-top:2px solid var(--ink);padding-top:16px;scroll-margin-top:20px;}
+.pp-wait{font-family:var(--mono);font-size:12px;color:var(--faint);margin:0;}
+.pp-track{font-family:var(--serif);font-size:24px;font-weight:600;line-height:1.2;margin-top:4px;}
+.pp-then{display:block;font-family:var(--sans);font-size:13.5px;font-weight:400;color:var(--muted);margin-top:2px;}
+.pp-stats{margin-top:12px;}
+.pp-why{margin:16px 0 6px;font-size:14.5px;color:var(--muted);}
+.pp-phases{list-style:none;padding:0;margin:14px 0 0;max-width:none;}
+.pp-phase{border:1px solid var(--line-soft);background:var(--bg);padding:12px 14px 6px;margin:0 0 8px;}
+.pp-ph-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;}
+.pp-ph-h b{font-size:15px;}
+.pp-ph-h .chip{margin:0;}
+.pp-ph-n{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);}
+.pp-ph-c{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);}
+.pp-ph-why{font-size:13.5px;color:var(--muted);margin:4px 0 6px;}
+.pp-lessons{margin:0 0 8px;padding-left:1.4em;font-size:14px;max-width:none;}
+.pp-lessons li{margin:.18em 0;}
+.pp-lessons a{text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line);}
+.pp-lessons a:hover{color:var(--accent-ink);border-bottom-color:var(--accent);}
+.pp-lessons li.done a{color:var(--faint);}
+.pp-tick{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ok);margin-left:8px;}
+.pp-cols{columns:2;column-gap:28px;}
+.pp-cols li{break-inside:avoid;}
+.pp-later{margin-top:12px;}
+.pp-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center;}
+.pp-actions a.btn{text-decoration:none;}
+.pp-actions .btn:disabled{opacity:.6;cursor:default;background:transparent;color:var(--ok);border-color:var(--ok);}
+.pp-msg{font-size:12.5px;color:var(--muted);margin:10px 0 0;}
+.pp-msg.ok{color:var(--ok);margin:0;}
+@media (max-width:640px){
+  .pp-cols{columns:1;}
+  .pp-ph-c{margin-left:0;}
+  .pp-stats div{flex:1 1 0;min-width:0;padding:9px 10px;}
+  .pp-stats .v{font-size:15px;}
+  table.grid{display:block;overflow-x:auto;}
+}
+
 /* ---------- misc ---------- */
 .landscape{width:100%;height:auto;border:1px solid var(--line);background:var(--panel);margin:20px 0;}
 .landscape a{cursor:pointer;outline:none;text-decoration:none;}
@@ -302,7 +356,7 @@ dialog.acct-modal .acct-actions{margin-top:14px;}
 .colophon{border-top:2px solid var(--ink);margin-top:70px;padding-top:18px;font-size:13.5px;color:var(--faint);}
 .colophon a{text-decoration:underline;}
 .plainlink{text-decoration:underline;text-underline-offset:3px;}
-.navbtns{display:flex;justify-content:space-between;margin-top:34px;gap:12px;}
+.navbtns{display:flex;flex-wrap:wrap;justify-content:space-between;margin-top:34px;gap:12px;}
 
 @media (max-width:1000px){
   .layout{grid-template-columns:1fr;}
@@ -381,7 +435,19 @@ dialog.acct-modal .acct-actions{margin-top:14px;}
       <li><strong>Track B — Ranking:</strong> module 3 (the CTR feature-interaction family). The densest, most practical module.</li>
       <li><strong>Track C — Sequence &amp; generative:</strong> module 4 (SASRec → BERT4Rec → HSTU). The frontier.</li>
       <li><strong>Track D — Multi-task:</strong> module 5 (MMoE, ESMM, the optimiser zoo). The industry default.</li>
+      <li><strong>Track E - The library:</strong> module 11 (244 production-ML posts). Read as evidence under every other module.</li>
     </ul>
+    <p>Not sure where you fit? Answer six quick questions and the course lays out a path for you: which track to follow,
+      which lessons to study, which to skim, and which to save for later. Each phase follows from your answers, and the
+      ticks fill in as you read.</p>
+    <div class="widget pp" id="ppWidget">
+      <div class="widget-head"><span class="t">Your learning path</span><span class="s">6 questions · about a minute</span></div>
+      <div class="widget-body">
+        <div class="pp-examples" id="ppExamples"><span class="pp-k">Start from an example learner</span></div>
+        <form id="ppQuestions" class="pp-form" onsubmit="return false"></form>
+        <div class="pp-result" id="ppResult" aria-live="polite"></div>
+      </div>
+    </div>
     <div class="note why"><div class="lab">Prerequisites</div>
       <p>Comfort with feed-forward networks, embeddings, and one DL framework (the blog uses TensorFlow; PyTorch equivalents
         are noted). Softmax, cross-entropy, and basic probability are assumed. No prior recommender-systems knowledge required.</p>
@@ -2219,6 +2285,185 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
     b.addEventListener("click",function(){ var t=$(b.dataset.goto); if(t) t.scrollIntoView({behavior:"smooth"}); });
   });
 
+  /* ================= personalised learning path =================
+     Six survey answers (background, experience, maths, goal, focus, weekly time) map to
+     an ordered, phased lesson plan. The mapping is plain data plus a few rules, so the
+     same answers always give the same path, and the path is stored as a compact code
+     ("P1.dnn.mle.solid.deepen.sequence.6") that can live in the roadmap's track field.
+  */
+  var PATH = (function(){
+    var QUESTIONS=[
+      {k:"exp", q:"How much have you worked with recommender systems?", o:[
+        ["none","Not at all - this is new to me"],
+        ["classic","Classic methods only: collaborative filtering, matrix factorisation, logistic regression"],
+        ["dnn","I have built or trained DNN recommenders: two-tower, DeepFM, DCN and the like"],
+        ["lead","I own or lead a production recommender"]]},
+      {k:"bg", q:"Which best describes your engineering background?", o:[
+        ["research","Research or academia - strong maths, little production software"],
+        ["swe","Software engineer - production code, newer to ML"],
+        ["mle","ML engineer - I train and ship models"]]},
+      {k:"math", q:"How comfortable are you with deep-learning maths?", o:[
+        ["refresh","I could use a refresher on embeddings, softmax and attention"],
+        ["solid","Comfortable training networks in PyTorch or TensorFlow"],
+        ["papers","I read ML papers and work through the maths myself"]]},
+      {k:"goal", q:"What do you most want from this course?", o:[
+        ["job","Land a recommender-systems or ML-engineering role"],
+        ["ship","Build or improve a recommender at work"],
+        ["deepen","Go deeper: sequence, generative and multi-task models"],
+        ["research","Do research: the paper lineage and open problems"]]},
+      {k:"focus", q:"Which part of the system matters most to you?", o:[
+        ["unsure","Not sure yet - show me the whole funnel"],
+        ["retrieval","Retrieval and candidate generation"],
+        ["ranking","Ranking and CTR prediction"],
+        ["sequence","Sequence and generative models"],
+        ["multitask","Multi-task objectives"],
+        ["infra","Embedding infrastructure and scale"]]},
+      {k:"time", q:"How much time can you give it each week?", o:[
+        ["3","About 3 hours"], ["6","About 6 hours"], ["10","10 hours or more"]]}
+    ];
+    var KEYS=QUESTIONS.map(function(x){ return x.k; });
+    var EXAMPLES={
+      phd:{label:"PhD graduate, new to recommenders",
+        a:{exp:"none", bg:"research", math:"papers", goal:"job", focus:"unsure", time:"10"}},
+      mid:{label:"Mid-career engineer, knows DNN recommenders",
+        a:{exp:"dnn", bg:"mle", math:"solid", goal:"deepen", focus:"sequence", time:"6"}}
+    };
+    var TRACK_NAMES={A:"A - Retrieval", B:"B - Ranking", C:"C - Sequence & generative", D:"D - Multi-task", E:"E - The library"};
+    var FOCUS_TRACK={retrieval:"A", ranking:"B", sequence:"C", multitask:"D"};
+    var FOCUS_NAME={retrieval:"retrieval", ranking:"ranking", sequence:"sequence & generative models",
+      multitask:"multi-task learning", infra:"embedding infrastructure", unsure:"a taste of each frontier"};
+
+    // lesson facts come from the page itself, so a renamed or removed lesson can never
+    // leave a dangling step in somebody's path
+    var title={}, order=[];
+    lessons.forEach(function(l){
+      var h3=$("h3",l), n=h3&&$(".n",h3);
+      var t=h3?h3.textContent.slice(n?n.textContent.length:0).trim():l.id;
+      // every exercise block and self-check shares one heading, so name its module
+      var m=/^l([eq])(\d+)$/.exec(l.id);
+      if(m) t=(m[1]==="e"?"Exercises":"Self-check")+" · M"+m[2];
+      title[l.id]=t;
+      order.push(l.id);
+    });
+
+    function valid(a){
+      return !!a && QUESTIONS.every(function(x){
+        return x.o.some(function(o){ return o[0]===a[x.k]; });
+      });
+    }
+    function encode(a){ return valid(a) ? "P1."+KEYS.map(function(k){ return a[k]; }).join(".") : ""; }
+    function decode(code){
+      var p=String(code||"").split(".");
+      if(p[0]!=="P1" || p.length!==KEYS.length+1) return null;
+      var a={}; KEYS.forEach(function(k,i){ a[k]=p[i+1]; });
+      return valid(a) ? a : null;
+    }
+    function isCode(code){ return !!decode(code); }
+
+    function minutes(id,mode){
+      if(/^lq/.test(id)) return 10;
+      if(/^le/.test(id)) return mode==="skim" ? 20 : 60;
+      return mode==="skim" ? 15 : 40;
+    }
+
+    function plan(a){
+      if(!valid(a)) return null;
+      var beginner = a.exp==="none" || a.exp==="classic";
+      var used={}, phases=[], why=[];
+      function phase(name, note, ids, mode){
+        var list=ids.filter(function(id){
+          if(!title[id] || used[id]) return false;
+          used[id]=1; return true;
+        });
+        if(list.length) phases.push({title:name, why:note, lessons:list, mode:mode||"study"});
+      }
+
+      if(beginner){
+        why.push(a.exp==="none"
+          ? "You are new to recommenders, so the path starts with the funnel and the two stages every production system has."
+          : "You know the classic methods, so the path reframes them as the funnel and moves quickly to the neural versions.");
+        phase("Foundations", "The funnel, recommendation as classification, diversity and how to measure a change.",
+          ["l0-2","l1-1","l1-2","l1-3","l1-4","le1","lq1"]);
+        phase("The two core stages", "Retrieval and ranking: the two-tower model and the first three rankers you will meet everywhere.",
+          ["l2-1","l2-2","l3-1","l3-2","l3-3","l3-9","le2"]);
+        var spec={
+          retrieval:["l2-3","l6-1","l6-2","l6-3","le6"],
+          ranking:["l3-4","l3-5","l3-6","l3-7","l3-8","le3"],
+          sequence:(a.math==="refresh"?["l4-1"]:[]).concat(["l4-2","l4-3","l4-4","le4"]),
+          multitask:["l5-1","l5-2","l5-3","le5"],
+          infra:["l3-6","l10-1","l10-2","l10-3","le10"],
+          unsure:["l4-1","l4-3","l5-1","l5-2","l6-5"]
+        }[a.focus];
+        phase("Specialise: "+FOCUS_NAME[a.focus],
+          a.focus==="unsure" ? "One lesson from each frontier, so you can tell which direction pulls you before going deep."
+                             : "Your chosen stage, taken past the basics.", spec);
+        var apply=["l7-1","l7-2","le7"];
+        if(a.bg==="research") apply=apply.concat(["l10-1","l11-4"]);
+        if(a.goal==="job") apply=apply.concat(["l10-4"]);
+        if(a.goal==="ship") apply=apply.concat(["l10-1","l10-3","l11-4"]);
+        if(a.goal==="research") apply=apply.concat(["l8-1","l8-2"]);
+        if(a.goal==="deepen") apply=apply.concat(["l4-5"]);
+        phase("Make it real", "Real data, one system designed end to end, and the questions interviewers and reviewers ask.", apply);
+      } else {
+        why.push(a.exp==="lead"
+          ? "You run a production system, so the refresher is two short skims and the rest of the time goes to depth."
+          : "You have shipped DNN recommenders, so the basics shrink to a quick skim of the places experienced engineers still slip.");
+        phase("Quick refresh (skim)", "Diversity, experiment design and the production details that bite even experienced teams.",
+          a.exp==="lead" ? ["l1-3","l1-4"] : ["l1-3","l1-4","l2-2","l3-9"], "skim");
+        var deep={
+          retrieval:["l2-2","l2-3","le2","l6-1","l6-2","l6-3","le6"],
+          ranking:["l3-3","l3-4","l3-5","l3-6","l3-7","l3-8","le3"],
+          sequence:(a.math==="refresh"?["l4-1","l4-2"]:[]).concat(["l4-3","l4-4","l4-5","le4"]),
+          multitask:["l5-1","l5-2","l5-3","l5-4","l5-5","le5"],
+          infra:["l10-1","l10-2","l10-3","l10-4","le10"],
+          unsure:["l4-3","l4-5","l5-1","l5-5"]
+        }[a.focus];
+        phase("Go deeper: "+FOCUS_NAME[a.focus], "Your chosen area at full depth, exercises included.", deep);
+        if(a.goal==="deepen" || a.goal==="research"){
+          if(a.focus==="sequence") phase("Next frontier: multi-task", "Most generative rankers predict several actions at once; this is how those heads are trained together.",
+            ["l5-1","l5-2","l5-5","le5"]);
+          else phase("Next frontier: sequence & generative", "From SASRec to HSTU, where the field is moving fastest.",
+            (a.math==="refresh"?["l4-1"]:[]).concat(["l4-3","l4-4","l4-5","le4"]));
+        } else {
+          phase("Systems at scale", "Embedding tables that do not fit, a real production stack, and the incidents that teach the most.",
+            ["l10-1","l10-3","l6-4","l6-5","l11-4"]);
+        }
+        var fin={
+          job:["l10-4","l7-2","le7"],
+          ship:["l7-2","le7","l11-3","l11-4"],
+          deepen:["l8-2","l8-3","l11-3"],
+          research:["l8-1","l8-2","l8-3","le8"]
+        }[a.goal];
+        if(a.bg==="research") fin=["l7-1"].concat(fin);
+        phase(a.goal==="research"||a.goal==="deepen" ? "Read the frontier" : "Apply it",
+          a.goal==="research"||a.goal==="deepen" ? "Trace the paper lineage and pick what to read next."
+                                                 : "Design one system end to end and practise explaining the trade-offs.", fin);
+      }
+
+      if(a.bg==="research") why.push("Your maths is ahead of your production experience, so the path adds data preprocessing, embedding infrastructure and real incident write-ups.");
+      if(a.bg==="swe") why.push("You bring production habits; spend the saved effort on the modelling lessons and their exercises.");
+      if(a.math==="refresh") why.push("The Transformer lesson is placed before any attention-based model, and the prerequisites box below lists what to brush up on.");
+      if(a.math==="papers") why.push("Every module ends with its source papers; the paper atlas (M8) lets you follow each model's lineage.");
+      if(a.goal==="job") why.push("The capstone and the interview-framing lesson turn what you learn into answers for system-design interviews.");
+      if(a.goal==="ship") why.push("The last phase leans on production practice: embedding tables, capacity planning and post-mortems.");
+
+      var track = FOCUS_TRACK[a.focus] || (a.focus==="infra" ? "B" : (beginner ? "A" : "C"));
+      var then = {A:"B", B:"A", C:"D", D:"C"}[track];
+      if(a.focus==="infra") why.push("Embedding infrastructure (M10) has no lettered track; your path covers it, and ranking (Track B) owns the largest tables.");
+
+      var total=0, count=0;
+      phases.forEach(function(p){ p.lessons.forEach(function(id){ total+=minutes(id,p.mode); count++; }); });
+      var hours=Math.round(total/60);
+      var later=order.filter(function(id){ return !used[id] && id!=="l0-1"; });
+      return {answers:a, code:encode(a), beginner:beginner, phases:phases, why:why, later:later,
+        track:track, trackName:TRACK_NAMES[track], then:then, thenName:TRACK_NAMES[then],
+        lessons:count, hours:hours, weeks:Math.max(1, Math.ceil(hours/Number(a.time)))};
+    }
+
+    return {QUESTIONS:QUESTIONS, EXAMPLES:EXAMPLES, title:title, encode:encode, decode:decode,
+      isCode:isCode, plan:plan, fromCode:function(c){ var a=decode(c); return a?plan(a):null; }};
+  })();
+
   /* ================= learner accounts: saved progress + roadmap =================
      Signed out, the course behaves exactly as before: widgets run locally and nothing
      leaves the browser. Signed in, lesson progress, self-check answers, the roadmap and
@@ -2490,12 +2735,27 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
     function track(id){
       var out=null;
       TRACKS.forEach(function(t){ if(t.id===id) out=t; });
+      if(!out && PATH.isCode(id)){
+        var p=PATH.fromCode(id);
+        out={id:"Path", name:"Personal path", personal:true, plan:p,
+          focus:"from the survey in lesson 01 · closest track "+p.trackName};
+      }
       return out;
     }
     function roadmap(){
       var t=track(state.roadmap.track);
       var r={track:t, steps:[], done:0, total:0};
       if(!t) return r;
+      if(t.personal){
+        t.plan.phases.forEach(function(ph,i){
+          var done=ph.lessons.filter(function(l){ return !!state.progress[l]; }).length;
+          var next=ph.lessons.filter(function(l){ return !state.progress[l]; })[0];
+          r.done+=done; r.total+=ph.lessons.length;
+          r.steps.push({label:"Phase "+(i+1)+" · "+ph.title, title:ph.title, done:done, total:ph.lessons.length,
+            complete:done===ph.lessons.length, next:next});
+        });
+        return r;
+      }
       t.modules.forEach(function(mid){
         var m=null;
         mods.forEach(function(x){ if(x.id===mid) m=x; });
@@ -2554,6 +2814,7 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         '<summary>Roadmap'+(r.track?'<span class="rm-tag">'+esc(r.track.id)+" · "+r.done+"/"+r.total+"</span>":"")+'</summary>'+
         '<div class="acct-field"><label for="rmTrack">Track</label><select id="rmTrack">'+
         '<option value="">— choose a track —</option>'+
+        (PATH.isCode(s.track) ? '<option value="'+esc(s.track)+'" selected>Personal path (from the survey)</option>' : "")+
         TRACKS.map(function(t){
           return '<option value="'+t.id+'"'+(s.track===t.id?' selected':'')+">"+esc(t.name)+"</option>";
         }).join("")+"</select></div>"+
@@ -2563,7 +2824,8 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         '<input id="rmTarget" type="date" value="'+esc(s.target)+'"></div>'+
         '<div class="acct-actions"><button class="acct-btn wide" id="rmSave">Save roadmap</button></div>';
       if(!r.track){
-        h+='<p class="acct-hint">Choose a track to get a next-step list computed from your own progress.</p>';
+        h+='<p class="acct-hint">Choose a track to get a next-step list computed from your own progress, or '+
+          '<a class="plainlink" href="#ppWidget">build a personal path</a> from a short survey.</p>';
       } else {
         h+='<div class="acct-sub" style="margin-top:12px">'+esc(r.track.name)+" · "+r.done+" / "+r.total+" lessons</div>"+
           '<div class="progress-bar" style="margin:6px 0 10px"><span style="width:'+pct(r.done,r.total)+'%"></span></div>'+
@@ -2599,7 +2861,15 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         "We email a 6-digit code to confirm the address.</p>"+noteHtml();
     }
 
-    function render(){
+    var listeners=[];
+    function notify(){ listeners.forEach(function(fn){ try{ fn(); }catch(e){} }); }
+    function render(){ renderPanel(); notify(); }
+    function setTrack(code){
+      state.roadmap.track=code||"";
+      persist(); render();
+      if(signed()) scheduleSave(); else setNote("Roadmap saved in this browser.","ok");
+    }
+    function renderPanel(){
       var host=$("#acctBody"), st=$("#acctState");
       if(!host) return;
       if(!online){
@@ -2790,7 +3060,7 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
     function lessonSeen(id){
       if(state.progress[id]){ touch(); persist(); return; }
       state.progress[id]=new Date().toISOString();
-      touch(); scheduleSave();
+      touch(); scheduleSave(); notify();
     }
     function recordQuiz(mid,qi,chosen,correct){
       var m=state.quiz[mid]||(state.quiz[mid]={});
@@ -2828,12 +3098,113 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
 
     boot();
     return {lessonSeen:lessonSeen, recordQuiz:recordQuiz, savedAnswersFor:savedAnswersFor,
-            state:function(){ return state; }};
+            state:function(){ return state; }, setTrack:setTrack, signedIn:signed,
+            onChange:function(fn){ listeners.push(fn); }};
   })();
 
   // restore saved lesson marks now that the account layer exists (this also re-runs
   // after a sign-in sync)
   reflectProgress();
+
+  /* ---------------- learning-path survey (M0 · lesson 01) ---------------- */
+  (function(){
+    var host=$("#ppQuestions"), out=$("#ppResult");
+    if(!host || !out) return;
+    function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+    var answers=PATH.decode(RT.state().roadmap.track) || {};
+
+    host.innerHTML=PATH.QUESTIONS.map(function(q,i){
+      return '<fieldset class="pp-q"><legend><span class="pp-num">'+(i+1)+"</span>"+esc(q.q)+"</legend>"+
+        '<div class="pp-opts">'+q.o.map(function(o){
+          return '<label class="pp-opt"><input type="radio" name="pp-'+q.k+'" value="'+esc(o[0])+'"'+
+            (answers[q.k]===o[0]?" checked":"")+"><span>"+esc(o[1])+"</span></label>";
+        }).join("")+"</div></fieldset>";
+    }).join("");
+
+    var ex=$("#ppExamples");
+    if(ex){
+      Object.keys(PATH.EXAMPLES).forEach(function(k){
+        var b=el("button","btn ghost pp-ex",PATH.EXAMPLES[k].label); b.type="button";
+        b.addEventListener("click",function(){
+          answers=Object.assign({},PATH.EXAMPLES[k].a);
+          $$("input[type=radio]",host).forEach(function(r){ r.checked = answers[r.name.slice(3)]===r.value; });
+          render(true);
+        });
+        ex.appendChild(b);
+      });
+    }
+    host.addEventListener("change",function(e){
+      var t=e.target; if(!t || t.type!=="radio") return;
+      answers[t.name.slice(3)]=t.value; render(false);
+    });
+
+    function lessonLink(id,done){
+      return '<li class="'+(done?"done":"")+'"><a href="#'+id+'">'+esc(PATH.title[id]||id)+"</a>"+
+        (done?'<span class="pp-tick" aria-label="done">done</span>':"")+"</li>";
+    }
+    function render(scroll){
+      var p=PATH.plan(answers);
+      var left=PATH.QUESTIONS.filter(function(q){ return !answers[q.k]; }).length;
+      if(!p){
+        out.innerHTML='<p class="pp-wait">'+(left===PATH.QUESTIONS.length
+          ? "Answer the questions above, or start from an example learner, to see your path."
+          : left+" question"+(left===1?"":"s")+" to go.")+"</p>";
+        return;
+      }
+      var st=RT.state(), prog=st.progress, onRoadmap=st.roadmap.track===p.code, first=null;
+      var laterOpen=!!$(".pp-later[open]",out);
+      var phases=p.phases.map(function(ph,i){
+        var done=ph.lessons.filter(function(id){ return !!prog[id]; }).length;
+        ph.lessons.forEach(function(id){ if(!first && !prog[id]) first=id; });
+        return '<li class="pp-phase"><div class="pp-ph-h"><span class="pp-ph-n">Phase '+(i+1)+"</span>"+
+          "<b>"+esc(ph.title)+"</b>"+(ph.mode==="skim"?'<span class="chip">skim</span>':"")+
+          '<span class="pp-ph-c">'+done+" / "+ph.lessons.length+"</span></div>"+
+          '<p class="pp-ph-why">'+esc(ph.why)+"</p>"+
+          '<ol class="pp-lessons">'+ph.lessons.map(function(id){ return lessonLink(id,!!prog[id]); }).join("")+"</ol></li>";
+      }).join("");
+      out.innerHTML=
+        '<div class="pp-head">'+
+          '<div class="pp-k">Recommended track</div>'+
+          '<div class="pp-track">'+esc(p.trackName)+'<span class="pp-then">then '+esc(p.thenName)+" · at "+esc(p.answers.time)+" hours a week</span></div>"+
+          '<div class="readout pp-stats">'+
+            '<div><div class="k">Lessons</div><div class="v">'+p.lessons+"</div></div>"+
+            '<div><div class="k">Hours</div><div class="v">~'+p.hours+"</div></div>"+
+            '<div><div class="k">Weeks</div><div class="v">~'+p.weeks+"</div></div>"+
+          "</div></div>"+
+        '<ul class="pp-why">'+p.why.map(function(w){ return "<li>"+esc(w)+"</li>"; }).join("")+"</ul>"+
+        '<ol class="pp-phases">'+phases+"</ol>"+
+        (p.later.length ? '<details class="ex pp-later"'+(laterOpen?" open":"")+'><summary>Save for later · '+p.later.length+" lessons</summary>"+
+          '<div class="ex-body"><p>Not on your path for now. Come back to them once the path is done, or whenever one comes up.</p>'+
+          '<ul class="pp-lessons pp-cols">'+p.later.map(function(id){ return lessonLink(id,!!prog[id]); }).join("")+"</ul></div></details>" : "")+
+        '<div class="pp-actions">'+
+          (first ? '<a class="btn" href="#'+first+'">Start: '+esc(PATH.title[first])+"</a>"
+                 : '<span class="pp-msg ok">Path complete. Pick something from the list above.</span>')+
+          '<button type="button" class="btn ghost" id="ppSave"'+(onRoadmap?" disabled":"")+">"+
+            (onRoadmap?"Saved as your roadmap":"Use as my roadmap")+"</button>"+
+          '<button type="button" class="btn ghost" id="ppReset">Start over</button>'+
+        "</div>"+
+        '<p class="pp-msg">'+(onRoadmap
+          ? "The sidebar roadmap now tracks this path"+(RT.signedIn()?" and it is saved to your account.":" in this browser.")
+          : "Saving it puts this path in the sidebar roadmap, with your next step computed from your progress.")+"</p>";
+      var save=$("#ppSave",out);
+      if(save) save.addEventListener("click",function(){ RT.setTrack(p.code); render(false); });
+      $("#ppReset",out).addEventListener("click",function(){
+        answers={}; $$("input[type=radio]",host).forEach(function(r){ r.checked=false; }); render(false);
+        host.scrollIntoView({behavior:"smooth", block:"start"});
+      });
+      if(scroll) out.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+    render(false);
+    RT.onChange(function(){
+      var saved=PATH.decode(RT.state().roadmap.track);
+      if(saved && !PATH.QUESTIONS.some(function(q){ return answers[q.k]; })){
+        answers=saved;
+        $$("input[type=radio]",host).forEach(function(r){ r.checked = answers[r.name.slice(3)]===r.value; });
+      }
+      render(false);
+    });
+  })();
 
   /* ---------------- funnels ---------------- */
   var stages = [

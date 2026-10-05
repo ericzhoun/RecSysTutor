@@ -144,13 +144,14 @@ python butterbase/tools/learner_schema.py --apply   # create tables + RLS (addit
 python butterbase/tools/learner_schema.py --check   # show tables, indexes and policies
 python butterbase/tools/test_learner_rls.py         # prove per-learner isolation
 node   butterbase/tools/test_account_e2e.mjs        # prove sync across devices and accounts
-node   butterbase/tools/check_roadmap_render.mjs    # prove the roadmap panel renders offline
+node   butterbase/tools/check_roadmap_render.mjs    # prove the roadmap panel renders offline (tracks + personal path)
+node   butterbase/tools/check_learning_path.mjs     # prove every survey answer gives a sound learning path
 node   butterbase/tools/check_inline_js.mjs         # syntax-check the page's inline JS
 ```
 
 `learner_schema.py` merges the learner tables into the schema it reads back before
 applying, so the declarative diff can only add. Both network tests are self-cleaning: they
-delete whatever they wrote and fail loudly if a row cannot be removed. The two `check_*`
+delete whatever they wrote and fail loudly if a row cannot be removed. The `check_*`
 scripts need no network and no account: they run the page's own inline script against a
 minimal DOM, which is also how a broken roadmap template gets caught before it ships.
 
