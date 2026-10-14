@@ -19,8 +19,9 @@ This module folds an entire paper collection into the course. Where modules 1–
 ### Lineage chains
 
 The atlas also carries **curated “builds on” links** — 70 of them — that trace how ideas moved across
-      papers. These chains are the shortest path through the field: read them top to bottom and you have the evolution of
-      a family. Click any node to jump to that paper in the atlas above.
+      papers. Connected chains are grouped into families so shared ancestors, branches and converging ideas
+      stay together. Expand a family to follow its reading paths and see what each link adds.
+      Click any node to jump to that paper in the atlas above.
 
 ### How to use the atlas
 

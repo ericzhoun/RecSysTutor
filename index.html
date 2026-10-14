@@ -374,6 +374,37 @@
       font-size: 12px;
     }
 
+    .lineage-family {
+      border-bottom: 1px solid var(--line-soft);
+      padding: 12px 0;
+    }
+
+    .lineage-family summary {
+      cursor: pointer;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .lineage-family .family-meta {
+      display: block;
+      margin: 5px 0 0 18px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--faint);
+    }
+
+    .lineage-family .chain:last-child {
+      border-bottom: 0;
+    }
+
+    .lineage-family .cl {
+      margin: 7px 0 0;
+      text-transform: none;
+      letter-spacing: 0;
+      line-height: 1.6;
+    }
+
     details.ex {
       border: 1px solid var(--line-soft);
       background: var(--bg);
@@ -4506,9 +4537,9 @@ print(round(p, 4))   <span class="c"># ~0.0411</span></pre>
           <h3><span class="n">02</span>Lineage chains</h3>
           <p>The atlas also carries <strong>curated “builds on” links</strong> — 70 of them — that trace how ideas moved
             across
-            papers. These chains are the shortest path through the field: read them top to bottom and you have the
-            evolution of
-            a family. Click any node to jump to that paper in the atlas above.</p>
+            papers. Connected chains are grouped into families so shared ancestors, branches and converging ideas
+            stay together. Expand a family to follow its reading paths and see what each link adds.
+            Click any node to jump to that paper in the atlas above.</p>
         </div>
         <div class="bleed">
           <div class="widget">
@@ -6711,36 +6742,88 @@ print(g.is_sparse, (g.values() != 0).sum() if g.is_sparse else (g != 0).sum(), <
         window.__atlasFocus = function (label) {
           $("#atlasSearch").value = label;
           if (selS) selS.value = ""; if (selT) selT.value = ""; if (selC) selC.value = ""; $("#atlasStars").checked = false;
+          $("#atlasYear").value = $("#atlasYear").min;
           render(); var w = $("#atlasList"); if (w) w.scrollIntoView({ behavior: "smooth", block: "center" });
         };
         render();
 
         var edges = PDATA.lineage || [];
-        var outAdj = {}, used = {};
-        edges.forEach(function (e) { (outAdj[e.s] = outAdj[e.s] || []).push(e); });
-        function key(e) { return e.s + "|" + e.t; }
-        function walkBack(id) { var path = []; while (true) { var inc = edges.filter(function (e) { return e.t === id; }); if (inc.length !== 1) break; var e = inc[0]; if (used[key(e)]) break; path.unshift(e); id = e.s; } return path; }
-        function walkFwd(id) { var path = []; while (true) { var o = outAdj[id]; if (!o || o.length !== 1) break; var e = o[0]; if (used[key(e)]) break; path.push(e); id = e.t; } return path; }
-        var chains = [];
+        var outAdj = {}, inAdj = {}, neighbors = {}, used = {};
         edges.forEach(function (e) {
-          if (used[key(e)]) return; var back = walkBack(e.s); back.forEach(function (x) { used[key(x)] = 1; }); used[key(e)] = 1;
-          var fwd = walkFwd(e.t); fwd.forEach(function (x) { used[key(x)] = 1; }); chains.push(back.concat([e]).concat(fwd));
+          (outAdj[e.s] = outAdj[e.s] || []).push(e);
+          (inAdj[e.t] = inAdj[e.t] || []).push(e);
+          (neighbors[e.s] = neighbors[e.s] || []).push(e.t);
+          (neighbors[e.t] = neighbors[e.t] || []).push(e.s);
         });
-        edges.forEach(function (e) { if (!used[key(e)]) { used[key(e)] = 1; chains.push([e]); } });
-        chains.sort(function (a, b) { return b.length - a.length; });
-        var lc = $("#lineageCount"); if (lc) lc.textContent = chains.length + " chains \u00b7 " + edges.length + " links";
+        function key(e) { return e.s + "|" + e.t; }
+        var familyNames = [
+          ["din", "Behavior sequences & long-term interests"],
+          ["esmm", "Conversion modeling & delayed feedback"],
+          ["lrftrl", "CTR foundations, cross networks & calibration"],
+          ["ffm", "Factorization & feature generation"],
+          ["fibinet", "Feature gating & masking"],
+          ["mobius", "Ads retrieval & generative recommendation"],
+          ["minet", "Cross-domain & multi-domain learning"],
+          ["deepmcp", "Matching, ranking & cascade consistency"],
+          ["dhen", "Ranking ensembles & foundation models"],
+          ["fat", "Transformer ranking & scaling"],
+          ["masm", "Relevance & multimodal matching"],
+          ["imagectr", "Visual behaviors & multimodal ads"],
+          ["unirom", "Unified ranking & sequential pretraining"]
+        ];
+        var families = [], seen = {};
+        Object.keys(neighbors).forEach(function (root) {
+          if (seen[root]) return;
+          var members = {}, pending = [root];
+          while (pending.length) {
+            var id = pending.pop();
+            if (members[id]) continue;
+            members[id] = true; seen[id] = true;
+            (neighbors[id] || []).forEach(function (next) { if (!members[next]) pending.push(next); });
+          }
+          var links = edges.filter(function (e) { return members[e.s]; });
+          var name = familyNames.filter(function (entry) { return members[entry[0]]; })[0];
+          families.push({ members: members, links: links, name: name ? name[1] : (paperL[root] || root) });
+        });
+        families.sort(function (a, b) { return b.links.length - a.links.length || a.name.localeCompare(b.name); });
+        function follow(e) {
+          var path = [];
+          while (e && !used[key(e)]) {
+            used[key(e)] = true; path.push(e);
+            var outgoing = outAdj[e.t] || [], incoming = inAdj[e.t] || [];
+            e = outgoing.length === 1 && incoming.length === 1 ? outgoing[0] : null;
+          }
+          return path;
+        }
+        var lc = $("#lineageCount"); if (lc) lc.textContent = families.length + " families \u00b7 " + edges.length + " links";
         var host = $("#lineageChains");
         if (host) {
           var h = "";
-          chains.forEach(function (ch, idx) {
-            var seq = [ch[0].s]; ch.forEach(function (e) { seq.push(e.t); });
-            var lab = ch[0].label || "";
-            h += '<div class="chain"><div class="cl">chain ' + (idx + 1) + (lab ? " \u00b7 " + esc(lab) : "") + '</div><div class="cn">';
-            seq.forEach(function (id, i) {
-              if (i > 0) h += '<span class="arw">\u2192</span>';
-              h += '<button class="node" data-paper="' + esc(paperL[id] || id) + '">' + esc(paperL[id] || id) + '</button>';
+          families.forEach(function (family) {
+            var chains = [];
+            family.links.forEach(function (e) {
+              if ((inAdj[e.s] || []).length !== 1 || (outAdj[e.s] || []).length !== 1) {
+                var path = follow(e); if (path.length) chains.push(path);
+              }
             });
-            h += '</div></div>';
+            // Any remaining links form cycles; follow() visits each edge only once.
+            family.links.forEach(function (e) { var path = follow(e); if (path.length) chains.push(path); });
+            h += '<details class="lineage-family"><summary>' + esc(family.name) +
+              '<span class="family-meta">' + Object.keys(family.members).length + ' papers \u00b7 ' +
+              family.links.length + ' links</span></summary>';
+            chains.forEach(function (ch) {
+              var seq = [ch[0].s]; ch.forEach(function (e) { seq.push(e.t); });
+              h += '<div class="chain"><div class="cn">';
+              seq.forEach(function (id, i) {
+                if (i > 0) h += '<span class="arw">\u2192</span>';
+                h += '<button class="node" data-paper="' + esc(paperL[id] || id) + '">' + esc(paperL[id] || id) + '</button>';
+              });
+              h += '</div><div class="cl">' + ch.map(function (e) {
+                return esc(paperL[e.s] || e.s) + ' \u2192 ' + esc(paperL[e.t] || e.t) +
+                  (e.label ? ': ' + esc(e.label) : '');
+              }).join(' \u00b7 ') + '</div></div>';
+            });
+            h += '</details>';
           });
           host.innerHTML = h;
           $$(".chain .node", host).forEach(function (b) { b.addEventListener("click", function () { window.__atlasFocus(b.dataset.paper); }); });
